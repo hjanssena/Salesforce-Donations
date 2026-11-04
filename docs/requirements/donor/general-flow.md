@@ -40,14 +40,15 @@ This document covers the base public experience and end-to-end donation lifecycl
 
 ---
 
-## RF-D3 · Pre-Payment Registration in Salesforce
+## RF-D3 · Donation Recorded After Successful Payment
 - **Milestone:** Deliverable 1 (E1)
 - **Actor:** Donor (Any Modality)
-- **User Story:** As a donor, I want my donation to be recorded before I pay, so that the program can match and recognize my payment when it arrives.
+- **User Story:** As a donor, I want my donation to be recorded once my payment succeeds, so that the program's records reflect only money that was actually received.
 
 ### Acceptance Criteria
-- **CA1 (Pending Record Creation):** **Given** I have filled in my details and selected a campaign, **when** I submit the donation form, **then** a donation record is created in Salesforce in `Pending` status with its campaign, modality, and amount (if known on-site) *before* the payment gateway checkout opens.
-- **CA2 (Payment Reference Correlation):** **Given** I submitted the donation form, **when** the test payment gateway opens, **then** the payment session carries a unique reference that allows staff (or the webhook) to locate the corresponding Salesforce donation record from the Stripe test payment.
+- **CA1 (Record After Successful Payment):** **Given** I have filled in my details and selected a campaign, **when** the payment gateway authorizes my payment, **then** a donation record exists in Salesforce in `Paid` status with its campaign, modality, and the amount paid.
+- **CA2 (Payment Reference Correlation):** **Given** a donation record was created from a successful payment, **when** staff views it, **then** it shows the unique payment reference that allows locating the corresponding Stripe test payment.
+- **CA3 (Negative Case — Unsuccessful Payment):** **Given** I started a payment, **when** it is declined, cancelled, or left unfinished, **then** no donation record is created in Salesforce and the campaign's progress does not change.
 
 ---
 
