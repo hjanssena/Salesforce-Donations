@@ -9,9 +9,9 @@ To maintain full traceability and satisfy both our internal workflow and the **S
 Defined in [AGENTS.md](file:///Users/janssen/Documents/UADY/Semestre7/Salesforce/Proyecto/AGENTS.md) and linked via [CLAUDE.md](file:///Users/janssen/Documents/UADY/Semestre7/Salesforce/Proyecto/CLAUDE.md):
 
 - **When to update:** Every single time an AI coding assistant modifies project files, metadata, configuration, or documentation.
-- **Format (1–2 lines max):**
+- **Format (1 change per line, with proper Markdown line breaks):**
   ```text
-  User | User request | Decision taken | Change made
+  - User | User request | Decision taken | Change made
   ```
 - **Purpose:** Provides an immediate, chronological audit trail inside every PR of what the AI was asked to do and which files it touched.
 

@@ -9,10 +9,10 @@ This file defines the mandatory operational rules and context for all AI coding 
 **Every user request that modifies anything in the project (code, configuration, metadata, or documentation) MUST be logged in [AI/log.md](file:///Users/janssen/Documents/UADY/Semestre7/Salesforce/Proyecto/AI/log.md) before concluding the turn.**
 
 ### Format
-Each entry must follow this exact pipe-separated structure and fit within **one or two lines**:
+Each entry must follow this exact pipe-separated structure, fit on a **single line** (1 change per line), and ensure proper Markdown line-break rendering (prefix each entry with `- ` as a bullet list item or separate entries with a blank line `\n\n` so Markdown does not collapse consecutive lines into a single paragraph):
 
 ```text
-User | User request | Decision taken | Change made
+- User | User request | Decision taken | Change made
 ```
 
 - **User:** The person making the request (e.g., `Janssen`, or ask/infer from environment if unknown).
