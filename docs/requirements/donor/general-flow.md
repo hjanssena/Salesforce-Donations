@@ -40,6 +40,18 @@ This document covers the base public experience and end-to-end donation lifecycl
 
 ---
 
+## RF-D1c · Browse Completed Campaigns and See When None Is Open
+- **Milestone:** Deliverable 2 (E2)
+- **Actor:** Visitor (Unauthenticated Guest User)
+- **User Story:** As a visitor, I want to browse past campaigns and be told clearly when no campaign is receiving donations, so that I understand the program's fundraising history and never land on an empty page.
+
+### Acceptance Criteria
+- **CA1 (Completed Campaigns View):** **Given** campaigns have ended or reached their goal, **when** I open the completed campaigns view, **then** I see each of them with its goal and the amount raised.
+- **CA2 (No Open Campaigns Message):** **Given** every campaign has ended or reached its goal, **when** I open the site, **then** I see a message that no campaign is receiving donations right now, and I can browse the completed campaigns.
+- **CA3 (Negative Case — No Donating to Completed Campaigns):** **Given** a campaign has ended or reached its goal, **when** I open it from the completed campaigns view, **then** no option to donate is offered.
+
+---
+
 ## RF-D3 · Donation Recorded After Successful Payment
 - **Milestone:** Deliverable 1 (E1)
 - **Actor:** Donor (Any Modality)
