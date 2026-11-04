@@ -39,3 +39,5 @@ Format: `- User | User request | Decision taken | Change made`
 - Janssen | Make sure the whole exchange is reflected in the AI log and open a PR to `main`. | Added log entries for the analysis, question drafting, and answer comparison steps; used branch `docs/stakeholder-questions` with a Conventional Commit and a PR targeting `main`. | Updated `AI/log.md`, committed `AI/log.md` and `docs/requirements/stakeholder-questions.md`, and opened a PR.
 
 - Janssen | Resolve the merge conflicts in the stakeholder questions PR. | Merged `origin/main` into `docs/stakeholder-questions` (no force push), took main's bullet format for `AI/log.md`, and re-added this branch's entries in that format. | Updated `AI/log.md` and merged the new `AGENTS.md` rule and workflow doc changes from `main`.
+
+- Janssen | Record the stakeholder's second round of Slack answers in the stakeholder questions document. | Moved 15 answered questions into a second-round answers table, kept the 2 questions still unanswered (who decides at 100% of the goal, site language), and left the stakeholder wording otherwise unchanged. | Updated `docs/requirements/stakeholder-questions.md` and `AI/log.md`.
