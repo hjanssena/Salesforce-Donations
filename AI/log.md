@@ -27,3 +27,15 @@ Format: `- User | User request | Decision taken | Change made`
 - Janssen | Create the commit and PR for the root `README.md`. | Created feature branch `docs/project-readme`, committed `README.md` and `AI/log.md` following Conventional Commits, pushed the branch, and opened a PR targeting `main`. | Updated `AI/log.md`, pushed `docs/project-readme`, and opened a PR.
 
 - Janssen | Fix `AI/log.md` line break formatting (one change per line) and add this rule to `AGENTS.md`, then commit and PR. | Formatted `AI/log.md` entries as individual Markdown list items separated by blank lines so each entry renders on its own line in Markdown, and updated Rule 1 in `AGENTS.md`. | Updated `AI/log.md`, `AGENTS.md`, and `docs/workflow/ai-and-documentation-logging.md`.
+
+- Janssen | Read the user stories and identify missing stakeholder information, contradictions, and acceptance criteria needing more context. | Reviewed `docs/requirements/` and `lineamientos.md` in problem context only, without designing a solution; findings reported in chat. | No project files changed (analysis only).
+
+- Janssen | Turn the findings into stakeholder questions, validate them against `lineamientos.md` and the stories, and keep a short artifact. | Wrote questions in the stakeholder's own process terms (no story IDs, "donations" wording), dropped questions the sources already answer, merged a teammate's campaign and donor questions, and removed duplicates. | Published and iterated a private Artifact "Stakeholder Questions" (outside the repo).
+
+- Janssen | Compare the questions with the stakeholder's Slack answers, keep unanswered ones only, add the answers, and export the open questions. | Marked 4 questions as answered or handed to the team, narrowed 3, deleted the unconfirmed-donations question, reworded the manual-confirmation question to the stakeholder's current process, and added an "Answered so far" section. | Updated the Artifact; created open-question PDF and markdown copies in `~/Downloads` (outside the repo).
+
+- Janssen | Save the stakeholder questions artifact as a markdown file in `docs/requirements`. | Stored the 17 open questions plus the stakeholder answers received so far in a single English file, using the existing kebab-case naming. | Created `docs/requirements/stakeholder-questions.md` and updated `AI/log.md`.
+
+- Janssen | Make sure the whole exchange is reflected in the AI log and open a PR to `main`. | Added log entries for the analysis, question drafting, and answer comparison steps; used branch `docs/stakeholder-questions` with a Conventional Commit and a PR targeting `main`. | Updated `AI/log.md`, committed `AI/log.md` and `docs/requirements/stakeholder-questions.md`, and opened a PR.
+
+- Janssen | Resolve the merge conflicts in the stakeholder questions PR. | Merged `origin/main` into `docs/stakeholder-questions` (no force push), took main's bullet format for `AI/log.md`, and re-added this branch's entries in that format. | Updated `AI/log.md` and merged the new `AGENTS.md` rule and workflow doc changes from `main`.
