@@ -161,7 +161,7 @@ erDiagram
 
 | Project term | Salesforce | Note |
 | :--- | :--- | :--- |
-| Campaign, goal, dates | Campaign | Goal in `ExpectedRevenue`. Completed means the end date passed or the raised amount reached the goal. |
+| Campaign, goal, dates | Campaign | Goal in `ExpectedRevenue`. Completed means the end date passed; reaching the goal does not close a campaign. |
 | Donation | Opportunity | Staff-entered donations use the same object with `Source__c` = Manual. |
 | Donor, company | Contact, Account | Matched by email to avoid duplicates. Anonymous donors keep their email, which is never public. |
 | Progress toward goal | Campaign roll-up | Simultaneous payments both count, so a campaign can end above 100%. |

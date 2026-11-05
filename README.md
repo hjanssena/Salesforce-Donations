@@ -31,6 +31,9 @@ The **Mexico Dreamin Donation Portal** is a Salesforce-backed fundraising platfo
 ├── AI/
 │   └── log.md                     # Chronological log of all AI-assisted changes (Rule 1)
 ├── docs/
+│   ├── scope.md               # Features, non-goals, and open points
+│   ├── architecture.md        # Services diagram, payment flow, data model diagram, decisions
+│   ├── assets/                # Architecture diagrams (SVG)
 │   ├── requirements/              # Software Requirements Specification (by domain)
 │   │   ├── README.md              # Traceability matrix, scope, and discovery questions
 │   │   ├── donor/                 # Public flow (general-flow.md) & modalities (modalities.md)
@@ -59,6 +62,8 @@ The **Mexico Dreamin Donation Portal** is a Salesforce-backed fundraising platfo
    ```
    This automatically configures **Husky** and **Commitlint** to enforce Conventional Commits locally.
 2. **Review Documentation:**
+   - **Scope (features and non-goals):** [docs/scope.md](file:///Users/janssen/Documents/UADY/Semestre7/Salesforce/Proyecto/docs/scope.md)
+   - **Architecture (services, data model):** [docs/architecture.md](file:///Users/janssen/Documents/UADY/Semestre7/Salesforce/Proyecto/docs/architecture.md)
    - **Requirements:** [docs/requirements/README.md](file:///Users/janssen/Documents/UADY/Semestre7/Salesforce/Proyecto/docs/requirements/README.md)
    - **Git & PR Workflow:** [docs/workflow/README.md](file:///Users/janssen/Documents/UADY/Semestre7/Salesforce/Proyecto/docs/workflow/README.md)
    - **AI Agent Rules:** [AGENTS.md](file:///Users/janssen/Documents/UADY/Semestre7/Salesforce/Proyecto/AGENTS.md)

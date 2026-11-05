@@ -22,6 +22,20 @@ Each entry must follow this exact pipe-separated structure, fit on a **single li
 
 ---
 
+## Rule 0: Read the Project Scope and Architecture First
+
+Before planning, writing, or reviewing anything, read these two documents. They tell you what the project is and is not, and how it is built:
+
+1. [docs/scope.md](file:///Users/janssen/Documents/UADY/Semestre7/Salesforce/Proyecto/docs/scope.md): the features, the explicit non-goals, and the open points.
+2. [docs/architecture.md](file:///Users/janssen/Documents/UADY/Semestre7/Salesforce/Proyecto/docs/architecture.md): the services, the payment flow, the data model on Salesforce objects, and the decisions that are settled.
+
+Rules that follow from them:
+- Do not build anything listed under "What we are not doing" in the scope, and do not reverse a decision listed in the architecture without the team.
+- When a request changes a feature, a non-goal, a service, the payment flow, or the data model, update `docs/scope.md` or `docs/architecture.md` (and the matching user stories in `docs/requirements/`) in the same change, then log it under Rule 1.
+- The detailed requirements and stories are indexed in [docs/requirements/README.md](file:///Users/janssen/Documents/UADY/Semestre7/Salesforce/Proyecto/docs/requirements/README.md). The scope and architecture pages summarize them and must not contradict them.
+
+---
+
 ## Rule 2: Salesforce Code Quality & Governor Limits (`C6` / `S11`, `S12`, `S14`)
 
 1. **Strict Bulkification (`S12`):** Never place SOQL queries or DML statements inside `for`/`while` loops in Apex or Flows. All triggers, invocable methods, and record-triggered flows must safely handle bulk operations.

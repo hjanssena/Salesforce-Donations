@@ -63,7 +63,7 @@ The requirements are organized by domain (Donor/Public Side, Admin/Internal Side
 ### In Scope
 - Public site in Spanish, without login, displaying open and completed campaigns, goal progress, and a donation form. Amounts are in MXN, with a 50 MXN minimum and no maximum.
 - Two independent donor choices: recognition (**Anonymous** or **Credited**) and an optional **invoice** request (only the data the invoice needs). The two never affect each other.
-- Recording of each donation in Salesforce as `Paid` once Stripe Test authorizes the payment, followed by a Thank-You page and a receipt email sent by Salesforce.
+- Recording of each donation in Salesforce once Stripe Test authorizes the payment, followed by a Thank-You page and a receipt email sent by Salesforce.
 - Internal Salesforce console with three roles (Admin, Campaign Manager, Moderator) to manage campaigns, view donations (anonymous donors included), enter donations received outside the website, and moderate public names.
 - Invoice emails for tax-deduction requests (no CFDI).
 - Automatic recording of payments from Stripe webhooks (E2).
