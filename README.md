@@ -33,6 +33,7 @@ The **Mexico Dreamin Donation Portal** is a Salesforce-backed fundraising platfo
 ├── docs/
 │   ├── scope.md               # Features, non-goals, and open points
 │   ├── architecture.md        # Services diagram, payment flow, data model diagram, decisions
+│   ├── contract.md            # API and PaymentIntent metadata between web app and Salesforce
 │   ├── assets/                # Architecture diagrams (SVG)
 │   ├── requirements/              # Software Requirements Specification (by domain)
 │   │   ├── README.md              # Traceability matrix, scope, and discovery questions
@@ -64,6 +65,7 @@ The **Mexico Dreamin Donation Portal** is a Salesforce-backed fundraising platfo
 2. **Review Documentation:**
    - **Scope (features and non-goals):** [docs/scope.md](file:///Users/janssen/Documents/UADY/Semestre7/Salesforce/Proyecto/docs/scope.md)
    - **Architecture (services, data model):** [docs/architecture.md](file:///Users/janssen/Documents/UADY/Semestre7/Salesforce/Proyecto/docs/architecture.md)
+   - **Contract (web app ↔ Salesforce):** [docs/contract.md](file:///Users/janssen/Documents/UADY/Semestre7/Salesforce/Proyecto/docs/contract.md)
    - **Requirements:** [docs/requirements/README.md](file:///Users/janssen/Documents/UADY/Semestre7/Salesforce/Proyecto/docs/requirements/README.md)
    - **Git & PR Workflow:** [docs/workflow/README.md](file:///Users/janssen/Documents/UADY/Semestre7/Salesforce/Proyecto/docs/workflow/README.md)
    - **AI Agent Rules:** [AGENTS.md](file:///Users/janssen/Documents/UADY/Semestre7/Salesforce/Proyecto/AGENTS.md)
