@@ -37,7 +37,7 @@ The milestone column is the team's own delivery plan, described in [docs/scope.m
 | :--- | :--- | :--- | :--- | :--- |
 | **RF-V1** | Scoped Public Site (No Login) | [donor/general-flow.md](file:///Users/janssen/Documents/UADY/Semestre7/Salesforce/Proyecto/docs/requirements/donor/general-flow.md) | Visitor | E1 |
 | **RF-D1a** | Select Campaign & View Progress | [donor/general-flow.md](file:///Users/janssen/Documents/UADY/Semestre7/Salesforce/Proyecto/docs/requirements/donor/general-flow.md) | Donor | E1 |
-| **RF-D1b** | Donate Custom Amount | [donor/general-flow.md](file:///Users/janssen/Documents/UADY/Semestre7/Salesforce/Proyecto/docs/requirements/donor/general-flow.md) | Donor | E1 |
+| **RF-D1b** | Donate Custom Amount | [donor/general-flow.md](file:///Users/janssen/Documents/UADY/Semestre7/Salesforce/Proyecto/docs/requirements/donor/general-flow.md) | Donor | E2 |
 | **RF-D1c** | Browse Completed Campaigns & No-Open-Campaign Message | [donor/general-flow.md](file:///Users/janssen/Documents/UADY/Semestre7/Salesforce/Proyecto/docs/requirements/donor/general-flow.md) | Visitor | E2 |
 | **RF-D2** | Donate Anonymously | [donor/modalities.md](file:///Users/janssen/Documents/UADY/Semestre7/Salesforce/Proyecto/docs/requirements/donor/modalities.md) | Anonymous Donor | E1 |
 | **RF-D3** | Donation Recorded After Successful Payment | [donor/general-flow.md](file:///Users/janssen/Documents/UADY/Semestre7/Salesforce/Proyecto/docs/requirements/donor/general-flow.md) | Donor | E1 |
@@ -49,7 +49,7 @@ The milestone column is the team's own delivery plan, described in [docs/scope.m
 | **RF-F2** | Flag Invoice Requests | [admin/treasury-donations.md](file:///Users/janssen/Documents/UADY/Semestre7/Salesforce/Proyecto/docs/requirements/admin/treasury-donations.md) | Admin, Campaign Manager | E1 |
 | **RF-F3** | Receive Invoice by Email | [donor/modalities.md](file:///Users/janssen/Documents/UADY/Semestre7/Salesforce/Proyecto/docs/requirements/donor/modalities.md) | Donor Requesting an Invoice | E2 |
 | **RF-S1** | Manage Campaigns | [admin/campaign-management.md](file:///Users/janssen/Documents/UADY/Semestre7/Salesforce/Proyecto/docs/requirements/admin/campaign-management.md) | Campaign Manager | E1 |
-| **RF-S1b** | Close Campaigns on Their End Date | [admin/campaign-management.md](file:///Users/janssen/Documents/UADY/Semestre7/Salesforce/Proyecto/docs/requirements/admin/campaign-management.md) | Campaign Manager | E1 |
+| **RF-S1b** | Close Campaigns on Their End Date | [admin/campaign-management.md](file:///Users/janssen/Documents/UADY/Semestre7/Salesforce/Proyecto/docs/requirements/admin/campaign-management.md) | Campaign Manager | E2 |
 | **RF-S2** | View All Donations | [admin/treasury-donations.md](file:///Users/janssen/Documents/UADY/Semestre7/Salesforce/Proyecto/docs/requirements/admin/treasury-donations.md) | Team Member (any role) | E1 |
 | **RF-S3** | Manually Record a Donation | [admin/treasury-donations.md](file:///Users/janssen/Documents/UADY/Semestre7/Salesforce/Proyecto/docs/requirements/admin/treasury-donations.md) | Admin | E1 |
 | **RF-S4** | View Rejected Payment Notices | [admin/payment-webhooks.md](file:///Users/janssen/Documents/UADY/Semestre7/Salesforce/Proyecto/docs/requirements/admin/payment-webhooks.md) | Admin | E2 |
