@@ -1,0 +1,6 @@
+# Stripe.js needs js.stripe.com (script, frames), hooks.stripe.com (3DS frames)
+# and api.stripe.com (calls). The API calls go to the Salesforce site origin.
+add_header Content-Security-Policy "default-src 'self'; script-src 'self' https://js.stripe.com; frame-src https://js.stripe.com https://hooks.stripe.com; connect-src 'self' ${SF_SITE_ORIGIN} https://api.stripe.com; img-src 'self' data: https:; style-src 'self' 'unsafe-inline'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'" always;
+add_header X-Content-Type-Options "nosniff" always;
+add_header Referrer-Policy "strict-origin-when-cross-origin" always;
+add_header Permissions-Policy "camera=(), microphone=(), geolocation=()" always;

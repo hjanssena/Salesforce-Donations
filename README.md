@@ -27,6 +27,7 @@ The **Mexico Dreamin Donation Portal** is a Salesforce-backed fundraising platfo
 
 ```text
 .
+├── .github/workflows/            # Web CI and the blocked-ticket board automation
 ├── .husky/                        # Git hooks (Commitlint validation on commit-msg)
 ├── AI/
 │   └── log.md                     # Chronological log of all AI-assisted changes (Rule 1)
@@ -47,6 +48,7 @@ The **Mexico Dreamin Donation Portal** is a Salesforce-backed fundraising platfo
 │       ├── branching-and-merge-strategy.md # Feature branches, PR reviews & Squash Merge
 │       ├── releases-and-tagging.md # SemVer & course milestone tags (entrega-1, entrega-2)
 │       └── ai-and-documentation-logging.md # AI logbook & academic deliverable rules
+├── web/                           # React web app, Dockerfile, Nginx and certbot setup (see web/README.md)
 ├── AGENTS.md                      # Mandatory instructions and guardrails for AI agents
 ├── CLAUDE.md                      # Pointer linking Claude agents to AGENTS.md
 ├── commitlint.config.js           # Commitlint configuration (@commitlint/config-conventional)
@@ -68,6 +70,7 @@ The **Mexico Dreamin Donation Portal** is a Salesforce-backed fundraising platfo
    - **Architecture (services, data model):** [docs/architecture.md](file:///Users/janssen/Documents/UADY/Semestre7/Salesforce/Proyecto/docs/architecture.md)
    - **Contract (web app ↔ Salesforce):** [docs/contract.md](file:///Users/janssen/Documents/UADY/Semestre7/Salesforce/Proyecto/docs/contract.md)
    - **Salesforce API setup:** [docs/salesforce-api.md](file:///Users/janssen/Documents/UADY/Semestre7/Salesforce/Proyecto/docs/salesforce-api.md)
+   - **Web app (dev and deploy):** [web/README.md](web/README.md)
    - **Requirements:** [docs/requirements/README.md](file:///Users/janssen/Documents/UADY/Semestre7/Salesforce/Proyecto/docs/requirements/README.md)
    - **Git & PR Workflow:** [docs/workflow/README.md](file:///Users/janssen/Documents/UADY/Semestre7/Salesforce/Proyecto/docs/workflow/README.md)
    - **AI Agent Rules:** [AGENTS.md](file:///Users/janssen/Documents/UADY/Semestre7/Salesforce/Proyecto/AGENTS.md)
