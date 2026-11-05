@@ -71,7 +71,7 @@ Why this is safe and where it stops:
 
 ### Decisions taken
 - **Web app hosting:** outside Salesforce, on the team's server. The org allows only that origin through CORS.
-- **No Pending record:** a donation is created only after a successful payment. Donor details, including the RFC, travel in the PaymentIntent metadata. This differs from `RF-D3` in `lineamientos.md` and needs the professor's confirmation.
+- **No Pending record:** a donation is created only after a successful payment. Donor details, including the RFC, travel in the PaymentIntent metadata. This differs from `RF-D3` in `lineamientos.md`; the professor confirmed it is acceptable and that the guideline's wording was wrong.
 - **Receipt by Salesforce:** Stripe sends no receipt emails in test mode, so Salesforce sends the receipt and the invoice. The Developer Edition daily email limit must be checked.
 - **Site language and currency:** the site and emails are in Spanish; amounts are in MXN, with a 50 MXN minimum and no maximum.
 - **Campaigns stay open past 100%:** a campaign closes only on its end date.

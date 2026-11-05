@@ -71,6 +71,7 @@ None at the moment. The four follow-up questions from the later meeting have bee
 | Should there be a button to confirm payments manually? | Another team (A) | The stakeholder did not understand the question. |
 | How does the team check that a donation was actually paid? | This team | There is no team for this at the moment. If the payment gateway authorized the transaction, it is successful. A record should be created only after a successful transaction. |
 | How should refunds or mistaken payments be handled? | This team | Out of scope. |
+| `lineamientos.md` `RF-D3` asks for a donation record before payment. Is it acceptable to create the donation only after a verified successful payment? | This team (to the professor) | Yes, it is acceptable. The user story in `lineamientos.md` was wrong. |
 
 ### Staff and access
 

@@ -51,7 +51,7 @@ A donation is a standard Opportunity that is always Closed Won. Campaign, Contac
 These are settled. Do not reverse them without the team.
 
 - **The web app runs outside Salesforce.** The org allows only the team's origin through CORS.
-- **No pending donation.** A donation exists only after a verified successful payment. Donor details travel in the PaymentIntent metadata. The professor still has to confirm this against `lineamientos.md` `RF-D3`.
+- **No pending donation.** A donation exists only after a verified successful payment. Donor details travel in the PaymentIntent metadata. The professor confirmed this is acceptable; the `RF-D3` wording in `lineamientos.md` was wrong.
 - **Idempotent recording.** The unique PaymentIntent ID on the Opportunity makes webhook retries safe.
 - **The Guest User has no object permissions.** It only calls the public API, which returns campaign progress and credited donor names with amounts. Never an email or an RFC.
 - **Recognition and invoice are independent choices.** Neither implies the other.
