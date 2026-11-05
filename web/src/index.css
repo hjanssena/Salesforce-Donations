@@ -1,33 +1,494 @@
+/* Rótulo de Mérida: a sign-painter's wall. Flat coats, no gradients, no blur.
+   Almagre is reserved for the one element in motion. */
+
 :root {
-  --text: #1f1d24;
-  --muted: #5b5765;
-  --bg: #ffffff;
-  --accent: #0b5cad;
-  font: 16px/1.5 system-ui, 'Segoe UI', Roboto, sans-serif;
-  color: var(--text);
-  background: var(--bg);
+  --cal: #f6f1e7; /* lime wash, the ground */
+  --cal-deep: #ece4d4; /* a second coat, for overlaps */
+  --izamal: #e6a71c; /* yellow wall */
+  --anil: #1f2f6b; /* indigo wall */
+  --almagre: #b23a1e; /* red oxide: selection and motion only */
+  --enamel: #15120e; /* black sign enamel */
+
+  --on-izamal-muted: #4a3a14;
+  --on-anil-muted: #d9d2c3;
+  --weather-1: #3b342c;
+  --weather-2: #5a5045;
+  --weather-3: #6e6356;
+
+  --sign: 'Bungee', 'Lexend', sans-serif;
+  --read: 'Lexend', system-ui, sans-serif;
+
+  --gutter: clamp(1.25rem, 4vw, 3rem);
+  --line: 2px;
+
+  font: 400 1.0625rem/1.6 var(--read);
+  color: var(--enamel);
+  background: var(--cal);
+  caret-color: var(--almagre);
+  accent-color: var(--almagre);
+  scrollbar-color: var(--anil) var(--cal-deep);
+  -webkit-text-size-adjust: 100%;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --text: #f2f1f4;
-    --muted: #b9b5c2;
-    --bg: #15141a;
-    --accent: #6fb1ff;
-  }
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
 }
 
 body {
   margin: 0;
-  background: var(--bg);
+  background: var(--cal);
 }
 
-.shell {
+::selection {
+  background: var(--almagre);
+  color: var(--cal);
+}
+
+:focus-visible {
+  outline: 3px solid var(--anil);
+  outline-offset: 3px;
+}
+
+.band :focus-visible {
+  outline-color: var(--izamal);
+}
+
+a {
+  color: inherit;
+  text-underline-offset: 0.2em;
+  text-decoration-thickness: 2px;
+}
+
+h1,
+h2,
+p {
+  margin: 0;
+}
+
+.numeral,
+.tile__value,
+.thanks__amount,
+.band__of {
+  font-variant-numeric: tabular-nums;
+}
+
+/* ---- Lettering ---- */
+
+/* The painted shadow is the sign-painter's "sombra": a flat second coat,
+   then the enamel outline coat. Display lettering only. */
+.sign {
+  font: 400 clamp(2.5rem, 7.2vw, 6rem) / 0.98 var(--sign);
+  letter-spacing: -0.01em;
+  text-transform: uppercase;
+  color: var(--anil);
+  text-shadow:
+    0.05em 0.05em 0 var(--cal),
+    0.1em 0.1em 0 var(--enamel);
+  text-wrap: balance;
+  overflow-wrap: anywhere;
+}
+
+.sign-small {
+  font: 400 clamp(1.25rem, 2.4vw, 1.6rem) / 1.1 var(--sign);
+  text-transform: uppercase;
+  letter-spacing: 0;
+}
+
+/* ---- Page grid ---- */
+
+.page {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-areas:
+    'strip'
+    'wall'
+    'band'
+    'donate'
+    'story'
+    'thanks'
+    'foot';
+  min-height: 100dvh;
+}
+
+@media (min-width: 960px) {
+  .page {
+    grid-template-columns: minmax(0, 1fr) minmax(360px, 420px);
+    grid-template-areas:
+      'strip strip'
+      'wall donate'
+      'band donate'
+      'story donate'
+      'thanks donate'
+      'foot foot';
+    grid-template-rows: auto auto auto auto 1fr auto;
+  }
+}
+
+.sample-strip {
+  grid-area: strip;
+  background: var(--enamel);
+  color: var(--cal);
+  font-size: 0.8125rem;
+  padding: 0.45rem var(--gutter);
+}
+
+/* ---- The yellow wall ---- */
+
+.wall {
+  grid-area: wall;
+  padding: 1rem var(--gutter) 3.75rem;
+}
+
+@media (min-width: 960px) {
+  .wall {
+    padding: 1.25rem var(--gutter) 4.5rem;
+  }
+}
+
+.wall--yellow {
+  background: var(--izamal);
+  color: var(--enamel);
+}
+
+.wall__top {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 1rem;
+  margin-bottom: clamp(1.25rem, 6vw, 4.5rem);
+}
+
+/* The painter's signature, lettered small in the corner of the wall. */
+.signature {
+  font: 400 0.9375rem / 1.2 var(--sign);
+}
+
+.wall__skip {
+  font-weight: 700;
+  font-size: 0.9375rem;
+  padding: 0.5rem 0;
+}
+
+.wall__line {
+  margin-top: 1rem;
+  max-width: 34ch;
+  font-size: clamp(1rem, 1.6vw, 1.3rem);
+  line-height: 1.45;
+  color: var(--on-izamal-muted);
+  font-weight: 700;
+}
+
+/* A campaign photo is pasted on the wall like a bill: flat, framed in enamel. */
+.bill {
+  margin: 1.75rem 0 0;
+  border: var(--line) solid var(--enamel);
+  background: var(--cal);
+  max-width: 640px;
+}
+
+.bill img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+}
+
+/* ---- The indigo band: raised and missing, lettered alike ---- */
+
+/* The band is a second coat painted over the foot of the yellow wall:
+   it climbs onto the wall and stops short of the right edge. */
+.band {
+  grid-area: band;
+  position: relative;
+  z-index: 1;
+  margin: -2rem clamp(0.75rem, 3vw, 2.5rem) 0 0;
+  background: var(--anil);
+  color: var(--cal);
+  padding: 1.25rem var(--gutter) 1.5rem;
+}
+
+.band__raised {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.25rem 0.9rem;
+}
+
+.numeral {
+  font: 400 clamp(2.4rem, 5.5vw, 3.75rem) / 1 var(--sign);
+  color: var(--izamal);
+}
+
+.band__of {
+  color: var(--on-anil-muted);
+  font-size: clamp(0.9375rem, 1.4vw, 1rem);
+  line-height: 1.4;
+}
+
+.meter {
+  margin: 0.9rem 0 0.75rem;
+  height: 1.25rem;
+  border: var(--line) solid var(--cal);
+  overflow: hidden;
+}
+
+.meter__paint {
+  display: block;
+  height: 100%;
+  background: var(--izamal);
+  transform-origin: left center;
+}
+
+/* What is still missing is lettered as boldly as what was raised. */
+.band__gap {
+  font: 400 clamp(2rem, 4.6vw, 3.25rem) / 1 var(--sign);
+  text-transform: uppercase;
+  color: var(--cal);
+}
+
+/* ---- Donate panel ---- */
+
+.donate {
+  grid-area: donate;
+  padding: 1.5rem var(--gutter) 0.5rem;
+  background: var(--cal);
+}
+
+@media (min-width: 960px) {
+  /* On desktop the yellow wall runs down the right side and the donate
+     panel is a cal board hung on it, a coat over the wall. */
+  .donate {
+    padding: 4.75rem 2rem 2.5rem;
+    background: var(--izamal);
+  }
+
+  .donate__inner .tile {
+    font-size: 0.875rem;
+  }
+
+  .donate__inner {
+    background: var(--cal);
+    border: var(--line) solid var(--enamel);
+    padding: 1.5rem 1.5rem 1.25rem;
+  }
+
+  /* The panel stays in reach while the story scrolls. */
+  .donate__inner {
+    position: sticky;
+    top: 2rem;
+    max-width: 400px;
+  }
+}
+
+.tiles {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0.5rem;
+  margin-top: 1rem;
+}
+
+
+@media (max-width: 340px) {
+  .tiles {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+.tile {
+  position: relative;
+  min-height: 3.25rem;
+  padding: 0.5rem 0;
+  border: var(--line) solid var(--enamel);
+  background: var(--cal);
+  color: var(--enamel);
+  font: 400 clamp(0.875rem, 3.8vw, 1rem) / 1 var(--sign);
+  cursor: pointer;
+  isolation: isolate;
+}
+
+/* The brush wipe: a coat of almagre painted left to right on the chosen tile. */
+.tile::before {
+  content: '';
+  position: absolute;
+  inset: calc(-1 * var(--line));
+  z-index: -1;
+  background: var(--almagre);
+  clip-path: inset(0 100% 0 0);
+  transition: clip-path 280ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.tile[aria-checked='true'] {
+  color: var(--cal);
+  border-color: var(--almagre);
+}
+
+.tile[aria-checked='true']::before {
+  clip-path: inset(0 0 0 0);
+}
+
+@media (hover: hover) {
+  .tile:hover:not([aria-checked='true']) {
+    background: var(--cal-deep);
+  }
+
+  .sign-button:hover {
+    background: var(--anil);
+  }
+}
+
+.tile__value {
+  position: relative;
+}
+
+.donate__min {
+  margin-top: 0.75rem;
+  font-size: 0.875rem;
+  line-height: 1.45;
+  color: var(--weather-2);
+}
+
+.sign-button {
+  display: block;
+  width: 100%;
+  margin-top: 1rem;
+  min-height: 3.75rem;
+  padding: 0.9rem 1rem;
+  border: 0;
+  background: var(--enamel);
+  color: var(--izamal);
+  font: 400 clamp(1.35rem, 5vw, 1.6rem) / 1 var(--sign);
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background-color 160ms ease-out;
+}
+
+.sign-button:active {
+  background: var(--almagre);
+  color: var(--cal);
+}
+
+.donate__notice:empty {
+  margin: 0;
+}
+
+.donate__notice {
+  margin-top: 0.75rem;
+  font-size: 0.9375rem;
+  font-weight: 700;
+}
+
+/* ---- Story: one calm column, a clearing in the wall ---- */
+
+.story {
+  grid-area: story;
+  padding: 2.5rem var(--gutter) 1rem;
+  max-width: calc(68ch + 2 * var(--gutter));
+}
+
+.story h2 {
+  margin-bottom: 1rem;
+}
+
+.story p + p {
+  margin-top: 1rem;
+}
+
+.story__lead {
+  font-size: clamp(1.2rem, 2vw, 1.4rem);
+  line-height: 1.45;
+  font-weight: 700;
+}
+
+/* ---- Thanks wall: newest painted darkest ---- */
+
+.thanks {
+  grid-area: thanks;
+  padding: 2.5rem var(--gutter) 3rem;
+}
+
+.thanks h2 {
+  margin-bottom: 1rem;
+}
+
+.thanks__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
   max-width: 40rem;
-  margin: 0 auto;
-  padding: 3rem 1rem;
+  border-top: var(--line) solid var(--enamel);
 }
 
-.shell p {
-  color: var(--muted);
+.thanks__row {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.8rem 0;
+  border-bottom: 1px solid var(--cal-deep);
+  font-size: 1.0625rem;
+}
+
+.thanks__row[data-age='0'] {
+  color: var(--enamel);
+  font-weight: 700;
+}
+.thanks__row[data-age='1'] {
+  color: var(--weather-1);
+}
+.thanks__row[data-age='2'] {
+  color: var(--weather-2);
+}
+.thanks__row[data-age='3'] {
+  color: var(--weather-3);
+}
+
+.thanks__name {
+  overflow-wrap: anywhere;
+}
+
+.thanks__amount {
+  white-space: nowrap;
+}
+
+.thanks__empty {
+  max-width: 40ch;
+  color: var(--weather-2);
+}
+
+/* ---- Footer ---- */
+
+.foot {
+  grid-area: foot;
+  background: var(--enamel);
+  color: var(--on-anil-muted);
+  padding: 1.5rem var(--gutter);
+  font-size: 0.875rem;
+}
+
+.foot p {
+  max-width: 70ch;
+}
+
+/* ---- Unavailable shell ---- */
+
+.unavailable {
+  min-height: 100dvh;
+  display: grid;
+  align-content: center;
+  gap: 1rem;
+  padding: var(--gutter);
+  background: var(--izamal);
+}
+
+.unavailable .sign {
+  font-size: clamp(2rem, 6vw, 3.5rem);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    transition-duration: 0.01ms !important;
+  }
 }
