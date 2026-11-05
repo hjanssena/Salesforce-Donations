@@ -25,7 +25,8 @@ Each site has its own Guest User and guest profile (site → Public Access Setti
 | Object permissions | **None** on every object, including Campaign and Opportunity (`M2`). |
 | Enabled Apex Class Access | Only the `@RestResource` classes in section 3. |
 | Field permissions, tabs, Visualforce pages | None, apart from the site's blank home page. |
-| External Credential Principal Access | The Stripe principal (section 6), from E2 on. **Check** that the guest profile can hold it. |
+| External Credential Principal Access | The Stripe principal (section 6), from E2 on. Supported since Summer '23 for a **named principal**; see section 6. |
+| User External Credentials object | Read and Create (the only levels allowed for guests). Not granted by default on guest profiles; set it by hand. |
 
 Because the guest has no object permissions, the Apex that reads campaigns and writes donations has to bypass them on purpose, in a small number of places:
 
@@ -65,7 +66,21 @@ Behind them:
 The web app calls the API from the browser, so the org must allow its origin.
 
 - Add `https://<our-domain>` to **Setup → CORS → Allowed Origins List**. No wildcards, no `http://` origins. Add `http://localhost:<port>` only while developing, and remove it before each delivery.
-- **Check:** that the allowlist applies to Apex REST served through a Salesforce Site, including the `OPTIONS` preflight for `POST` with `Content-Type: application/json`. This is the first thing the hello-world endpoint tests.
+- **Check:** that the allowlist applies to Apex REST served through a Salesforce Site, including the `OPTIONS` preflight for `POST` with `Content-Type: application/json`. Salesforce documents that the allowlist covers Apex REST, but not whether it covers unauthenticated calls through a Site; an older community source says CORS does not support unauthenticated resources. Treat it as unknown until tested.
+- **Test (part of #39):** with the origin in the allowlist, run these against the site and record the headers here.
+  ```bash
+  # Preflight, as the browser sends it before a JSON POST
+  curl -si -X OPTIONS "$SF_SITE_URL/services/apexrest/donations/v1/health" \
+    -H "Origin: https://<our-domain>" \
+    -H "Access-Control-Request-Method: POST" \
+    -H "Access-Control-Request-Headers: content-type"
+  # Actual request
+  curl -si "$SF_SITE_URL/services/apexrest/donations/v1/health" -H "Origin: https://<our-domain>"
+  # Same request from an origin that is not allowed
+  curl -si "$SF_SITE_URL/services/apexrest/donations/v1/health" -H "Origin: https://evil.example"
+  ```
+  Pass: the preflight answers 2xx with `Access-Control-Allow-Origin: https://<our-domain>` and allows `POST` and `content-type`; the real request carries the same header; the other origin gets no allow header (or a `403`). Then confirm once from the deployed web app in a browser, since curl does not enforce CORS.
+- **Decision rule:** if any of those fail, use the fallback below instead of working around it in Apex. Apex REST has no `OPTIONS` handler, so the preflight cannot be fixed from our code.
 - **Fallback if it does not:** the web app's own server (Nginx in the Docker image) proxies `/api/*` to `{SF_SITE_URL}/services/apexrest/donations/v1/*`. The browser then calls our own domain and no cross-origin request happens. The web app only changes its base URL setting; the contract does not change. This stays on the team's server, so it fits the approved hosting exception.
 
 The webhook needs no CORS: Stripe calls it server to server.
@@ -84,7 +99,10 @@ The webhook needs no CORS: Stripe calls it server to server.
 - **External Credential** `Stripe` (custom authentication) with one principal holding the test secret key as a parameter, entered in the org by hand. **Named Credential** `Stripe_API` with URL `https://api.stripe.com` and an `Authorization: Bearer` header built from that parameter. Apex calls `callout:Stripe_API/v1/payment_intents`; the key never appears in code.
 - Stripe expects form-encoded bodies: `amount`, `currency=mxn`, `payment_method_types[]=card`, `description`, and `metadata[<key>]=<value>` for every key in contract section 4.
 - Send an `Idempotency-Key` header per payment session request, so a retried request does not create two PaymentIntents.
-- The callout runs as the Guest User, so the guest profile needs access to the External Credential principal (section 2, **Check**).
+- The callout runs as the Guest User. Since Summer '23, a guest profile can make Named Credential callouts when the External Credential uses a **named principal** (one shared credential, which is our case). The guest profile needs:
+  - **External Credential Principal Access** to the `Stripe` principal;
+  - **User External Credentials** object access, Read and Create, set by hand.
+- **Check:** some community reports say the User External Credentials permission could not be edited on certain guest-license profiles. Confirm on our org in E1 by saving those two settings on the site's guest profile; no Stripe call is needed. If it cannot be saved, the fallback is a custom setting holding the key in a field only Apex reads, with the callout to `https://api.stripe.com` allowed in Remote Site Settings. That is weaker than a Named Credential, so record it in `docs/seguridad.md` if used.
 - A timeout or a Stripe error becomes `502 PAYMENT_PROVIDER_ERROR`.
 
 ## 7. Limits to watch
