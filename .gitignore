@@ -54,3 +54,7 @@ debug.log
 .Trashes
 ehthumbs.db
 Thumbs.db
+
+# Impeccable design review captures (regenerated on each review)
+.impeccable/review/
+.impeccable/build/

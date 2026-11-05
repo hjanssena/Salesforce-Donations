@@ -1,0 +1,400 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-11-05T18:49:29+00:00",
+  "title": "Design System: SF Vibe Lab Donation Site",
+  "extensions": {
+    "colorMeta": {
+      "izamal": {
+        "role": "primary",
+        "displayName": "Izamal Yellow",
+        "canonical": "oklch(76.8% 0.153 80.2)",
+        "tonalRamp": [
+          "oklch(15% 0.153 80.2)",
+          "oklch(26% 0.153 80.2)",
+          "oklch(38% 0.153 80.2)",
+          "oklch(50% 0.153 80.2)",
+          "oklch(62% 0.153 80.2)",
+          "oklch(74% 0.153 80.2)",
+          "oklch(85% 0.153 80.2)",
+          "oklch(95% 0.153 80.2)"
+        ]
+      },
+      "anil": {
+        "role": "secondary",
+        "displayName": "Añil Indigo",
+        "canonical": "oklch(32.9% 0.106 268.7)",
+        "tonalRamp": [
+          "oklch(15% 0.106 268.7)",
+          "oklch(26% 0.106 268.7)",
+          "oklch(38% 0.106 268.7)",
+          "oklch(50% 0.106 268.7)",
+          "oklch(62% 0.106 268.7)",
+          "oklch(74% 0.106 268.7)",
+          "oklch(85% 0.106 268.7)",
+          "oklch(95% 0.106 268.7)"
+        ]
+      },
+      "almagre": {
+        "role": "tertiary",
+        "displayName": "Almagre Red Oxide",
+        "canonical": "oklch(51.9% 0.161 34.3)",
+        "tonalRamp": [
+          "oklch(15% 0.161 34.3)",
+          "oklch(26% 0.161 34.3)",
+          "oklch(38% 0.161 34.3)",
+          "oklch(50% 0.161 34.3)",
+          "oklch(62% 0.161 34.3)",
+          "oklch(74% 0.161 34.3)",
+          "oklch(85% 0.161 34.3)",
+          "oklch(95% 0.161 34.3)"
+        ]
+      },
+      "cal": {
+        "role": "neutral",
+        "displayName": "Cal Lime Wash",
+        "canonical": "oklch(95.9% 0.014 84.6)",
+        "tonalRamp": [
+          "oklch(15% 0.014 84.6)",
+          "oklch(26% 0.014 84.6)",
+          "oklch(38% 0.014 84.6)",
+          "oklch(50% 0.014 84.6)",
+          "oklch(62% 0.014 84.6)",
+          "oklch(74% 0.014 84.6)",
+          "oklch(85% 0.014 84.6)",
+          "oklch(95% 0.014 84.6)"
+        ]
+      },
+      "cal-deep": {
+        "role": "neutral",
+        "displayName": "Second Coat",
+        "canonical": "oklch(92.1% 0.023 84.6)",
+        "tonalRamp": [
+          "oklch(15% 0.023 84.6)",
+          "oklch(26% 0.023 84.6)",
+          "oklch(38% 0.023 84.6)",
+          "oklch(50% 0.023 84.6)",
+          "oklch(62% 0.023 84.6)",
+          "oklch(74% 0.023 84.6)",
+          "oklch(85% 0.023 84.6)",
+          "oklch(95% 0.023 84.6)"
+        ]
+      },
+      "enamel": {
+        "role": "neutral",
+        "displayName": "Black Enamel",
+        "canonical": "oklch(18.4% 0.009 75.0)",
+        "tonalRamp": [
+          "oklch(15% 0.009 75.0)",
+          "oklch(26% 0.009 75.0)",
+          "oklch(38% 0.009 75.0)",
+          "oklch(50% 0.009 75.0)",
+          "oklch(62% 0.009 75.0)",
+          "oklch(74% 0.009 75.0)",
+          "oklch(85% 0.009 75.0)",
+          "oklch(95% 0.009 75.0)"
+        ]
+      },
+      "on-izamal-muted": {
+        "role": "neutral",
+        "displayName": "Ochre Shade",
+        "canonical": "oklch(35.7% 0.058 86.0)",
+        "tonalRamp": [
+          "oklch(15% 0.058 86.0)",
+          "oklch(26% 0.058 86.0)",
+          "oklch(38% 0.058 86.0)",
+          "oklch(50% 0.058 86.0)",
+          "oklch(62% 0.058 86.0)",
+          "oklch(74% 0.058 86.0)",
+          "oklch(85% 0.058 86.0)",
+          "oklch(95% 0.058 86.0)"
+        ]
+      },
+      "on-anil-muted": {
+        "role": "neutral",
+        "displayName": "Faded Cal",
+        "canonical": "oklch(86.5% 0.022 85.9)",
+        "tonalRamp": [
+          "oklch(15% 0.022 85.9)",
+          "oklch(26% 0.022 85.9)",
+          "oklch(38% 0.022 85.9)",
+          "oklch(50% 0.022 85.9)",
+          "oklch(62% 0.022 85.9)",
+          "oklch(74% 0.022 85.9)",
+          "oklch(85% 0.022 85.9)",
+          "oklch(95% 0.022 85.9)"
+        ]
+      },
+      "weather-1": {
+        "role": "neutral",
+        "displayName": "Weathering 1",
+        "canonical": "oklch(33.0% 0.017 70.9)",
+        "tonalRamp": [
+          "oklch(15% 0.017 70.9)",
+          "oklch(26% 0.017 70.9)",
+          "oklch(38% 0.017 70.9)",
+          "oklch(50% 0.017 70.9)",
+          "oklch(62% 0.017 70.9)",
+          "oklch(74% 0.017 70.9)",
+          "oklch(85% 0.017 70.9)",
+          "oklch(95% 0.017 70.9)"
+        ]
+      },
+      "weather-2": {
+        "role": "neutral",
+        "displayName": "Weathering 2",
+        "canonical": "oklch(43.8% 0.022 69.9)",
+        "tonalRamp": [
+          "oklch(15% 0.022 69.9)",
+          "oklch(26% 0.022 69.9)",
+          "oklch(38% 0.022 69.9)",
+          "oklch(50% 0.022 69.9)",
+          "oklch(62% 0.022 69.9)",
+          "oklch(74% 0.022 69.9)",
+          "oklch(85% 0.022 69.9)",
+          "oklch(95% 0.022 69.9)"
+        ]
+      },
+      "weather-3": {
+        "role": "neutral",
+        "displayName": "Weathering 3",
+        "canonical": "oklch(50.6% 0.024 71.9)",
+        "tonalRamp": [
+          "oklch(15% 0.024 71.9)",
+          "oklch(26% 0.024 71.9)",
+          "oklch(38% 0.024 71.9)",
+          "oklch(50% 0.024 71.9)",
+          "oklch(62% 0.024 71.9)",
+          "oklch(74% 0.024 71.9)",
+          "oklch(85% 0.024 71.9)",
+          "oklch(95% 0.024 71.9)"
+        ]
+      }
+    },
+    "typographyMeta": {
+      "display": {
+        "displayName": "Display",
+        "purpose": "Campaign headline on the yellow wall and the unavailable sign; uppercase, carries the painted shadow."
+      },
+      "headline-numeral": {
+        "displayName": "Headline, numeral",
+        "purpose": "Raised amount in yellow on the añil band; tabular figures."
+      },
+      "headline-gap": {
+        "displayName": "Headline, gap",
+        "purpose": "\"FALTAN $X\" in cal on añil, close in size to the numeral."
+      },
+      "title": {
+        "displayName": "Title",
+        "purpose": "Uppercase section signs: Elige tu donativo, Para qué es, Gracias."
+      },
+      "label-sign": {
+        "displayName": "Label, sign",
+        "purpose": "The SF Vibe Lab · Mérida signature in the wall corner."
+      },
+      "lead": {
+        "displayName": "Lead",
+        "purpose": "Campaign purpose opening the story column; Lexend 700."
+      },
+      "body": {
+        "displayName": "Body",
+        "purpose": "All running text and supporter rows; story capped near 68ch."
+      },
+      "small": {
+        "displayName": "Small",
+        "purpose": "Helper lines, donate notice, preview strip and footer."
+      }
+    },
+    "shadows": [
+      {
+        "name": "painted-sombra",
+        "value": "text-shadow: 0.05em 0.05em 0 var(--cal), 0.1em 0.1em 0 var(--enamel)",
+        "purpose": "Flat two-coat sign-painter shadow on display lettering only. The system has no box shadows."
+      }
+    ],
+    "motion": [
+      {
+        "name": "brush-wipe",
+        "value": "clip-path 280ms cubic-bezier(0.16, 1, 0.3, 1)",
+        "purpose": "Almagre coat wiped left to right onto the selected amount tile."
+      },
+      {
+        "name": "sign-repaint",
+        "value": "background-color 160ms ease-out",
+        "purpose": "Donate sign hover repaint (enamel to añil)."
+      },
+      {
+        "name": "reduced-motion",
+        "value": "transition-duration: 0.01ms",
+        "purpose": "Under prefers-reduced-motion every transition completes instantly."
+      }
+    ],
+    "breakpoints": [
+      {
+        "name": "narrow",
+        "value": "340px",
+        "purpose": "Below this (max-width) amount tiles drop from 4 to 2 columns."
+      },
+      {
+        "name": "desktop",
+        "value": "960px",
+        "purpose": "From this (min-width) the page splits into content plus a 360–420px sticky donate column on the yellow wall."
+      }
+    ],
+    "lines": [
+      {
+        "name": "line",
+        "value": "2px solid enamel",
+        "purpose": "Outline for tiles, donate board, meter (cal on añil), bill frame and the top of the thanks list."
+      },
+      {
+        "name": "hairline",
+        "value": "1px solid cal-deep",
+        "purpose": "Divider between supporter rows."
+      }
+    ],
+    "focus": [
+      {
+        "name": "focus-default",
+        "value": "outline: 3px solid var(--anil); outline-offset: 3px",
+        "purpose": "Default focus ring on cal and yellow grounds."
+      },
+      {
+        "name": "focus-on-dark",
+        "value": "outline-color: var(--izamal)",
+        "purpose": "Focus ring on añil or enamel grounds (inside the band). The ring follows the ground it is drawn on, not the element."
+      }
+    ]
+  },
+  "components": [
+    {
+      "name": "Donate Sign",
+      "kind": "button",
+      "refersTo": "button-sign",
+      "description": "Full-width enamel slab lettered in yellow; repaints with the chosen amount.",
+      "html": "<button type=\"button\" class=\"ds-sign-button\">Donar $250</button>",
+      "css": ".ds-sign-button { display: block; width: 100%; min-height: 3.75rem; padding: 0.9rem 1rem; border: 0; border-radius: 0; background: var(--enamel, #15120e); color: var(--izamal, #e6a71c); font: 400 clamp(1.35rem, 5vw, 1.6rem)/1 var(--sign, 'Bungee', 'Lexend', sans-serif); text-transform: uppercase; cursor: pointer; transition: background-color 160ms ease-out; } .ds-sign-button:hover { background: var(--anil, #1f2f6b); } .ds-sign-button:active { background: var(--almagre, #b23a1e); color: var(--cal, #f6f1e7); } .ds-sign-button:focus-visible { outline: 3px solid var(--anil, #1f2f6b); outline-offset: 3px; }"
+    },
+    {
+      "name": "Amount Tiles",
+      "kind": "chip",
+      "refersTo": "tile",
+      "description": "Square painted amount tiles in a radio group; the chosen one is wiped almagre left to right.",
+      "html": "<div class=\"ds-tiles\" role=\"radiogroup\" aria-label=\"Elige tu donativo\"><button type=\"button\" role=\"radio\" aria-checked=\"false\" class=\"ds-tile\"><span>100</span></button><button type=\"button\" role=\"radio\" aria-checked=\"true\" class=\"ds-tile\"><span>250</span></button><button type=\"button\" role=\"radio\" aria-checked=\"false\" class=\"ds-tile\"><span>500</span></button><button type=\"button\" role=\"radio\" aria-checked=\"false\" class=\"ds-tile\"><span>1,000</span></button></div>",
+      "css": ".ds-tiles { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 0.5rem; } .ds-tile { position: relative; isolation: isolate; min-height: 3.25rem; padding: 0.5rem 0; border: 2px solid var(--enamel, #15120e); border-radius: 0; background: var(--cal, #f6f1e7); color: var(--enamel, #15120e); font: 400 1rem/1 var(--sign, 'Bungee', 'Lexend', sans-serif); font-variant-numeric: tabular-nums; cursor: pointer; } .ds-tile span { position: relative; } .ds-tile::before { content: ''; position: absolute; inset: -2px; z-index: -1; background: var(--almagre, #b23a1e); clip-path: inset(0 100% 0 0); transition: clip-path 280ms cubic-bezier(0.16, 1, 0.3, 1); } .ds-tile:hover:not([aria-checked='true']) { background: var(--cal-deep, #ece4d4); } .ds-tile[aria-checked='true'] { color: var(--cal, #f6f1e7); border-color: var(--almagre, #b23a1e); } .ds-tile[aria-checked='true']::before { clip-path: inset(0 0 0 0); } .ds-tile:focus-visible { outline: 3px solid var(--anil, #1f2f6b); outline-offset: 3px; }"
+    },
+    {
+      "name": "Painted Sign Headline",
+      "kind": "custom",
+      "refersTo": "display",
+      "description": "Display lettering in añil on the yellow wall with the flat two-coat sombra.",
+      "html": "<div class=\"ds-wall\"><span class=\"ds-signature\">SF Vibe Lab · Mérida</span><h1 class=\"ds-sign\">Becas Mexico Dreamin 2026</h1><p class=\"ds-wall-line\">Somos estudiantes de la UADY en Mérida. Ayúdanos a llegar.</p></div>",
+      "css": ".ds-wall { background: var(--izamal, #e6a71c); color: var(--enamel, #15120e); padding: 1.25rem clamp(1.25rem, 4vw, 3rem) 3.75rem; } .ds-signature { display: block; margin-bottom: 1.5rem; font: 400 0.9375rem/1.2 var(--sign, 'Bungee', sans-serif); } .ds-sign { margin: 0; font: 400 clamp(2.5rem, 7.2vw, 6rem)/0.98 var(--sign, 'Bungee', sans-serif); letter-spacing: -0.01em; text-transform: uppercase; color: var(--anil, #1f2f6b); text-shadow: 0.05em 0.05em 0 var(--cal, #f6f1e7), 0.1em 0.1em 0 var(--enamel, #15120e); text-wrap: balance; } .ds-wall-line { margin: 1rem 0 0; max-width: 34ch; font: 700 clamp(1rem, 1.6vw, 1.3rem)/1.45 var(--read, 'Lexend', sans-serif); color: var(--on-izamal-muted, #4a3a14); }"
+    },
+    {
+      "name": "Progress Band",
+      "kind": "custom",
+      "refersTo": "band",
+      "description": "Añil band with the raised numeral, goal line, flat meter, and the missing amount lettered as boldly.",
+      "html": "<section class=\"ds-band\"><p class=\"ds-band-raised\"><span class=\"ds-numeral\">$31,250</span><span class=\"ds-band-of\">de $50,000 MXN · cierra el 15 de noviembre</span></p><div class=\"ds-meter\" role=\"progressbar\" aria-valuenow=\"63\" aria-valuemin=\"0\" aria-valuemax=\"100\"><span class=\"ds-meter-paint\" style=\"transform: scaleX(0.625)\"></span></div><p class=\"ds-gap\">Faltan $18,750</p></section>",
+      "css": ".ds-band { background: var(--anil, #1f2f6b); color: var(--cal, #f6f1e7); padding: 1.25rem clamp(1.25rem, 4vw, 3rem) 1.5rem; } .ds-band p { margin: 0; } .ds-band-raised { display: flex; flex-wrap: wrap; align-items: baseline; gap: 0.25rem 0.9rem; } .ds-numeral { font: 400 clamp(2.4rem, 5.5vw, 3.75rem)/1 var(--sign, 'Bungee', sans-serif); color: var(--izamal, #e6a71c); font-variant-numeric: tabular-nums; } .ds-band-of { color: var(--on-anil-muted, #d9d2c3); font: 400 1rem/1.4 var(--read, 'Lexend', sans-serif); font-variant-numeric: tabular-nums; } .ds-meter { margin: 0.9rem 0 0.75rem; height: 1.25rem; border: 2px solid var(--cal, #f6f1e7); overflow: hidden; } .ds-meter-paint { display: block; height: 100%; background: var(--izamal, #e6a71c); transform-origin: left center; } .ds-gap { font: 400 clamp(2rem, 4.6vw, 3.25rem)/1 var(--sign, 'Bungee', sans-serif); text-transform: uppercase; color: var(--cal, #f6f1e7); }"
+    },
+    {
+      "name": "Donate Board",
+      "kind": "card",
+      "refersTo": "donate-board",
+      "description": "Cal board with a 2px enamel outline hung on the yellow wall (desktop); holds the tiles and the donate sign.",
+      "html": "<div class=\"ds-board-wall\"><div class=\"ds-board\"><h2 class=\"ds-title\">Elige tu donativo</h2><p class=\"ds-help\">Pesos mexicanos · mínimo $50 · pago seguro con tarjeta</p></div></div>",
+      "css": ".ds-board-wall { background: var(--izamal, #e6a71c); padding: 2rem; } .ds-board { max-width: 400px; background: var(--cal, #f6f1e7); border: 2px solid var(--enamel, #15120e); border-radius: 0; padding: 1.5rem 1.5rem 1.25rem; color: var(--enamel, #15120e); } .ds-title { margin: 0; font: 400 clamp(1.25rem, 2.4vw, 1.6rem)/1.1 var(--sign, 'Bungee', sans-serif); text-transform: uppercase; } .ds-help { margin: 0.75rem 0 0; font: 400 0.875rem/1.45 var(--read, 'Lexend', sans-serif); color: var(--weather-2, #5a5045); }"
+    },
+    {
+      "name": "Thanks Wall",
+      "kind": "custom",
+      "refersTo": "body",
+      "description": "Supporters list; newest painted darkest, older rows weather.",
+      "html": "<ol class=\"ds-thanks\"><li data-age=\"0\"><span>Ana López</span><span>$500</span></li><li data-age=\"1\"><span>Empresa Ejemplo</span><span>$2,000</span></li><li data-age=\"2\"><span>Luis Pech</span><span>$250</span></li><li data-age=\"3\"><span>Familia Canul</span><span>$1,000</span></li></ol>",
+      "css": ".ds-thanks { list-style: none; margin: 0; padding: 0; max-width: 40rem; border-top: 2px solid var(--enamel, #15120e); font: 400 1.0625rem/1.6 var(--read, 'Lexend', sans-serif); background: var(--cal, #f6f1e7); } .ds-thanks li { display: flex; justify-content: space-between; gap: 1rem; padding: 0.8rem 0; border-bottom: 1px solid var(--cal-deep, #ece4d4); font-variant-numeric: tabular-nums; } .ds-thanks li[data-age='0'] { color: var(--enamel, #15120e); font-weight: 700; } .ds-thanks li[data-age='1'] { color: var(--weather-1, #3b342c); } .ds-thanks li[data-age='2'] { color: var(--weather-2, #5a5045); } .ds-thanks li[data-age='3'] { color: var(--weather-3, #6e6356); }"
+    },
+    {
+      "name": "Bill Photo Frame",
+      "kind": "card",
+      "refersTo": "wall",
+      "description": "Campaign photo pasted on the wall like a bill: 16:9, 2px enamel frame, square.",
+      "html": "<figure class=\"ds-bill\"><div class=\"ds-bill-img\"></div></figure>",
+      "css": ".ds-bill { margin: 0; max-width: 640px; border: 2px solid var(--enamel, #15120e); background: var(--cal, #f6f1e7); } .ds-bill-img { aspect-ratio: 16 / 9; background: var(--cal-deep, #ece4d4); }"
+    }
+  ],
+  "narrative": {
+    "northStar": "Rótulo de Mérida",
+    "overview": "The site is a hand-painted shop sign on a lime-washed Mérida wall. Whole sections are painted as flat walls of colour (Izamal yellow, añil blue, black enamel) on a cal ground, and the campaign is lettered across them in big sign-painter capitals.\n\nEverything is flat: no gradients, no blur, no rounded cards, no box shadows. Depth comes only from overlapping coats: the añil band climbs onto the yellow wall, the cal donate board hangs on it, the photo is pasted on like a bill. Almagre red is held back for the single thing in motion, the amount just chosen.\n\nDensity is low and type is large, because most visitors are relatives on phones. Display lettering is loud; everything read sits in calm, legible Lexend.",
+    "keyCharacteristics": [
+      "Flat coats of colour as sections; depth only by overlap.",
+      "Bungee sign capitals for display, painted shadow on the headline only.",
+      "Lexend for all reading text, with a plain zero so amounts read as money.",
+      "Square corners and 2px enamel outlines everywhere.",
+      "Almagre red only on the selected or pressed element.",
+      "What is missing is lettered as boldly as what was raised."
+    ],
+    "rules": [
+      {
+        "name": "The One Moving Colour Rule",
+        "body": "Almagre appears only on the element in motion: the selected amount, a pressed sign, a selection. If nothing is chosen, nothing is red.",
+        "section": "colors"
+      },
+      {
+        "name": "The Flat Coat Rule",
+        "body": "Colour is applied as solid coats. No gradients, no transparency washes, no blur.",
+        "section": "colors"
+      },
+      {
+        "name": "The Readable Wall Rule",
+        "body": "Every text colour sits on a wall it was tested on. Izamal never letters on cal.",
+        "section": "colors"
+      },
+      {
+        "name": "The Two Voices Rule",
+        "body": "Bungee is for signs, never for sentences. Anything read in full is Lexend.",
+        "section": "typography"
+      },
+      {
+        "name": "The Painted Shadow Rule",
+        "body": "The flat two-coat shadow belongs to display lettering only.",
+        "section": "typography"
+      },
+      {
+        "name": "The Tabular Money Rule",
+        "body": "Every amount uses tabular figures.",
+        "section": "typography"
+      },
+      {
+        "name": "The Overlap Rule",
+        "body": "Sections meet by overlapping coats (the band climbs 2rem onto the wall and stops short of the right edge), never by a gap with a divider.",
+        "section": "layout"
+      },
+      {
+        "name": "The Coats, Not Shadows Rule",
+        "body": "To raise something, paint it as a new coat over another wall; never lift it with a drop shadow.",
+        "section": "elevation"
+      },
+      {
+        "name": "The Square Sign Rule",
+        "body": "No rounded corners and no pills, on anything.",
+        "section": "shapes"
+      }
+    ],
+    "dos": [
+      "Do paint sections as whole flat walls (izamal, anil, enamel) on the cal ground.",
+      "Do keep almagre for the one chosen or pressed element.",
+      "Do letter the missing amount as boldly as the raised one.",
+      "Do outline tiles, boards and frames with the 2px enamel line and keep every corner square.",
+      "Do use tabular figures for every amount a donor reads.",
+      "Do keep touch targets large: tiles at least 3.25rem, the donate sign at least 3.75rem."
+    ],
+    "donts": [
+      "Don't use rounded cards, pill buttons, gradients, blur or box shadows.",
+      "Don't put the painted shadow on anything other than display lettering.",
+      "Don't use almagre for decoration, headings or static emphasis.",
+      "Don't set sentences in Bungee.",
+      "Don't letter izamal on the cal ground; it fails contrast."
+    ]
+  }
+}
