@@ -39,9 +39,9 @@ If a Salesforce Developer Edition limitation blocks a requirement, report it usi
 | Detected Situation | Advisor / Professor Contingency Action |
 | :--- | :--- |
 | Developer Edition does not allow enabling public sites (Experience Cloud / Salesforce Sites). | Provision of a technical alternative or adjustment to `RF-V1`, `RF-V2`, and `M2`. |
-| The Guest User cannot create the preliminary donation record due to platform restrictions. | Modification of `RF-D3` or authorization of an equivalent alternative mechanism. |
+| The public API cannot be called by the Guest User (Apex class access or CORS for the team's web origin is blocked). | Authorization of an equivalent alternative mechanism for `RF-D1a`, `RF-D3` and `M2`. |
 | Platform blocks incoming external webhooks to the Developer Edition org. | Contingency plan for `RF-D5` and `RF-V3a` preserving autonomous status updates. |
-| Outbound email relay fails or is restricted in the Developer Edition org. | Acceptance of system logs or alternative verifiable evidence of the generated receipt. |
+| Outbound email fails or hits the Developer Edition daily limit. Salesforce sends the receipt (`RF-D5`) and the invoice (`RF-F3`) because Stripe sends no receipt in test mode. | Acceptance of system logs or alternative verifiable evidence of the generated receipt. |
 
 ---
 

@@ -89,6 +89,6 @@ This document covers the public experience and the donation lifecycle shared by 
 - **User Story:** As a donor, I want to receive a receipt by email as soon as I pay, so that I have proof of my donation.
 
 ### Acceptance Criteria
-- **CA1 (Receipt After Payment):** **Given** I paid with a test card, **when** the payment succeeds, **then** I receive an email at the address I gave, with a reference that identifies my donation.
+- **CA1 (Receipt After Payment):** **Given** I paid with a test card, **when** my donation is recorded, **then** I receive an email from the program at the address I gave, with the donation reference, campaign, amount and date, and my name unless I donated anonymously.
 - **CA2 (Negative: Unsuccessful Payment):** **Given** my payment was declined, cancelled, or left unfinished, **when** I check my email, **then** I have received no receipt.
 - **CA3 (Single Email):** **Given** I did not request an invoice, **when** my payment succeeds, **then** the receipt is the only email I receive.

@@ -59,7 +59,7 @@ None at the moment. The follow-up questions raised while writing the stories hav
 | When a donor asks for an invoice, who deals with the request and how does the donor receive it? | This team | A form is enough. After the donor submits it, Salesforce sends the invoice to the donor. |
 | What does "sending the receipt" mean: is Stripe's ticket enough, or should a custom receipt be generated? | Another team (A) | It depends on the donation type. A ticket in the donor's email is the minimum. |
 | Is the proposed receipt content enough: reference number, campaign, amount, date, donation type and donor name (if not anonymous)? | Another team (B) | Same answer: it depends on the type, and the team works out the minimum. |
-| Is the payment gateway's ticket enough as proof, or do you want one from the program as well? | This team | The gateway's email is enough. The only other email a donor should receive is the one for a tax-deduction invoice request. |
+| Is the payment gateway's ticket enough as proof, or do you want one from the program as well? | This team | The gateway's email is enough. The only other email a donor should receive is the one for a tax-deduction invoice request. **Team decision:** Salesforce sends the receipt itself once the payment is confirmed, because Stripe sends no receipt emails in test mode. The donor still receives one email, plus the invoice when requested. |
 
 ### Payments and records
 

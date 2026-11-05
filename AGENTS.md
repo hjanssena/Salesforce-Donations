@@ -47,7 +47,8 @@ Each entry must follow this exact pipe-separated structure, fit on a **single li
 ## Rule 5: Zero-Cost & Native Stack Constraint (Section 6)
 
 1. **Allowed Stack Only:** Only design solutions using standard **Salesforce Developer Edition** capabilities (Experience Cloud / Salesforce Sites, LWC, Apex, Flow Builder), **Stripe Test Mode** (preferring `MXN` currency), VS Code, Salesforce CLI (`sf`), and GitHub.
-2. **No Paid Add-Ons or Unapproved Packages:** Never introduce paid features, external hosting services, or third-party AppExchange packages unless explicitly approved by the professor.
+2. **Approved Exception, Web App Hosting:** The professor approved a React web app served from the team's own server (Docker, own domain, certbot TLS). Salesforce remains the backend and database.
+3. **No Paid Add-Ons or Unapproved Packages:** Never introduce paid features, external hosting services, or third-party AppExchange packages unless explicitly approved by the professor.
 
 ---
 
@@ -85,5 +86,5 @@ Whenever performing or assisting with version control actions (creating branches
 
 1. **Requirements Reference:** All functional and non-functional requirements live in [docs/requirements/README.md](file:///Users/janssen/Documents/UADY/Semestre7/Salesforce/Proyecto/docs/requirements/README.md) (derived from [lineamientos.md](file:///Users/janssen/Documents/UADY/Semestre7/Salesforce/Proyecto/lineamientos.md)).
 2. **Test Mode & Dummy Data Only (`M1`):** All Stripe integrations and test records must strictly use Stripe Test Mode, test cards, team-controlled test emails, and fictitious data. Never generate real CFDI tax receipts or query the live SAT service.
-3. **Guest User Isolation (`M2`):** Enforce strict *least privilege*. Never grant read or modify access on `Donation` records to the unauthenticated Guest User beyond creating the initial `Pending` donation (`RF-D3`) and viewing aggregate campaign progress / `Paid` `Credited` donor recognition (`Name` + `Amount` only, never `Email` or `RFC`).
+3. **Guest User Isolation (`M2`):** Enforce strict *least privilege*. Never grant read or modify access on `Donation` (Opportunity) records to the unauthenticated Guest User. Guests only call the public API, which returns campaign progress and `Credited` or `Invoiced` donor recognition (`Name` + `Amount` only, never `Email` or `RFC`) and starts payment sessions. Donations are created only after a verified successful payment (`RF-D3`).
 4. **Zero Secrets (`M3`):** Never hardcode or commit Stripe API keys, webhook signing secrets, credentials, or real PII in any source file, metadata, commit, screenshot, or log.

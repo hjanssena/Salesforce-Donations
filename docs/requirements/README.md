@@ -23,6 +23,7 @@ The requirements are organized by domain (Donor/Public Side, Admin/Internal Side
   - [payment-webhooks.md](file:///Users/janssen/Documents/UADY/Semestre7/Salesforce/Proyecto/docs/requirements/admin/payment-webhooks.md) — Automatic recording of payments from provider notices, authenticity checks, duplicate handling, and the rejected notices log (`RF-V3a`, `RF-V3b`, `RF-S4`).
 - **Architecture & Non-Functional (`architecture/`)**
   - [security-privacy.md](file:///Users/janssen/Documents/UADY/Semestre7/Salesforce/Proyecto/docs/requirements/architecture/security-privacy.md) — Pass/Fail mandatory minimums (`M1–M3`), Guest User security proof (`RF-V2`), least privilege (`S15`), and PII classification (`OA6`).
+  - [solution-architecture.md](file:///Users/janssen/Documents/UADY/Semestre7/Salesforce/Proyecto/docs/requirements/architecture/solution-architecture.md) — Services (React web app, Salesforce, Stripe), payment flow, and the data model mapped to standard Salesforce objects.
   - [technical-standards.md](file:///Users/janssen/Documents/UADY/Semestre7/Salesforce/Proyecto/docs/requirements/architecture/technical-standards.md) — Development best practices (`S11`, `S12`, `S14`), platform constraints, contingency matrix, and AI usage guidelines.
 
 ---
@@ -60,7 +61,7 @@ The requirements are organized by domain (Donor/Public Side, Admin/Internal Side
 ### In Scope
 - Public site in English, without login, displaying open and completed campaigns, goal progress, and a donation form.
 - Three donor modalities: **Anonymous**, **Credited** (publicly recognized name), and **Invoiced** (name and RFC).
-- Recording of each donation in Salesforce as `Paid` once Stripe Test authorizes the payment, followed by redirection to a Thank-You page.
+- Recording of each donation in Salesforce as `Paid` once Stripe Test authorizes the payment, followed by a Thank-You page and a receipt email sent by Salesforce.
 - Internal Salesforce console for staff to manage campaigns, view donations, enter donations received outside the website, and moderate public names.
 - Invoice emails for tax-deduction requests (no CFDI).
 - Automatic recording of payments from Stripe webhooks (E2).

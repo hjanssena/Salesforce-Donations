@@ -18,7 +18,7 @@ The **Mexico Dreamin Donation Portal** is a Salesforce-backed fundraising platfo
   - **Anonymous (`RF-D2`):** Donor identity is completely hidden from all public views and email receipts.
   - **Credited (`RF-C1`):** Donor's name and contribution amount appear on the campaign's public donor wall once paid.
   - **Invoiced (`RF-F1`, `RF-F2`):** Captures and validates the donor's legal name and Mexican tax ID (`RFC` pattern check) and flags the donation for staff follow-up.
-- **Stripe Test Checkout & Webhook Automation:** Pre-registers `Pending` donations in Salesforce before redirecting to Stripe Test Mode (`RF-D3`, `RF-D4`), and automatically confirms payments and sends email receipts via Stripe webhooks (`RF-D5`, `RF-V3a`, `RF-V3b`).
+- **Stripe Test Checkout & Webhook Automation:** Salesforce creates the Stripe test payment session, records the donation only after a successful payment (`RF-D3`, `RF-D4`), and sends the email receipt (`RF-D5`). Stripe webhooks record payments automatically (`RF-V3a`, `RF-V3b`).
 - **Internal Staff & Treasury Console:** Allows coordination and treasury staff to manage campaigns (`RF-S1`), oversee all donations (`RF-S2`), manually confirm payments (`RF-S3`), and audit automatic confirmations and rejected webhooks (`RF-S4`).
 
 ---
