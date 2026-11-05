@@ -53,7 +53,7 @@ flowchart LR
 8. Salesforce emails the invoice, only when the donor requested one.
 
 ### How Salesforce knows who a donation belongs to
-The donor details are validated in step 2 and attached to the PaymentIntent as metadata in step 3. The `payment_intent.succeeded` event in step 6 carries the full PaymentIntent, so the webhook has everything it needs without a stored draft.
+The display name and the invoice data are separate: the first exists only for credited donors, the second only when an invoice is requested. The donor details are validated in step 2 and attached to the PaymentIntent as metadata in step 3. The `payment_intent.succeeded` event in step 6 carries the full PaymentIntent, so the webhook has everything it needs without a stored draft.
 
 | Metadata key | Used for | When |
 | :--- | :--- | :--- |
@@ -61,13 +61,12 @@ The donor details are validated in step 2 and attached to the PaymentIntent as m
 | `is_anonymous` | `Is_Anonymous__c` | Always |
 | `invoice_requested` | Whether to create an `Invoice_Request__c` | Always |
 | `donor_email` | Find or create the Contact; receipt address | Always |
-| `donor_name` | Contact name; for an anonymous donor who requests an invoice, the invoice legal name | Credited, or invoice requested |
-| `public_name` | `Public_Name__c` | Credited |
+| `public_name` | `Public_Name__c`, the display name on the supporters list | Credited only |
 | `is_company` | Create or link the Account | Credited, or invoice requested |
 | `invoice_legal_name`, `invoice_rfc`, `invoice_taxpayer_type`, `invoice_email` | `Invoice_Request__c` | Invoice requested |
 
 On `payment_intent.succeeded`, Salesforce verifies the signature, then in one transaction:
-1. Finds or creates the Contact by email, and the Account for a company.
+1. Finds or creates the Contact by email, and the Account for a company. The Contact is named from the invoice legal name, else the display name, else "Anonymous donor".
 2. Creates the Opportunity (Closed Won) with the campaign, the amount from the event, the anonymity flag and the PaymentIntent ID.
 3. Creates the `Invoice_Request__c` when the metadata carries invoice data.
 4. Logs the event in `Stripe_Event__c`, then sends the receipt and, if requested, the invoice.

@@ -44,7 +44,7 @@ The requirements are organized by domain (Donor/Public Side, Admin/Internal Side
 | **RF-C1** | Public Donor Recognition | [donor/modalities.md](file:///Users/janssen/Documents/UADY/Semestre7/Salesforce/Proyecto/docs/requirements/donor/modalities.md) | Credited Donor | E1 |
 | **RF-C2** | Moderate Public Names | [admin/treasury-donations.md](file:///Users/janssen/Documents/UADY/Semestre7/Salesforce/Proyecto/docs/requirements/admin/treasury-donations.md) | Moderator | E2 |
 | **RF-F1** | Capture Tax Data (RFC) | [donor/modalities.md](file:///Users/janssen/Documents/UADY/Semestre7/Salesforce/Proyecto/docs/requirements/donor/modalities.md) | Donor Requesting an Invoice | E1 |
-| **RF-F2** | Flag Invoice Requests | [admin/treasury-donations.md](file:///Users/janssen/Documents/UADY/Semestre7/Salesforce/Proyecto/docs/requirements/admin/treasury-donations.md) | Admin | E1 |
+| **RF-F2** | Flag Invoice Requests | [admin/treasury-donations.md](file:///Users/janssen/Documents/UADY/Semestre7/Salesforce/Proyecto/docs/requirements/admin/treasury-donations.md) | Admin, Campaign Manager | E1 |
 | **RF-F3** | Receive Invoice by Email | [donor/modalities.md](file:///Users/janssen/Documents/UADY/Semestre7/Salesforce/Proyecto/docs/requirements/donor/modalities.md) | Donor Requesting an Invoice | E2 |
 | **RF-S1** | Manage Campaigns | [admin/campaign-management.md](file:///Users/janssen/Documents/UADY/Semestre7/Salesforce/Proyecto/docs/requirements/admin/campaign-management.md) | Campaign Manager | E1 |
 | **RF-S1b** | Close Campaigns on Their End Date | [admin/campaign-management.md](file:///Users/janssen/Documents/UADY/Semestre7/Salesforce/Proyecto/docs/requirements/admin/campaign-management.md) | Campaign Manager | E1 |
@@ -62,7 +62,7 @@ The requirements are organized by domain (Donor/Public Side, Admin/Internal Side
 
 ### In Scope
 - Public site in Spanish, without login, displaying open and completed campaigns, goal progress, and a donation form. Amounts are in MXN, with a 50 MXN minimum and no maximum.
-- Two independent donor choices: recognition (**Anonymous** or **Credited**) and an optional **invoice** request (legal name and RFC).
+- Two independent donor choices: recognition (**Anonymous** or **Credited**) and an optional **invoice** request (only the data the invoice needs). The two never affect each other.
 - Recording of each donation in Salesforce as `Paid` once Stripe Test authorizes the payment, followed by a Thank-You page and a receipt email sent by Salesforce.
 - Internal Salesforce console with three roles (Admin, Campaign Manager, Moderator) to manage campaigns, view donations (anonymous donors included), enter donations received outside the website, and moderate public names.
 - Invoice emails for tax-deduction requests (no CFDI).

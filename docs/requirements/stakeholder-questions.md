@@ -8,15 +8,7 @@ Answers marked **Team decision** are not the stakeholder's words. They record ho
 
 ## Open Questions
 
-These came up while applying the later meeting's decisions and have not been put to the stakeholder yet.
-
-| Question | Asked by | Why it matters |
-| :--- | :--- | :--- |
-| If an invoiced donor stays anonymous, does the invoice still prove the donation for SAT purposes, or must invoiced donations be public? | This team | The earlier answer said invoiced donations are always public; the later meeting made anonymity and invoice separate choices. |
-| Can the moderator correct donors' emails, or only view them? | This team | The meeting said the moderator moderates names and emails. A wrong email redirects the receipt and invoice. |
-| Which roles may see a donor's RFC? | This team | Assumed admin only. The meeting said roles can see donor data, but did not mention tax data. |
-| Does the 50 MXN minimum apply to donations an admin enters by hand? | This team | The minimum was given for donations; manual entries are not mentioned. |
-
+None at the moment. The four follow-up questions from the later meeting have been answered.
 ---
 
 ## Answered Questions
@@ -48,15 +40,17 @@ These came up while applying the later meeting's decisions and have not been put
 | Should an anonymous donor's email be required for the receipt, or optional? | Another team (B) | The minimum is a ticket sent to the donor's email, so the email is needed for every donation type. |
 | If the same person gives twice by accident, what should happen? | This team | Not considered possible: the donor has to go through the whole payment flow again, so it should not happen by accident. |
 | Do donations arrive outside the website? (Clarified as bank transfers or the old manual process.) | This team | They are added manually, which is out of the project's scope. The system only needs to update the campaign's goal progress. No email is sent for them. |
+| Does the 50 MXN minimum apply to donations an admin enters by hand? | This team | Yes. |
 
 ### Public recognition
 
 | Question | Asked by | Answer |
 | :--- | :--- | :--- |
-| If a donor chooses an invoice, should their name and amount appear on the public recognition list? | Another team (B) | Yes, always. These donations must be public to prove the donation was made for SAT purposes. The team should investigate edge cases. **Updated:** At a later meeting, anonymity and invoice became separate decisions, so an invoiced donor can stay anonymous. Whether that still satisfies SAT is an open question. |
+| If a donor chooses an invoice, should their name and amount appear on the public recognition list? | Another team (B) | Yes, always. These donations must be public to prove the donation was made for SAT purposes. The team should investigate edge cases. **Updated:** Anonymity and invoice are now two separate toggles. An invoiced donation appears on the list only if the donor also chooses to be credited. |
 | Can donors choose the name shown in public? | This team | Yes. Donors can enter any name they want, and there is no way to confirm it is real. |
 | Who decides whether a name is appropriate to display? | This team | A blacklist, plus a process for a moderator to remove an entry that looks ill-intentioned. |
 | How many names should be shown at once? | This team | All of them, as a list that scrolls automatically with an animation. The stakeholder is open to other suggestions. |
+| If an invoiced donor stays anonymous, does the invoice still prove the donation for SAT purposes? | This team | Anonymity and invoice are two completely different toggles that do not affect each other. A donor who wants an invoice gives only the data needed to fill the invoice table, with no display name. Their donation stays off the supporters list unless they also choose to be credited. |
 
 ### Invoices and proof of the donation
 
@@ -84,6 +78,8 @@ These came up while applying the later meeting's decisions and have not been put
 | :--- | :--- | :--- |
 | Are reports customized or automatic? | Another team (A) | The stakeholder asked what "automatic reports" means. No answer was given. |
 | Who should be able to see donors' email addresses, and who may change a donation after it is recorded? | This team | One person can manually create donations that come from outside. Another can change the name or the visibility. Both types of user can see email addresses. **Updated:** Three roles can see donor data, anonymous donors included: Admin, Campaign Manager (creates and configures campaigns), and Moderator (moderates the entries of a campaign: donors' names and emails). |
+| Can the moderator correct donors' emails, or only view them? | This team | Only view. The moderator may correct display names when an inadequate name appears. |
+| Which roles may see a donor's RFC? | This team | Admin and campaign manager. |
 
 ### Language
 

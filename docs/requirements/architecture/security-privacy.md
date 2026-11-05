@@ -46,9 +46,10 @@ If an API key or secret is accidentally committed to Git:
 
 ### Personal Data Classification (`OA6`)
 - Systematically classify all collected fields:
-  - **Donor Name** (PII — Public only if the donor chose to be credited. Not collected from anonymous donors, except the legal name of an anonymous donor who requests an invoice, which stays internal).
+  - **Display Name** (PII — Asked only from credited donors and public on the supporters list. Not collected from anonymous donors).
+  - **Invoice Data** (Legal name and the other data the invoice needs — Asked only when an invoice is requested, internal, never public, and independent of the display name).
   - **Email Address** (PII — Strictly confidential; used solely for receipt delivery, never displayed publicly).
-  - **RFC** (Sensitive Tax ID — Strictly internal, visible to admins only, for donors who request an invoice; validated via regex, never public). It travels in the PaymentIntent metadata until the donation is recorded, so only fictitious RFCs are allowed.
+  - **RFC** (Sensitive Tax ID — Strictly internal, visible to admins and campaign managers only, for donors who request an invoice; validated via regex, never public). It travels in the PaymentIntent metadata until the donation is recorded, so only fictitious RFCs are allowed.
   - **Payment Tokens / References** (Operational — Store only Stripe Checkout Session / PaymentIntent IDs; never capture or store raw card numbers/CVV in Salesforce).
 - **Email Testing Rule:** Only email addresses owned and controlled by the project team may be used during testing to prevent sending emails to real third parties.
 
