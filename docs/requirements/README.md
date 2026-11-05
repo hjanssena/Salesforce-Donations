@@ -31,6 +31,8 @@ The requirements are organized by domain (Donor/Public Side, Admin/Internal Side
 
 ## 2. Requirements Traceability Matrix
 
+The milestone column is the team's own delivery plan, described in [docs/scope.md](file:///Users/janssen/Documents/UADY/Semestre7/Salesforce/Proyecto/docs/scope.md#delivery-plan). It replaces the milestones in the course guidelines (`lineamientos.md`) for planning.
+
 | ID | Title | Domain File | Actor | Milestone |
 | :--- | :--- | :--- | :--- | :--- |
 | **RF-V1** | Scoped Public Site (No Login) | [donor/general-flow.md](file:///Users/janssen/Documents/UADY/Semestre7/Salesforce/Proyecto/docs/requirements/donor/general-flow.md) | Visitor | E1 |
@@ -47,7 +49,7 @@ The requirements are organized by domain (Donor/Public Side, Admin/Internal Side
 | **RF-F2** | Flag Invoice Requests | [admin/treasury-donations.md](file:///Users/janssen/Documents/UADY/Semestre7/Salesforce/Proyecto/docs/requirements/admin/treasury-donations.md) | Admin, Campaign Manager | E1 |
 | **RF-F3** | Receive Invoice by Email | [donor/modalities.md](file:///Users/janssen/Documents/UADY/Semestre7/Salesforce/Proyecto/docs/requirements/donor/modalities.md) | Donor Requesting an Invoice | E2 |
 | **RF-S1** | Manage Campaigns | [admin/campaign-management.md](file:///Users/janssen/Documents/UADY/Semestre7/Salesforce/Proyecto/docs/requirements/admin/campaign-management.md) | Campaign Manager | E1 |
-| **RF-S1b** | Close Campaigns on Their End Date | [admin/campaign-management.md](file:///Users/janssen/Documents/UADY/Semestre7/Salesforce/Proyecto/docs/requirements/admin/campaign-management.md) | Campaign Manager | E1 |
+| **RF-S1b** | Close Campaigns on Their End Date | [admin/campaign-management.md](file:///Users/janssen/Documents/UADY/Semestre7/Salesforce/Proyecto/docs/requirements/admin/campaign-management.md) | Campaign Manager | E2 |
 | **RF-S2** | View All Donations | [admin/treasury-donations.md](file:///Users/janssen/Documents/UADY/Semestre7/Salesforce/Proyecto/docs/requirements/admin/treasury-donations.md) | Team Member (any role) | E1 |
 | **RF-S3** | Manually Record a Donation | [admin/treasury-donations.md](file:///Users/janssen/Documents/UADY/Semestre7/Salesforce/Proyecto/docs/requirements/admin/treasury-donations.md) | Admin | E1 |
 | **RF-S4** | View Rejected Payment Notices | [admin/payment-webhooks.md](file:///Users/janssen/Documents/UADY/Semestre7/Salesforce/Proyecto/docs/requirements/admin/payment-webhooks.md) | Admin | E2 |

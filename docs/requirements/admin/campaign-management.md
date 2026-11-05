@@ -20,7 +20,7 @@ This document covers how campaign managers set up campaigns and how campaigns op
 ---
 
 ## RF-S1b · Close Campaigns on Their End Date
-- **Milestone:** Deliverable 1 (E1)
+- **Milestone:** Deliverable 2 (E2)
 - **Actor:** Campaign Manager
 - **User Story:** As a campaign manager, I want campaigns to stop receiving donations on their end date, so that no donor gives to a closed campaign and I do not have to close it by hand.
 

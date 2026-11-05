@@ -22,15 +22,17 @@ Each entry must follow this exact pipe-separated structure, fit on a **single li
 
 ---
 
-## Rule 0: Read the Project Scope and Architecture First
+## Rule 0: Read the Scope, Architecture and Contract First
 
-Before planning, writing, or reviewing anything, read these two documents. They tell you what the project is and is not, and how it is built:
+Before planning, writing, or reviewing anything, read these three documents. They tell you what the project is and is not, how it is built, and how its two halves talk:
 
 1. [docs/scope.md](file:///Users/janssen/Documents/UADY/Semestre7/Salesforce/Proyecto/docs/scope.md): the features, the explicit non-goals, and the open points.
 2. [docs/architecture.md](file:///Users/janssen/Documents/UADY/Semestre7/Salesforce/Proyecto/docs/architecture.md): the services, the payment flow, the data model on Salesforce objects, and the decisions that are settled.
+3. [docs/contract.md](file:///Users/janssen/Documents/UADY/Semestre7/Salesforce/Proyecto/docs/contract.md): the agreed API between the React web app and Salesforce: campaign endpoints, the payment session endpoint, errors, and the PaymentIntent metadata. Front and back are built apart against it.
 
 Rules that follow from them:
 - Do not build anything listed under "What we are not doing" in the scope, and do not reverse a decision listed in the architecture without the team.
+- Never change an endpoint, a field, an error code, or a metadata key on one side only. Change `docs/contract.md` first, with the mock or tests that follow it, in the same change.
 - When a request changes a feature, a non-goal, a service, the payment flow, or the data model, update `docs/scope.md` or `docs/architecture.md` (and the matching user stories in `docs/requirements/`) in the same change, then log it under Rule 1.
 - The detailed requirements and stories are indexed in [docs/requirements/README.md](file:///Users/janssen/Documents/UADY/Semestre7/Salesforce/Proyecto/docs/requirements/README.md). The scope and architecture pages summarize them and must not contradict them.
 

@@ -55,14 +55,7 @@ flowchart LR
 ### How Salesforce knows who a donation belongs to
 The display name and the invoice data are separate: the first exists only for credited donors, the second only when an invoice is requested. The donor details are validated in step 2 and attached to the PaymentIntent as metadata in step 3. The `payment_intent.succeeded` event in step 6 carries the full PaymentIntent, so the webhook has everything it needs without a stored draft.
 
-| Metadata key | Used for | When |
-| :--- | :--- | :--- |
-| `campaign_id` | Opportunity `CampaignId` | Always |
-| `is_anonymous` | `Is_Anonymous__c` | Always |
-| `invoice_requested` | Whether to create an `Invoice_Request__c` | Always |
-| `donor_email` | Find or create the Contact; receipt address | Always |
-| `public_name` | `Public_Name__c`, the display name on the supporters list | Credited only |
-| `invoice_full_name`, `invoice_rfc`, `invoice_taxpayer_type`, `invoice_postal_code`, `invoice_tax_regime`, `invoice_cfdi_use`, `invoice_email` | `Invoice_Request__c` | Invoice requested |
+The exact keys, values and rules are defined in [contract.md](file:///Users/janssen/Documents/UADY/Semestre7/Salesforce/Proyecto/docs/contract.md) (section 4), which is the single source. In short: campaign, anonymity flag, donor email and invoice flag always; the display name only for credited donors; the seven invoice items only when an invoice is requested.
 
 On `payment_intent.succeeded`, Salesforce verifies the signature, then in one transaction:
 1. Finds or creates the Contact by email, and the Account when the invoice's taxpayer type is a company. The Contact is named from the invoice legal name, else the display name, else "Anonymous donor".
@@ -90,7 +83,7 @@ Why this is safe and where it stops:
 - The Guest User can call the Apex REST API from the team's origin (CORS on a public site).
 - The webhook endpoint is reachable by Stripe through the public site.
 - The Developer Edition daily email limit covers the demo.
-- Whether the E1 deliverable confirms the payment without the webhook (for example, Salesforce asks Stripe for the payment status when the donor returns). Recording must be idempotent on the Stripe payment ID so both paths can coexist.
+- Resolved by the delivery plan: E1 records donations from a sample event, E2 connects the real webhook. Earlier open question: whether the E1 deliverable confirms the payment without the webhook (for example, Salesforce asks Stripe for the payment status when the donor returns). Recording must be idempotent on the Stripe payment ID so both paths can coexist.
 
 ---
 
