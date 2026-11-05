@@ -6,8 +6,8 @@ This document covers the Deliverable 2 (E2) requirements for recording payments 
 
 ## RF-V3a · Receive Payment Webhook (Minimum Level)
 - **Milestone:** Deliverable 2 (E2, mandatory)
-- **Actor:** Staff
-- **User Story:** As a staff member, I want each successful payment to be recorded automatically, so that donations and campaign progress stay current without manual entry.
+- **Actor:** Admin
+- **User Story:** As an admin, I want each successful payment to be recorded automatically, so that donations and campaign progress stay current without manual entry.
 
 ### Acceptance Criteria
 - **CA1 (Automatic Recording):** **Given** a donor paid with a test card, **when** the payment provider confirms the payment, **then** the donation is recorded as `Paid` without anyone entering it.
@@ -18,8 +18,8 @@ This document covers the Deliverable 2 (E2) requirements for recording payments 
 
 ## RF-V3b · Authentic and Idempotent Notices (Second Level)
 - **Milestone:** Deliverable 2 (E2, optional)
-- **Actor:** Staff
-- **User Story:** As a staff member, I want only authentic payment notices to be accepted and repeated notices to be ignored, so that no donation is added without a payment and none is counted twice.
+- **Actor:** Admin
+- **User Story:** As an admin, I want only authentic payment notices to be accepted and repeated notices to be ignored, so that no donation is added without a payment and none is counted twice.
 
 ### Acceptance Criteria
 - **CA1 (Negative: Forged Notice):** **Given** someone other than the payment provider sends a forged or unsigned notice, **when** it arrives, **then** it is rejected, no donation is recorded, and the rejection is visible to staff (`RF-S4`).
@@ -29,10 +29,10 @@ This document covers the Deliverable 2 (E2) requirements for recording payments 
 
 ## RF-S4 · View Rejected Payment Notices
 - **Milestone:** Deliverable 2 (E2)
-- **Actor:** Staff
-- **User Story:** As a staff member, I want to see which payment notices were rejected and why, so that I can trust the donation data without checking every payment.
+- **Actor:** Admin
+- **User Story:** As an admin, I want to see which payment notices were rejected and why, so that I can trust the donation data without checking every payment.
 
 ### Acceptance Criteria
 - **CA1 (Rejected Notice Log):** **Given** a notice was rejected (for example an invalid signature or a malformed payload), **when** I open the rejected notices log, **then** I see when it arrived and why it was rejected.
 - **CA2 (Negative: No Donation From Rejected Notices):** **Given** a notice was rejected, **when** I view the donations list, **then** no donation exists for it.
-- **CA3 (Negative: Staff Only):** **Given** I am not an authenticated staff member, **when** I try to open the rejected notices log, **then** access is denied.
+- **CA3 (Negative: Admin Only):** **Given** I am signed in as a campaign manager or a moderator, or not signed in, **when** I try to open the rejected notices log, **then** access is denied.

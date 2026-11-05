@@ -1,9 +1,10 @@
-# Donor Domain — Donation Modalities
+# Donor Domain — Donor Choices
 
-Donors choose one of three modalities:
-1. **Anonymous Donor (`RF-D2`)** gives only an email address and is never shown publicly.
-2. **Credited Donor (`RF-C1`)** appears on the campaign's supporters list.
-3. **Invoiced Donor (`RF-F1`, `RF-F3`)** gives tax details, appears on the supporters list, and receives an invoice by email.
+Every donor makes two independent choices:
+1. **Recognition:** donate **anonymously** (`RF-D2`) or be **credited** on the campaign's supporters list (`RF-C1`).
+2. **Invoice:** request a tax-deduction invoice (`RF-F1`, `RF-F3`) or not.
+
+Any combination is allowed: an anonymous donor can request an invoice, and a credited donor can skip it. The invoice choice never changes what the public sees.
 
 ---
 
@@ -15,10 +16,10 @@ Donors choose one of three modalities:
 ### Acceptance Criteria
 - **CA1 (No Public Exposure):** **Given** I donated anonymously, **when** I inspect the public site (campaign pages, supporters list, thank-you page), **then** my name does not appear anywhere.
 - **CA2 (Anonymous Receipt):** **Given** I donated anonymously, **when** I receive my receipt by email, **then** it shows no name.
-- **CA3 (Email Only):** **Given** I choose to donate anonymously, **when** I fill in the form, **then** I am asked only for my email address.
+- **CA3 (Email Only):** **Given** I choose to donate anonymously and do not request an invoice, **when** I fill in the form, **then** I am asked only for my email address.
 - **CA4 (Negative: Email Required):** **Given** I choose to donate anonymously, **when** I submit the form without an email address, **then** submission is blocked and the form shows that the email is required.
-- **CA5 (Negative: No Invoice):** **Given** I choose to donate anonymously, **when** I try to request an invoice, **then** I am prevented from doing so.
-- **CA6 (Staff Visibility):** **Given** an anonymous donation exists, **when** staff view donations, **then** it is identified as `Anonymous`.
+- **CA5 (Anonymous With Invoice):** **Given** I donated anonymously and requested an invoice, **when** I inspect the public site, **then** neither my name nor my RFC appears, and the invoice is sent only to my email.
+- **CA6 (Team Visibility):** **Given** an anonymous donation exists, **when** an admin, a campaign manager, or a moderator views donations, **then** they see my email and the donation is marked `Anonymous`.
 
 ---
 
@@ -39,22 +40,22 @@ Donors choose one of three modalities:
 
 ## RF-F1 · Capture Tax Data for Invoice (RFC)
 - **Milestone:** Deliverable 1 (E1)
-- **Actor:** Invoiced Donor
-- **User Story:** As a donor who needs a tax-deduction invoice, I want to give my name and RFC with my donation, so that the program has what it needs to issue my invoice.
-- **Open point:** The team works out which other tax data the invoice requires.
+- **Actor:** Donor Requesting an Invoice
+- **User Story:** As a donor who needs a tax-deduction invoice, I want to give my legal name and RFC with my donation, so that the program has what it needs to issue my invoice.
+- **Open point:** The team works out which other tax data the invoice requires. The earlier answer that invoiced donations must always be public for SAT purposes conflicts with keeping the two choices separate; the stakeholder has to confirm.
 
 ### Acceptance Criteria
-- **CA1 (Negative: Mandatory Fields):** **Given** I chose to request an invoice, **when** I submit the form without my name, my RFC, or my email address, **then** submission is blocked and the form shows which one is missing.
+- **CA1 (Negative: Mandatory Fields):** **Given** I chose to request an invoice, **when** I submit the form without my legal name, my RFC, or my email address, **then** submission is blocked and the form shows which one is missing.
 - **CA2 (Negative: RFC Pattern):** **Given** I entered an RFC, **when** I submit the form, **then** it is checked against the SAT structural pattern (initial letters, 6-digit date, 3-character homoclave; 12 characters for a company, 13 for an individual) and any input that does not match is rejected. The live SAT service is not queried.
 - **CA3 (Individual or Company):** **Given** I request an invoice, **when** I fill in the form, **then** I am asked whether I donate as an individual or as a company.
-- **CA4 (Public Listing):** **Given** I requested an invoice and my donation is recorded, **when** any visitor opens that campaign, **then** they see my name and amount in its supporters list.
+- **CA4 (Independent of Recognition):** **Given** I requested an invoice, **when** I choose to be anonymous or credited, **then** the public site follows that choice alone: my name appears on the supporters list only if I chose to be credited.
 - **CA5 (No Real CFDI):** **Given** I completed my donation with an invoice request, **when** the program is audited, **then** no real fiscal receipt (CFDI) was issued.
 
 ---
 
 ## RF-F3 · Receive Invoice by Email
 - **Milestone:** Deliverable 2 (E2)
-- **Actor:** Invoiced Donor
+- **Actor:** Donor Requesting an Invoice
 - **User Story:** As a donor who requested an invoice, I want to receive it by email, so that I can claim my donation as a tax deduction.
 - **Open point:** The team defines the invoice content from the tax requirements. No CFDI is included.
 
@@ -62,3 +63,4 @@ Donors choose one of three modalities:
 - **CA1 (Invoice Email):** **Given** I donated and requested an invoice, **when** my payment succeeds, **then** I receive an invoice at the email address I gave.
 - **CA2 (Negative: No Request):** **Given** I donated without requesting an invoice, **when** my payment succeeds, **then** I receive no invoice email.
 - **CA3 (Negative: Unsuccessful Payment):** **Given** I requested an invoice, **when** my payment is declined, cancelled, or left unfinished, **then** I receive no invoice email.
+- **CA4 (Spanish):** **Given** I receive an invoice email, **when** I read it, **then** it is written in Spanish.

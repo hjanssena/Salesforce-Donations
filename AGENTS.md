@@ -77,6 +77,8 @@ Whenever performing or assisting with version control actions (creating branches
 
 **All project work and artifacts MUST be written in English, even when the user prompts or converses in Spanish.**
 
+**Exception, user-facing text:** The site, its emails, and campaign content are in Spanish, as decided with the stakeholder. Code, metadata, documentation, logs, commits, and PRs stay in English.
+
 1. **Code & Metadata:** All Apex classes, triggers, LWCs, Flows, Custom Objects/Fields API names, comments, and unit tests must be written in English.
 2. **Documentation & Logs:** All documentation under `docs/`, entries in [AI/log.md](file:///Users/janssen/Documents/UADY/Semestre7/Salesforce/Proyecto/AI/log.md), User Stories, Acceptance Criteria (`Given / When / Then`), commit messages, branch names, and PR descriptions must be written in English.
 
@@ -86,5 +88,5 @@ Whenever performing or assisting with version control actions (creating branches
 
 1. **Requirements Reference:** All functional and non-functional requirements live in [docs/requirements/README.md](file:///Users/janssen/Documents/UADY/Semestre7/Salesforce/Proyecto/docs/requirements/README.md) (derived from [lineamientos.md](file:///Users/janssen/Documents/UADY/Semestre7/Salesforce/Proyecto/lineamientos.md)).
 2. **Test Mode & Dummy Data Only (`M1`):** All Stripe integrations and test records must strictly use Stripe Test Mode, test cards, team-controlled test emails, and fictitious data. Never generate real CFDI tax receipts or query the live SAT service.
-3. **Guest User Isolation (`M2`):** Enforce strict *least privilege*. Never grant read or modify access on `Donation` (Opportunity) records to the unauthenticated Guest User. Guests only call the public API, which returns campaign progress and `Credited` or `Invoiced` donor recognition (`Name` + `Amount` only, never `Email` or `RFC`) and starts payment sessions. Donations are created only after a verified successful payment (`RF-D3`).
+3. **Guest User Isolation (`M2`):** Enforce strict *least privilege*. Never grant read or modify access on `Donation` (Opportunity) records to the unauthenticated Guest User. Guests only call the public API, which returns campaign progress and credited (non-anonymous) donor recognition (`Name` + `Amount` only, never `Email` or `RFC`) and starts payment sessions. Donations are created only after a verified successful payment (`RF-D3`).
 4. **Zero Secrets (`M3`):** Never hardcode or commit Stripe API keys, webhook signing secrets, credentials, or real PII in any source file, metadata, commit, screenshot, or log.

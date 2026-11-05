@@ -16,7 +16,7 @@ This document captures the non-functional development standards (`C6`), platform
   - Clean execution using **Salesforce Code Analyzer**.
   - Unit tests must pass and assert business logic without relying on hard-coded Salesforce Record IDs (`SeeAllData=false`).
 - **Gateway Currency Configuration:**
-  - Prefer `MXN` (Mexican Peso) in Stripe Test Mode. If test constraints require `USD`, document a technical note justifying the choice.
+  - Use `MXN` (Mexican Peso) in Stripe Test Mode. The minimum donation is 50 MXN with no maximum. If test constraints require `USD`, document a technical note justifying the choice.
 
 ---
 

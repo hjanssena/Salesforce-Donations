@@ -2,13 +2,20 @@
 
 Log of the questions put to the stakeholder about how the program raises and handles donations for Mexico Dreamin, with the answers received in Slack. It includes the questions from this team and from two other teams, who are called **Another team (A)** and **Another team (B)** below. Questions written in Spanish are translated to English.
 
-Answers marked **Team decision** are not the stakeholder's words. They record how this team chose to handle a stakeholder wish.
+Answers marked **Team decision** are not the stakeholder's words. They record how this team chose to handle a stakeholder wish. Answers marked **Updated** replace an earlier answer after a later meeting with the stakeholder; the earlier answer is kept in the text.
 
 ---
 
 ## Open Questions
 
-None at the moment. The follow-up questions raised while writing the stories have all been answered.
+These came up while applying the later meeting's decisions and have not been put to the stakeholder yet.
+
+| Question | Asked by | Why it matters |
+| :--- | :--- | :--- |
+| If an invoiced donor stays anonymous, does the invoice still prove the donation for SAT purposes, or must invoiced donations be public? | This team | The earlier answer said invoiced donations are always public; the later meeting made anonymity and invoice separate choices. |
+| Can the moderator correct donors' emails, or only view them? | This team | The meeting said the moderator moderates names and emails. A wrong email redirects the receipt and invoice. |
+| Which roles may see a donor's RFC? | This team | Assumed admin only. The meeting said roles can see donor data, but did not mention tax data. |
+| Does the 50 MXN minimum apply to donations an admin enters by hand? | This team | The minimum was given for donations; manual entries are not mentioned. |
 
 ---
 
@@ -21,20 +28,20 @@ None at the moment. The follow-up questions raised while writing the stories hav
 | What does "no login" mean? Is it wrong to have a registration through a token, or must the user go straight to a donation form? | Another team (A) | Any visitor to the site should be able to donate. The stakeholder did not understand what registering with a token meant. |
 | How do several campaigns work: one site listing all active campaigns, or a separate page or site per campaign? | Another team (A) | If there is more than one campaign, visitors see a list. With a single campaign, the site goes straight to it. |
 | When does a campaign start, and who decides when it is active, inactive or completed? | This team | Anyone with enough access creates a campaign and fills in when it starts and finishes. It has a goal amount and is active while the current date falls inside its time span. Who decides is otherwise out of scope. |
-| Besides its name, goal and amount raised, what should visitors see about each campaign? | This team | Description, images, deadline and purpose are all required for every campaign. |
+| Besides its name, goal and amount raised, what should visitors see about each campaign? | This team | Description, image, deadline and purpose are all required for every campaign. **Updated:** The image is mandatory, and the description and what the money is for are shown on the campaign. |
 | Should completed campaigns stay visible to visitors as a record of past fundraising? | This team | Yes, in a separate view. |
 | Could the team change a campaign's goal after donations have come in? | This team | No. Once a campaign is active, its goal should not change, whether or not donations have come in. |
-| When a campaign reaches 100% of its goal or the event date has passed, should it keep accepting donations? | Another team (B) | After the date, stop receiving donations. At 100%, the campaign also stops receiving donations. |
-| When a campaign reaches its goal, who decides whether it keeps receiving donations? | This team | Nobody decides. The campaign stops receiving donations when it reaches 100%. |
-| If two payments arrive close together and push a campaign past 100%, should both be accepted? | This team | Yes. |
+| When a campaign reaches 100% of its goal or the event date has passed, should it keep accepting donations? | Another team (B) | **Updated:** After the end date, the campaign stops receiving donations. At 100% it keeps receiving them; the earlier answer was that it stopped at 100%. |
+| When a campaign reaches its goal, who decides whether it keeps receiving donations? | This team | **Updated:** Nobody decides. The campaign keeps receiving donations after 100% and stops on its end date. The earlier answer was that it stopped at 100%. |
+| If two payments arrive close together and push a campaign past 100%, should both be accepted? | This team | Yes. This no longer matters in practice, since campaigns keep receiving donations after 100%. |
 | There should always be an open campaign. What should happen when none is open? | This team | **Team decision:** visitors see a message that no campaign is receiving donations right now, and they can browse completed campaigns. |
 
 ### Donations and donor information
 
 | Question | Asked by | Answer |
 | :--- | :--- | :--- |
-| What should the minimum amount be? $50? | Another team (A) | As low as possible. The team checks what the payment gateway's documentation allows. |
-| Which suggested and custom amounts should be shown, and should there be a minimum or maximum per transaction? | Another team (B) | The stakeholder asked the team what amounts it suggests. The team proposes them. The minimum is whatever the gateway allows. |
+| What should the minimum amount be? $50? | Another team (A) | **Updated:** 50 MXN. The earlier answer was "as low as possible", to be checked against the payment gateway. |
+| Which suggested and custom amounts should be shown, and should there be a minimum or maximum per transaction? | Another team (B) | **Updated:** Suggested amounts are 100, 250, 500, 1,000, 2,000, 5,000, 10,000 and 20,000 MXN, and donors can also enter a custom amount. The minimum is 50 MXN and there is no maximum. |
 | What information is asked of the donor? | Another team (A) | It depends on the donation type. For an invoice, the stakeholder asked back what minimum information is needed to issue one for a tax-deduction claim, so the team works it out. |
 | Besides an email address, what else do you want to know about each donor? | This team | Only the name and whether the donor is a company. More is needed only for the data required to issue an invoice for a tax-deduction claim. |
 | If someone stays anonymous, should the team still be able to see who they are? | This team | Nothing is needed about them beyond sending them a ticket. |
@@ -46,7 +53,7 @@ None at the moment. The follow-up questions raised while writing the stories hav
 
 | Question | Asked by | Answer |
 | :--- | :--- | :--- |
-| If a donor chooses an invoice, should their name and amount appear on the public recognition list? | Another team (B) | Yes, always. These donations must be public to prove the donation was made for SAT purposes. The team should investigate edge cases. |
+| If a donor chooses an invoice, should their name and amount appear on the public recognition list? | Another team (B) | Yes, always. These donations must be public to prove the donation was made for SAT purposes. The team should investigate edge cases. **Updated:** At a later meeting, anonymity and invoice became separate decisions, so an invoiced donor can stay anonymous. Whether that still satisfies SAT is an open question. |
 | Can donors choose the name shown in public? | This team | Yes. Donors can enter any name they want, and there is no way to confirm it is real. |
 | Who decides whether a name is appropriate to display? | This team | A blacklist, plus a process for a moderator to remove an entry that looks ill-intentioned. |
 | How many names should be shown at once? | This team | All of them, as a list that scrolls automatically with an animation. The stakeholder is open to other suggestions. |
@@ -76,12 +83,12 @@ None at the moment. The follow-up questions raised while writing the stories hav
 | Question | Asked by | Answer |
 | :--- | :--- | :--- |
 | Are reports customized or automatic? | Another team (A) | The stakeholder asked what "automatic reports" means. No answer was given. |
-| Who should be able to see donors' email addresses, and who may change a donation after it is recorded? | This team | One person can manually create donations that come from outside. Another can change the name or the visibility. Both types of user can see email addresses. |
+| Who should be able to see donors' email addresses, and who may change a donation after it is recorded? | This team | One person can manually create donations that come from outside. Another can change the name or the visibility. Both types of user can see email addresses. **Updated:** Three roles can see donor data, anonymous donors included: Admin, Campaign Manager (creates and configures campaigns), and Moderator (moderates the entries of a campaign: donors' names and emails). |
 
 ### Language
 
 | Question | Asked by | Answer |
 | :--- | :--- | :--- |
-| In which language should donors read the site? | This team | English only. The stakeholder first answered English and Spanish, then confirmed that only English will be used. |
-| Are campaign descriptions required in both English and Spanish? | This team | Not needed, since only English is used. |
-| In which language should the invoice email be written? | This team | English, since only English is used. |
+| In which language should donors read the site? | This team | **Updated:** Spanish. The stakeholder first answered English and Spanish, then English only, and at a later meeting said the project will be in Spanish. |
+| Are campaign descriptions required in both English and Spanish? | This team | **Updated:** Not needed, since only Spanish is used. |
+| In which language should the invoice email be written? | This team | **Updated:** Spanish, since only Spanish is used. |

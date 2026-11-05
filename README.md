@@ -14,12 +14,12 @@ The **Mexico Dreamin Donation Portal** is a Salesforce-backed fundraising platfo
 
 ### Key Capabilities
 - **Public Donation Portal (No Login Required):** Visitors can browse active fundraising campaigns, view real-time progress toward financial goals, and see publicly recognized donors (`RF-V1`, `RF-D1a`, `RF-D1b`).
-- **Three Donation Modalities:**
-  - **Anonymous (`RF-D2`):** Donor identity is completely hidden from all public views and email receipts.
-  - **Credited (`RF-C1`):** Donor's name and contribution amount appear on the campaign's public donor wall once paid.
-  - **Invoiced (`RF-F1`, `RF-F2`):** Captures and validates the donor's legal name and Mexican tax ID (`RFC` pattern check) and flags the donation for staff follow-up.
+- **Two Independent Donor Choices:**
+  - **Recognition:** **Anonymous** (`RF-D2`) hides the donor from every public view and from the receipt; **Credited** (`RF-C1`) shows the donor's name and amount on the campaign's supporters list once paid.
+  - **Invoice:** A donor may also request a tax-deduction invoice (`RF-F1`, `RF-F3`), which captures and validates the legal name and Mexican tax ID (`RFC` pattern check). It is independent of the recognition choice.
+- **Spanish Site, Amounts in MXN:** The site and its emails are in Spanish. The minimum donation is 50 MXN with no maximum, and campaigns keep receiving donations after reaching their goal, until their end date (`RF-D1a`, `RF-D1b`, `RF-S1b`).
 - **Stripe Test Checkout & Webhook Automation:** Salesforce creates the Stripe test payment session, records the donation only after a successful payment (`RF-D3`, `RF-D4`), and sends the email receipt (`RF-D5`). Stripe webhooks record payments automatically (`RF-V3a`, `RF-V3b`).
-- **Internal Staff & Treasury Console:** Allows coordination and treasury staff to manage campaigns (`RF-S1`), oversee all donations (`RF-S2`), manually confirm payments (`RF-S3`), and audit automatic confirmations and rejected webhooks (`RF-S4`).
+- **Internal Team Console with Three Roles (`RF-S5`):** **Admins** record donations received outside the website (`RF-S3`), follow invoice requests (`RF-F2`), and audit rejected payment notices (`RF-S4`); **campaign managers** create and configure campaigns (`RF-S1`); **moderators** review donor entries and hide or correct public names (`RF-C2`). All three can view donations, anonymous donors included (`RF-S2`).
 
 ---
 
