@@ -1,0 +1,33 @@
+:root {
+  --text: #1f1d24;
+  --muted: #5b5765;
+  --bg: #ffffff;
+  --accent: #0b5cad;
+  font: 16px/1.5 system-ui, 'Segoe UI', Roboto, sans-serif;
+  color: var(--text);
+  background: var(--bg);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --text: #f2f1f4;
+    --muted: #b9b5c2;
+    --bg: #15141a;
+    --accent: #6fb1ff;
+  }
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+}
+
+.shell {
+  max-width: 40rem;
+  margin: 0 auto;
+  padding: 3rem 1rem;
+}
+
+.shell p {
+  color: var(--muted);
+}
