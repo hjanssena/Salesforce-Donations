@@ -65,7 +65,7 @@ This document covers the public experience and the donation lifecycle shared by 
 - **User Story:** As a donor, I want my donation to be recorded once my payment succeeds, so that the program's records reflect only money it actually received.
 
 ### Acceptance Criteria
-- **CA1 (Record After Successful Payment):** **Given** I have filled in my details and selected a campaign, **when** the payment is authorized, **then** a donation record exists in `Paid` status with its campaign, my recognition choice (anonymous or credited), my invoice choice, my details for those choices, and the amount paid.
+- **CA1 (Record After Successful Payment):** **Given** I have filled in my details and selected a campaign, **when** the payment is authorized, **then** a donation record exists with its campaign, my recognition choice (anonymous or credited), my invoice choice, my details for those choices, and the amount paid.
 - **CA2 (Payment Reference):** **Given** a donation was recorded from a successful payment, **when** staff view it, **then** it shows the unique payment reference that locates the matching Stripe test payment.
 - **CA3 (Negative: Unsuccessful Payment):** **Given** I started a payment, **when** it is declined, cancelled, or left unfinished, **then** no donation record is created and the campaign's progress does not change.
 
@@ -90,7 +90,7 @@ This document covers the public experience and the donation lifecycle shared by 
 - **User Story:** As a donor, I want to receive a receipt by email as soon as I pay, so that I have proof of my donation.
 
 ### Acceptance Criteria
-- **CA1 (Receipt After Payment):** **Given** I paid with a test card, **when** my donation is recorded, **then** I receive an email from the program at the address I gave, with the donation reference, campaign, amount and date, and my name unless I donated anonymously.
+- **CA1 (Receipt After Payment):** **Given** I paid with a test card, **when** my donation is recorded, **then** I receive an email from the program at the address I gave, with the donation reference, campaign, amount and date, and my display name only if I chose to be credited.
 - **CA2 (Negative: Unsuccessful Payment):** **Given** my payment was declined, cancelled, or left unfinished, **when** I check my email, **then** I have received no receipt.
 - **CA3 (Single Email):** **Given** I did not request an invoice, **when** my payment succeeds, **then** the receipt is the only email I receive.
 - **CA4 (Spanish):** **Given** I receive a receipt, **when** I read it, **then** it is written in Spanish.

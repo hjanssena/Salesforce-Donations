@@ -10,7 +10,7 @@ This document covers the Deliverable 2 (E2) requirements for recording payments 
 - **User Story:** As an admin, I want each successful payment to be recorded automatically, so that donations and campaign progress stay current without manual entry.
 
 ### Acceptance Criteria
-- **CA1 (Automatic Recording):** **Given** a donor paid with a test card, **when** the payment provider confirms the payment, **then** the donation is recorded as `Paid` without anyone entering it.
+- **CA1 (Automatic Recording):** **Given** a donor paid with a test card, **when** the payment provider confirms the payment, **then** the donation is recorded without anyone entering it.
 - **CA2 (Negative: Unsuccessful Payment):** **Given** the payment provider reports a declined or cancelled payment, **when** the notice arrives, **then** no donation is recorded.
 - **CA3 (Negative: Malformed Notice):** **Given** a notice arrives with missing or unreadable data, **when** it is processed, **then** no donation is recorded and the notice is logged for staff (`RF-S4`).
 
