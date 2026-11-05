@@ -52,6 +52,31 @@ flowchart LR
 7. Salesforce emails the receipt.
 8. Salesforce emails the invoice, only when the donor requested one.
 
+### How Salesforce knows who a donation belongs to
+The donor details are validated in step 2 and attached to the PaymentIntent as metadata in step 3. The `payment_intent.succeeded` event in step 6 carries the full PaymentIntent, so the webhook has everything it needs without a stored draft.
+
+| Metadata key | Used for | When |
+| :--- | :--- | :--- |
+| `campaign_id` | Opportunity `CampaignId` | Always |
+| `modality` | `Modality__c` (Anonymous, Credited, Invoiced) | Always |
+| `donor_email` | Find or create the Contact; receipt address | Always |
+| `donor_name` | Contact name | Credited, Invoiced |
+| `public_name` | `Public_Name__c` | Credited, Invoiced |
+| `is_company` | Create or link the Account | Credited, Invoiced |
+| `invoice_legal_name`, `invoice_rfc`, `invoice_taxpayer_type`, `invoice_email` | `Invoice_Request__c` | Invoiced |
+
+On `payment_intent.succeeded`, Salesforce verifies the signature, then in one transaction:
+1. Finds or creates the Contact by email, and the Account for a company.
+2. Creates the Opportunity (Closed Won) with the campaign, the amount from the event, the modality and the PaymentIntent ID.
+3. Creates the `Invoice_Request__c` when the metadata carries invoice data.
+4. Logs the event in `Stripe_Event__c`, then sends the receipt and, if requested, the invoice.
+
+Why this is safe and where it stops:
+- The browser holds only the client secret. It can confirm the payment but cannot change the metadata or the amount, so Salesforce trusts what it validated itself.
+- Stripe allows 50 metadata keys, 500 characters per value; these fields fit.
+- The details stay in Stripe's test account, so only fictitious data is allowed.
+- If creating the records fails, the endpoint answers with an error so Stripe retries. The unique PaymentIntent ID on the Opportunity makes the retry safe.
+
 ### Decisions taken
 - **Web app hosting:** outside Salesforce, on the team's server. The org allows only that origin through CORS.
 - **No Pending record:** a donation is created only after a successful payment. Donor details, including the RFC, travel in the PaymentIntent metadata. This differs from `RF-D3` in `lineamientos.md` and needs the professor's confirmation.
