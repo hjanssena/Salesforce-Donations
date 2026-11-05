@@ -8,11 +8,7 @@ Answers marked **Team decision** are not the stakeholder's words. They record ho
 
 ## Open Questions
 
-These came up while turning the answers into stories and have not been put to the stakeholder yet.
-
-1. Are campaign descriptions required in both English and Spanish?
-2. In which language should the invoice email be written: the donor's chosen language, or a fixed one?
-3. If two payments arrive close together and push a campaign past 100%, should both be accepted?
+None at the moment. The follow-up questions raised while writing the stories have all been answered.
 
 ---
 
@@ -30,6 +26,7 @@ These came up while turning the answers into stories and have not been put to th
 | Could the team change a campaign's goal after donations have come in? | This team | No. Once a campaign is active, its goal should not change, whether or not donations have come in. |
 | When a campaign reaches 100% of its goal or the event date has passed, should it keep accepting donations? | Another team (B) | After the date, stop receiving donations. At 100%, the campaign also stops receiving donations. |
 | When a campaign reaches its goal, who decides whether it keeps receiving donations? | This team | Nobody decides. The campaign stops receiving donations when it reaches 100%. |
+| If two payments arrive close together and push a campaign past 100%, should both be accepted? | This team | Yes. |
 | There should always be an open campaign. What should happen when none is open? | This team | **Team decision:** visitors see a message that no campaign is receiving donations right now, and they can browse completed campaigns. |
 
 ### Donations and donor information
@@ -85,4 +82,6 @@ These came up while turning the answers into stories and have not been put to th
 
 | Question | Asked by | Answer |
 | :--- | :--- | :--- |
-| In which language should donors read the site? | This team | English and Spanish. |
+| In which language should donors read the site? | This team | English only. The stakeholder first answered English and Spanish, then confirmed that only English will be used. |
+| Are campaign descriptions required in both English and Spanish? | This team | Not needed, since only English is used. |
+| In which language should the invoice email be written? | This team | English, since only English is used. |
