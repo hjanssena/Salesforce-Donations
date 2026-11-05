@@ -29,7 +29,7 @@ Any combination is allowed. Requesting an invoice does not put a donation on the
 - **User Story:** As a credited donor, I want my name shown as a supporter of the campaign, so that my contribution is publicly recognized.
 
 ### Acceptance Criteria
-- **CA1 (Details Requested):** **Given** I choose to be credited, **when** I fill in the form, **then** I am asked for the display name to show, my email address, and whether I donate as a company.
+- **CA1 (Details Requested):** **Given** I choose to be credited, **when** I fill in the form, **then** I am asked only for the display name to show and my email address.
 - **CA2 (Negative: Name Required):** **Given** I choose to be credited, **when** I submit the form without a display name, **then** submission is blocked and the form shows that the display name is required.
 - **CA3 (Names As Entered):** **Given** I choose to be credited, **when** I enter any display name, **then** it is accepted as typed, because names are not verified.
 - **CA4 (Supporters List):** **Given** I asked for credit and my donation is recorded, **when** any visitor opens that campaign, **then** they see my display name and amount in its supporters list. The list is per campaign.

@@ -62,11 +62,10 @@ The display name and the invoice data are separate: the first exists only for cr
 | `invoice_requested` | Whether to create an `Invoice_Request__c` | Always |
 | `donor_email` | Find or create the Contact; receipt address | Always |
 | `public_name` | `Public_Name__c`, the display name on the supporters list | Credited only |
-| `is_company` | Create or link the Account | Credited, or invoice requested |
 | `invoice_full_name`, `invoice_rfc`, `invoice_taxpayer_type`, `invoice_postal_code`, `invoice_tax_regime`, `invoice_cfdi_use`, `invoice_email` | `Invoice_Request__c` | Invoice requested |
 
 On `payment_intent.succeeded`, Salesforce verifies the signature, then in one transaction:
-1. Finds or creates the Contact by email, and the Account for a company. The Contact is named from the invoice legal name, else the display name, else "Anonymous donor".
+1. Finds or creates the Contact by email, and the Account when the invoice's taxpayer type is a company. The Contact is named from the invoice legal name, else the display name, else "Anonymous donor".
 2. Creates the Opportunity (Closed Won) with the campaign, the amount from the event, the anonymity flag and the PaymentIntent ID.
 3. Creates the `Invoice_Request__c` when the metadata carries invoice data.
 4. Logs the event in `Stripe_Event__c`, then sends the receipt and, if requested, the invoice.
