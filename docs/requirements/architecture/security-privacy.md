@@ -25,13 +25,14 @@ If an API key or secret is accidentally committed to Git:
 
 ## 2. RF-V2 · Visitor Security Proof
 - **Milestone:** Deliverable 1 (E1)
-- **Actor:** Program Coordination / Security Auditor
-- **User Story:** As program coordination, I want verifiable evidence that an unauthenticated visitor cannot read or modify other people's donations, so that donor privacy and financial integrity are protected.
+- **Actor:** Program Coordinator / Security Auditor
+- **User Story:** As a program coordinator, I want evidence that a visitor cannot read or change other people's donations, so that donors' privacy and the program's financial records are protected.
 
 ### Acceptance Criteria
-- **CA1 (Read Isolation):** **Given** donations from other people exist in Salesforce, **when** an unauthenticated visitor attempts to read them via the public site UI or any other vector identified by the team (e.g., URL manipulation, REST/Aura/GraphQL endpoints), **then** they obtain zero data from those donations.
-- **CA2 (Write/Modify Isolation):** **Given** donations from other people exist in Salesforce, **when** an unauthenticated visitor attempts to modify or overwrite them, **then** the attempt fails.
-- **CA3 (Reproducible Documentation):** **Given** the security documentation (`docs/seguridad.md`), **when** another person follows its step-by-step instructions, **then** they can reproduce the test and obtain the exact same result.
+- **CA1 (Read Isolation):** **Given** donations from other people exist, **when** an unauthenticated visitor tries to read them through the public site or any other route the team identified (for example URL changes or REST, Aura, or GraphQL calls), **then** the visitor gets no data from those donations.
+- **CA2 (Write Isolation):** **Given** donations from other people exist, **when** an unauthenticated visitor tries to change or overwrite them, **then** the attempt fails.
+- **CA3 (Negative: No Direct Donation Creation):** **Given** I am an unauthenticated visitor, **when** I try to create a donation without a successful payment, **then** the attempt fails.
+- **CA4 (Reproducible Documentation):** **Given** the security documentation (`docs/seguridad.md`), **when** another person follows its steps, **then** they can repeat the test and get the same result.
 
 ---
 
@@ -43,7 +44,7 @@ If an API key or secret is accidentally committed to Git:
 
 ### Personal Data Classification (`OA6`)
 - Systematically classify all collected fields:
-  - **Donor Name** (PII — Public only if `Credited`, Internal-only if `Invoiced`, Not stored/displayed if `Anonymous`).
+  - **Donor Name** (PII — Public if `Credited` or `Invoiced`, not collected if `Anonymous`).
   - **Email Address** (PII — Strictly confidential; used solely for receipt delivery, never displayed publicly).
   - **RFC** (Sensitive Tax ID — Strictly internal for `Invoiced` modality; validated via regex, never public).
   - **Payment Tokens / References** (Operational — Store only Stripe Checkout Session / PaymentIntent IDs; never capture or store raw card numbers/CVV in Salesforce).
