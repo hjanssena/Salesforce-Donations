@@ -66,14 +66,9 @@ Rules that follow from them:
 
 ---
 
-## Rule 6: 5-Part Technical Blocker & Bug Reporting (`C7` — `docs/preguntas_y_reportes.md`)
+## Rule 6: Not Used
 
-Whenever helping debug a platform error, Guest User permission issue, or integration blocker, structure the diagnostic summary using the mandatory 5-part report format so it can be logged directly in `docs/preguntas_y_reportes.md`:
-1. **Objective:** Specific User Story (`RF`) and Acceptance Criterion (`CA`) under test.
-2. **Actions Executed:** Detailed technical steps taken.
-3. **Expected Behavior:** Intended technical outcome.
-4. **Actual Behavior:** Sanitized error log or behavior observed (zero secrets or PII).
-5. **Prior Research:** Prompt used, AI/documentation response, and why it failed.
+The technical blocker and bug report log (`docs/preguntas_y_reportes.md`) is not kept in this project. The number stays reserved so Rules 7 and 8 keep their references.
 
 ---
 
