@@ -42,6 +42,7 @@ If an API key or secret is accidentally committed to Git:
 - **Guest User Profile & Sharing:** The Guest User gets no object permissions on `Donation` (Opportunity) or its related records. It may only call the public API, which returns campaigns and approved public donor recognition summaries (name and amount) and starts a payment session. Organization-Wide Defaults (OWD) for external users must default to `Private` where applicable.
 - **Team Roles:** Admin, Campaign Manager, and Moderator can view donor data, anonymous donors included. All other capabilities are split by role as defined in [roles.md](file:///Users/janssen/Documents/UADY/Semestre7/Salesforce/Proyecto/docs/requirements/admin/roles.md), and each role is a separate permission set.
 - **Integration User / Webhook Context:** Integration accounts or webhook handlers must have permissions restricted solely to receiving the webhook, logging the event, and creating the donation after a verified successful payment.
+- **Guest User and Apex REST setup:** the guest profile, the `without sharing` selector, and the webhook secret handling are described in [salesforce-api.md](file:///Users/janssen/Documents/UADY/Semestre7/Salesforce/Proyecto/docs/salesforce-api.md).
 - **Web Application Origin:** The donor-facing web app runs outside Salesforce on a team-owned server over HTTPS. The org allows only that origin through CORS.
 
 ### Personal Data Classification (`OA6`)

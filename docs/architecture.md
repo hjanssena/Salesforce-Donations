@@ -1,6 +1,6 @@
 # Architecture — Mexico Dreamin Donation Portal
 
-The overview every contributor and agent reads before building. It holds the two diagrams the team agreed on: the services, and the data model mapped to Salesforce objects. The detail behind them (metadata keys, webhook steps, field list, decisions) is in [requirements/architecture/solution-architecture.md](requirements/architecture/solution-architecture.md). What is and is not built is in [scope.md](scope.md).
+The overview every contributor and agent reads before building. It holds the two diagrams the team agreed on: the services, and the data model mapped to Salesforce objects. The detail behind them (metadata keys, webhook steps, field list, decisions) is in [requirements/architecture/solution-architecture.md](requirements/architecture/solution-architecture.md). What is and is not built is in [scope.md](scope.md). How Salesforce serves the API (site, Guest User, Apex REST classes, CORS, webhook, Stripe callout) is in [salesforce-api.md](salesforce-api.md).
 
 If a change contradicts this page, update the page and `docs/requirements/architecture/solution-architecture.md` in the same pull request.
 
@@ -61,6 +61,9 @@ These are settled. Do not reverse them without the team.
 - **Secrets stay out of the repository.** Stripe keys and the webhook secret live in Named Credentials and protected settings.
 
 ## 4. Open technical checks
+
+Each check and its fallback is described in [salesforce-api.md](salesforce-api.md).
+
 
 - The Guest User can call the Apex REST API from the team's origin.
 - Stripe can reach the webhook endpoint through the public site.

@@ -80,6 +80,7 @@ Why this is safe and where it stops:
 - **No Payment object for now:** a donation exists only after one successful payment, so it has one PaymentIntent. `Stripe_Event__c` keeps the attempt history. A Payment object becomes worthwhile if refunds, stored failed attempts, or more Stripe data (charge, fees) enter scope.
 
 ### Open technical checks
+How each is set up and tested, with fallbacks: [salesforce-api.md](file:///Users/janssen/Documents/UADY/Semestre7/Salesforce/Proyecto/docs/salesforce-api.md).
 - The Guest User can call the Apex REST API from the team's origin (CORS on a public site).
 - The webhook endpoint is reachable by Stripe through the public site.
 - The Developer Edition daily email limit covers the demo.
