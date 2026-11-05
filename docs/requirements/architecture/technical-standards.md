@@ -34,7 +34,7 @@ This document captures the non-functional development standards (`C6`), platform
 
 ## 3. Platform Failure Contingency Matrix
 
-If a Salesforce Developer Edition limitation blocks a requirement, report it using the 5-part protocol (`docs/preguntas_y_reportes.md`) to activate the professor's contingency plan:
+If a Salesforce Developer Edition limitation blocks a requirement, report it to the professor to activate the contingency plan:
 
 | Detected Situation | Advisor / Professor Contingency Action |
 | :--- | :--- |
@@ -58,5 +58,4 @@ If a Salesforce Developer Edition limitation blocks a requirement, report it usi
 | :--- | :--- | :--- |
 | **AI Logbook** | `docs/bitacora_ia.md` | Date, author, AI tool, associated RF, prompt/summary, output obtained, verification method, corrections applied, and acceleration estimate. Must include **at least 3 documented AI errors/hallucinations** that were caught and fixed (for `C3` Excellence). |
 | **AI Context File** | Root or `docs/` (`CLAUDE.md`, etc.) | Master system prompts or architectural context provided to LLMs. |
-| **Contribution Log** | `docs/contribucion.md` | Individual tables per team member listing tasks, verifiable evidence (commit links/screenshots), and hours invested for E1 and E2. |
-| **Questions & Bug Reports** | `docs/preguntas_y_reportes.md` | Continuous log using the 5-part structure: (1) Objective/RF/CA, (2) Actions executed, (3) Expected behavior, (4) Actual behavior/logs, (5) Prior research & LLM prompt used, plus final resolution. |
+| **Individual Contributions** | GitHub Project | Tracked in the team's GitHub Project, linked to the squashed PRs and commits on `main`. There is no `docs/contribucion.md`. |
