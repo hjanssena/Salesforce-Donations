@@ -40,14 +40,27 @@ This document covers the base public experience and end-to-end donation lifecycl
 
 ---
 
-## RF-D3 · Pre-Payment Registration in Salesforce
-- **Milestone:** Deliverable 1 (E1)
-- **Actor:** Donor (Any Modality)
-- **User Story:** As a donor, I want my donation to be recorded before I pay, so that the program can match and recognize my payment when it arrives.
+## RF-D1c · Browse Completed Campaigns and See When None Is Open
+- **Milestone:** Deliverable 2 (E2)
+- **Actor:** Visitor (Unauthenticated Guest User)
+- **User Story:** As a visitor, I want to browse past campaigns and be told clearly when no campaign is receiving donations, so that I understand the program's fundraising history and never land on an empty page.
 
 ### Acceptance Criteria
-- **CA1 (Pending Record Creation):** **Given** I have filled in my details and selected a campaign, **when** I submit the donation form, **then** a donation record is created in Salesforce in `Pending` status with its campaign, modality, and amount (if known on-site) *before* the payment gateway checkout opens.
-- **CA2 (Payment Reference Correlation):** **Given** I submitted the donation form, **when** the test payment gateway opens, **then** the payment session carries a unique reference that allows staff (or the webhook) to locate the corresponding Salesforce donation record from the Stripe test payment.
+- **CA1 (Completed Campaigns View):** **Given** campaigns have ended or reached their goal, **when** I open the completed campaigns view, **then** I see each of them with its goal and the amount raised.
+- **CA2 (No Open Campaigns Message):** **Given** every campaign has ended or reached its goal, **when** I open the site, **then** I see a message that no campaign is receiving donations right now, and I can browse the completed campaigns.
+- **CA3 (Negative Case — No Donating to Completed Campaigns):** **Given** a campaign has ended or reached its goal, **when** I open it from the completed campaigns view, **then** no option to donate is offered.
+
+---
+
+## RF-D3 · Donation Recorded After Successful Payment
+- **Milestone:** Deliverable 1 (E1)
+- **Actor:** Donor (Any Modality)
+- **User Story:** As a donor, I want my donation to be recorded once my payment succeeds, so that the program's records reflect only money that was actually received.
+
+### Acceptance Criteria
+- **CA1 (Record After Successful Payment):** **Given** I have filled in my details and selected a campaign, **when** the payment gateway authorizes my payment, **then** a donation record exists in Salesforce in `Paid` status with its campaign, modality, and the amount paid.
+- **CA2 (Payment Reference Correlation):** **Given** a donation record was created from a successful payment, **when** staff views it, **then** it shows the unique payment reference that allows locating the corresponding Stripe test payment.
+- **CA3 (Negative Case — Unsuccessful Payment):** **Given** I started a payment, **when** it is declined, cancelled, or left unfinished, **then** no donation record is created in Salesforce and the campaign's progress does not change.
 
 ---
 

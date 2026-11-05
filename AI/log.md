@@ -40,8 +40,14 @@ Format: `- User | User request | Decision taken | Change made`
 
 - Janssen | Resolve the merge conflicts in the stakeholder questions PR. | Merged `origin/main` into `docs/stakeholder-questions` (no force push), took main's bullet format for `AI/log.md`, and re-added this branch's entries in that format. | Updated `AI/log.md` and merged the new `AGENTS.md` rule and workflow doc changes from `main`.
 
+- Janssen | Update RF-S1 (goal cannot change once a campaign is active) and RF-D3 (donation recorded only after a successful payment) to match the stakeholder answers. | Replaced the goal-update criterion with a locked goal once the campaign starts, made activity depend on start and end dates, and rewrote RF-D3 around a record created as `Paid` after gateway authorization, with a negative case for unsuccessful payments. | Updated `docs/requirements/admin/campaign-management.md`, `docs/requirements/donor/general-flow.md`, `docs/requirements/README.md`, and `AI/log.md`.
+
+- Janssen | Add the visitor message for when no campaign is open, as a story. | Created RF-D1c (E2) for browsing completed campaigns, with an explicit message and a negative case when no campaign is receiving donations; other pending story changes remain undecided. | Updated `docs/requirements/donor/general-flow.md`, `docs/requirements/README.md`, and `AI/log.md`.
+
 - Janssen | Record the stakeholder's second round of Slack answers in the stakeholder questions document. | Moved 15 answered questions into a second-round answers table, kept the 2 questions still unanswered (who decides at 100% of the goal, site language), and left the stakeholder wording otherwise unchanged. | Updated `docs/requirements/stakeholder-questions.md` and `AI/log.md`.
 
 - Janssen | Record the stakeholder questions, including those from the other two teams, in the markdown file. | Rewrote `stakeholder-questions.md` as a question log (question, asker, answer) grouped by topic, folded in the latest answers (close at 100%, no email for manual donations, English and Spanish), and listed 3 new follow-up questions. | Updated `docs/requirements/stakeholder-questions.md` and `AI/log.md`.
 
 - Janssen | Record that the site will use English only and that two payments pushing a campaign past 100% are both accepted. | Changed the language answer to English only, moved the three follow-up questions into the answered tables (descriptions and invoice email in English, both payments accepted), and left no open questions. | Updated `docs/requirements/stakeholder-questions.md` and `AI/log.md`.
+
+- Janssen | Fix the merge conflicts in the RF-D3 and RF-S1 story update PR. | Merged `origin/main` into `docs/update-rf-d3-and-rf-s1` without a force push and kept both sides of the `AI/log.md` conflict. | Updated `AI/log.md`; merged the stakeholder questions log from `main`.

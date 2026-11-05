@@ -15,7 +15,7 @@
 The requirements are organized by domain (Donor/Public Side, Admin/Internal Side, and Cross-Cutting Architecture & Security):
 
 - **Donor Domain (`donor/`)**
-  - [general-flow.md](file:///Users/janssen/Documents/UADY/Semestre7/Salesforce/Proyecto/docs/requirements/donor/general-flow.md) — Public site access, campaign browsing, donation pre-registration, checkout redirection, thank-you page, and automated receipts (`RF-V1`, `RF-D1a`, `RF-D1b`, `RF-D3`, `RF-D4`, `RF-D5`).
+  - [general-flow.md](file:///Users/janssen/Documents/UADY/Semestre7/Salesforce/Proyecto/docs/requirements/donor/general-flow.md) — Public site access, campaign browsing, donation pre-registration, checkout redirection, thank-you page, and automated receipts (`RF-V1`, `RF-D1a`, `RF-D1b`, `RF-D1c`, `RF-D3`, `RF-D4`, `RF-D5`).
   - [modalities.md](file:///Users/janssen/Documents/UADY/Semestre7/Salesforce/Proyecto/docs/requirements/donor/modalities.md) — Rules and acceptance criteria for Anonymous (`RF-D2`), Credited (`RF-C1`), and Invoiced/RFC (`RF-F1`) donations.
 - **Admin / Staff Domain (`admin/`)**
   - [campaign-management.md](file:///Users/janssen/Documents/UADY/Semestre7/Salesforce/Proyecto/docs/requirements/admin/campaign-management.md) — Creating and managing fundraising campaigns and targets (`RF-S1`).
@@ -34,8 +34,9 @@ The requirements are organized by domain (Donor/Public Side, Admin/Internal Side
 | **RF-V1** | Scoped Public Site (No Login) | [donor/general-flow.md](file:///Users/janssen/Documents/UADY/Semestre7/Salesforce/Proyecto/docs/requirements/donor/general-flow.md) | Visitor | E1 |
 | **RF-D1a** | Select Campaign & View Progress | [donor/general-flow.md](file:///Users/janssen/Documents/UADY/Semestre7/Salesforce/Proyecto/docs/requirements/donor/general-flow.md) | Donor | E1 |
 | **RF-D1b** | Donate Custom Amount | [donor/general-flow.md](file:///Users/janssen/Documents/UADY/Semestre7/Salesforce/Proyecto/docs/requirements/donor/general-flow.md) | Donor | E2 |
+| **RF-D1c** | Browse Completed Campaigns & No-Open-Campaign Message | [donor/general-flow.md](file:///Users/janssen/Documents/UADY/Semestre7/Salesforce/Proyecto/docs/requirements/donor/general-flow.md) | Visitor | E2 |
 | **RF-D2** | Donate Anonymously | [donor/modalities.md](file:///Users/janssen/Documents/UADY/Semestre7/Salesforce/Proyecto/docs/requirements/donor/modalities.md) | Anonymous Donor | E1 |
-| **RF-D3** | Pre-Payment Registration | [donor/general-flow.md](file:///Users/janssen/Documents/UADY/Semestre7/Salesforce/Proyecto/docs/requirements/donor/general-flow.md) | Donor | E1 |
+| **RF-D3** | Donation Recorded After Successful Payment | [donor/general-flow.md](file:///Users/janssen/Documents/UADY/Semestre7/Salesforce/Proyecto/docs/requirements/donor/general-flow.md) | Donor | E1 |
 | **RF-D4** | Thank-You Page | [donor/general-flow.md](file:///Users/janssen/Documents/UADY/Semestre7/Salesforce/Proyecto/docs/requirements/donor/general-flow.md) | Donor | E1 |
 | **RF-D5** | Automatic Confirmation & Receipt | [donor/general-flow.md](file:///Users/janssen/Documents/UADY/Semestre7/Salesforce/Proyecto/docs/requirements/donor/general-flow.md) | Donor | E2 |
 | **RF-C1** | Public Donor Recognition | [donor/modalities.md](file:///Users/janssen/Documents/UADY/Semestre7/Salesforce/Proyecto/docs/requirements/donor/modalities.md) | Credited Donor | E1 |
@@ -56,7 +57,7 @@ The requirements are organized by domain (Donor/Public Side, Admin/Internal Side
 ### In Scope
 - Public site without login displaying active campaigns, goal progress, and a donation form.
 - Three donor modalities: **Anonymous**, **Credited** (publicly recognized name), and **Invoiced** (name and RFC).
-- Pre-registration of donations in Salesforce with `Pending` status prior to Stripe Test checkout, followed by redirection to a Thank-You page.
+- Recording of each donation in Salesforce as `Paid` once Stripe Test authorizes the payment, followed by redirection to a Thank-You page.
 - Internal Salesforce console for staff to manage campaigns, track donations, manually confirm payments, and trigger email receipts.
 - Automated payment confirmation via Stripe webhooks (E2).
 - Security testing documentation (`docs/seguridad.md`) and personal data classification.
