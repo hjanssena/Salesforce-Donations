@@ -15,13 +15,11 @@ The team that runs the program uses three roles. All three can see donor data, i
 | View donations and donor data, anonymous donors included | Yes | Yes | Yes | `RF-S2` |
 | Create and configure campaigns | Yes | Yes | No | `RF-S1` |
 | Hide or correct display names (emails are read-only) | Yes | No | Yes | `RF-C2` |
-| Maintain banned words | Yes | No | Yes (to confirm) | `RF-C2` |
+| Maintain banned words | Yes | No | Yes | `RF-C2` |
 | See RFC and invoice details | Yes | Yes | No | `RF-F2` |
 | Manually record donations | Yes | No | No | `RF-S3` |
 | View rejected payment notices | Yes | No | No | `RF-S4` |
 | Assign roles to team members | Yes | No | No | `RF-S5` |
-
-One cell is still an assumption: banned words maintained by moderators and admins.
 
 ---
 

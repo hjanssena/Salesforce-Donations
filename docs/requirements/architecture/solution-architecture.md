@@ -63,7 +63,7 @@ The display name and the invoice data are separate: the first exists only for cr
 | `donor_email` | Find or create the Contact; receipt address | Always |
 | `public_name` | `Public_Name__c`, the display name on the supporters list | Credited only |
 | `is_company` | Create or link the Account | Credited, or invoice requested |
-| `invoice_legal_name`, `invoice_rfc`, `invoice_taxpayer_type`, `invoice_email` | `Invoice_Request__c` | Invoice requested |
+| `invoice_full_name`, `invoice_rfc`, `invoice_taxpayer_type`, `invoice_postal_code`, `invoice_tax_regime`, `invoice_cfdi_use`, `invoice_email` | `Invoice_Request__c` | Invoice requested |
 
 On `payment_intent.succeeded`, Salesforce verifies the signature, then in one transaction:
 1. Finds or creates the Contact by email, and the Account for a company. The Contact is named from the invoice legal name, else the display name, else "Anonymous donor".
@@ -137,9 +137,12 @@ erDiagram
     string Name "company donors only"
   }
   Invoice_Request__c {
-    string Legal_Name__c
+    string Legal_Name__c "full name"
     string RFC__c "sensitive"
     string Taxpayer_Type__c
+    string Postal_Code__c
+    string Tax_Regime__c
+    string Cfdi_Use__c
     email Invoice_Email__c
     string Status__c "Requested, Sent, Failed"
     string Invoice_Type__c "no CFDI today"
@@ -155,7 +158,7 @@ erDiagram
   }
 ```
 
-`Banned_Word__mdt` (custom metadata, field `Word__c`) holds the words refused in public names. Who maintains the list is still an open point.
+`Banned_Word__mdt` (custom metadata, field `Word__c`) holds the words refused in display names. Moderators and admins maintain the list.
 
 | Project term | Salesforce | Note |
 | :--- | :--- | :--- |
@@ -165,6 +168,6 @@ erDiagram
 | Progress toward goal | Campaign roll-up | Simultaneous payments both count, so a campaign can end above 100%. |
 | Anonymous or credited | `Is_Anonymous__c` | Two independent choices with the invoice request. The supporters list shows donations that are not anonymous and are Visible. |
 | Hide or correct a name | `Public_Name__c`, `Display_Status__c` | Hidden donations still count toward the goal. |
-| Invoice request | `Invoice_Request__c` | Child of the donation. Has its own status, can be reissued (1 donation to N invoices), keeps the RFC behind its own permission set, and avoids empty invoice fields on most donations. `Invoice_Type__c` leaves room for CFDI later. |
+| Invoice request | `Invoice_Request__c` | Child of the donation. Has its own status, can be reissued (1 donation to N invoices), keeps the RFC behind its own permission set, and avoids empty invoice fields on most donations. `Invoice_Type__c` leaves room for CFDI later. The donor gives five SAT items (full name, RFC, postal code, fiscal regime, fiscal use); the invoice fills in the rest (description, quantity 1, amount, single payment, card) from the donation. |
 | Notice log, duplicate check, attempt history | `Stripe_Event__c` | Logs every Stripe notice, including failed payments, with the PaymentIntent ID. No standard object holds a staff-readable integration log. |
 | Admin, campaign manager, moderator | Three permission sets | See [roles.md](file:///Users/janssen/Documents/UADY/Semestre7/Salesforce/Proyecto/docs/requirements/admin/roles.md). The Guest User gets no permissions on these objects. |

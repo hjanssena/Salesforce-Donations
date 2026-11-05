@@ -48,14 +48,14 @@ This document covers how the team views donations, finds invoice requests, recor
 - **Milestone:** Deliverable 2 (E2)
 - **Actor:** Moderator
 - **User Story:** As a moderator, I want to review the donor entries of a campaign and hide or correct inappropriate display names, so that they do not stay visible on the supporters list.
-- **Open point:** Who maintains the list of banned words.
+- **Note:** Moderators and admins maintain the list of banned words.
 
 ### Acceptance Criteria
 - **CA1 (Review Entries):** **Given** a campaign has donations, **when** I open its entries, **then** I see each donor's display name and email, including anonymous donors.
 - **CA2 (Hide a Name):** **Given** a display name on the supporters list is inappropriate, **when** I hide it, **then** it no longer appears on the public list.
 - **CA3 (Correct a Name):** **Given** a display name on the supporters list needs fixing, **when** I change it, **then** the public list shows the new name.
 - **CA4 (Hidden Donation Still Counts):** **Given** I hid a name, **when** I check the campaign's progress, **then** the donation's amount is still included.
-- **CA5 (Negative: Banned Word):** **Given** a donor enters a name containing a banned word, **when** they submit the form, **then** submission is blocked and they are asked to enter another name.
+- **CA5 (Negative: Banned Word):** **Given** a donor enters a display name containing a banned word, **when** they submit the form, **then** submission is blocked and they are asked to enter another name.
 - **CA6 (Negative: Emails Are Read-Only):** **Given** I am signed in as a moderator, **when** I try to change a donor's email, **then** it is not possible.
 - **CA7 (Negative: Campaign Manager):** **Given** I am signed in as a campaign manager, **when** I try to hide or change a name, **then** it is not possible.
 - **CA8 (Negative: No Role):** **Given** I am not signed in or have no team role, **when** I try to hide or change a name, **then** it is not possible.

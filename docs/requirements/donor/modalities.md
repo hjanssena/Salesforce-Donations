@@ -42,15 +42,16 @@ Any combination is allowed. Requesting an invoice does not put a donation on the
 - **Milestone:** Deliverable 1 (E1)
 - **Actor:** Donor Requesting an Invoice
 - **User Story:** As a donor who needs a tax-deduction invoice, I want to give only the data my invoice needs, so that I receive it without sharing anything else.
-- **Open point:** The team works out exactly which data fills the invoice table (legal name and RFC are the minimum).
+- **Note:** Following the SAT's invoice requirements, the donor gives five items: full name, RFC, postal code of the fiscal address, fiscal regime, and the fiscal use of the invoice (uso fiscal). The program fills in the rest from the donation (see `RF-F3`).
 
 ### Acceptance Criteria
-- **CA1 (Negative: Mandatory Fields):** **Given** I chose to request an invoice, **when** I submit the form without my legal name, my RFC, or my email address, **then** submission is blocked and the form shows which one is missing.
+- **CA1 (Negative: Mandatory Fields):** **Given** I chose to request an invoice, **when** I submit the form without my full name, my RFC, the postal code of my fiscal address, my fiscal regime, the fiscal use of the invoice, or my email address, **then** submission is blocked and the form shows which one is missing.
 - **CA2 (Negative: RFC Pattern):** **Given** I entered an RFC, **when** I submit the form, **then** it is checked against the SAT structural pattern (initial letters, 6-digit date, 3-character homoclave; 12 characters for a company, 13 for an individual) and any input that does not match is rejected. The live SAT service is not queried.
 - **CA3 (Individual or Company):** **Given** I request an invoice, **when** I fill in the form, **then** I am asked whether I donate as an individual or as a company.
-- **CA4 (Independent of Recognition):** **Given** I requested an invoice and did not choose to be credited, **when** I inspect the public site, **then** my donation is not on the supporters list and my invoice data appears nowhere.
-- **CA5 (Negative: No Display Name Asked):** **Given** I requested an invoice and chose to be anonymous, **when** I fill in the form, **then** I am not asked for a display name.
-- **CA6 (No Real CFDI):** **Given** I completed my donation with an invoice request, **when** the program is audited, **then** no real fiscal receipt (CFDI) was issued.
+- **CA4 (Negative: Postal Code):** **Given** I entered a postal code, **when** it does not have exactly 5 digits, **then** submission is blocked and the form shows the postal code is not valid.
+- **CA5 (Independent of Recognition):** **Given** I requested an invoice and did not choose to be credited, **when** I inspect the public site, **then** my donation is not on the supporters list and my invoice data appears nowhere.
+- **CA6 (Negative: No Display Name Asked):** **Given** I requested an invoice and chose to be anonymous, **when** I fill in the form, **then** I am not asked for a display name.
+- **CA7 (No Real CFDI):** **Given** I completed my donation with an invoice request, **when** the program is audited, **then** no real fiscal receipt (CFDI) was issued.
 
 ---
 
@@ -58,10 +59,11 @@ Any combination is allowed. Requesting an invoice does not put a donation on the
 - **Milestone:** Deliverable 2 (E2)
 - **Actor:** Donor Requesting an Invoice
 - **User Story:** As a donor who requested an invoice, I want to receive it by email, so that I can claim my donation as a tax deduction.
-- **Open point:** The team defines the invoice content from the tax requirements. No CFDI is included.
+- **Open point:** Whether the invoice needs a tax breakdown ("cuando proceda") for a donation. No CFDI is included.
 
 ### Acceptance Criteria
 - **CA1 (Invoice Email):** **Given** I donated and requested an invoice, **when** my payment succeeds, **then** I receive an invoice at the email address I gave.
-- **CA2 (Negative: No Request):** **Given** I donated without requesting an invoice, **when** my payment succeeds, **then** I receive no invoice email.
-- **CA3 (Negative: Unsuccessful Payment):** **Given** I requested an invoice, **when** my payment is declined, cancelled, or left unfinished, **then** I receive no invoice email.
-- **CA4 (Spanish):** **Given** I receive an invoice email, **when** I read it, **then** it is written in Spanish.
+- **CA2 (Invoice Content):** **Given** I receive my invoice, **when** I read it, **then** it shows my full name, RFC, postal code, fiscal regime and fiscal use, plus what the program fills in from the donation: a donation description, quantity 1, the amount as unit value and total, payment in a single payment, and payment by card.
+- **CA3 (Negative: No Request):** **Given** I donated without requesting an invoice, **when** my payment succeeds, **then** I receive no invoice email.
+- **CA4 (Negative: Unsuccessful Payment):** **Given** I requested an invoice, **when** my payment is declined, cancelled, or left unfinished, **then** I receive no invoice email.
+- **CA5 (Spanish):** **Given** I receive an invoice email, **when** I read it, **then** it is written in Spanish.
