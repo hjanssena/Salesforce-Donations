@@ -197,5 +197,6 @@ Stripe events Salesforce handles at its webhook: `payment_intent.succeeded` crea
 ## 5. Working apart
 
 - **Web app:** run against a mock server that returns the examples above, including each error code. The mock is the contract in executable form; keep it in the web app repository.
+- **Salesforce, E1:** `POST /payment-sessions` validates exactly as in section 3 and returns a placeholder `clientSecret` and `paymentIntentId`. The real Stripe callout is added in E2 without changing the contract.
 - **Salesforce:** write tests with the same examples. For the webhook, use a sample `payment_intent.succeeded` event whose metadata follows section 4, so the recording logic is tested without Stripe.
 - **Changes:** edit this page and the mock or tests in the same pull request, and have one person from each side approve it.
