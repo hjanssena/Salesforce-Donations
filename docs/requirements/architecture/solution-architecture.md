@@ -22,7 +22,7 @@ flowchart LR
     API["Public API (Apex REST, guest user)"]
     Session["Payment session service (Named Credential)"]
     Hook["Webhook endpoint (Apex REST)"]
-    Records[("Campaign, Opportunity, Contact, Account, Stripe_Event__c")]
+    Records[("Campaign, Opportunity, Contact, Account, Invoice_Request__c, Stripe_Event__c")]
     Staff["Lightning app for staff"]
     Mail["Receipt and invoice emails"]
   end
@@ -57,6 +57,8 @@ flowchart LR
 - **No Pending record:** a donation is created only after a successful payment. Donor details, including the RFC, travel in the PaymentIntent metadata. This differs from `RF-D3` in `lineamientos.md` and needs the professor's confirmation.
 - **Receipt by Salesforce:** Stripe sends no receipt emails in test mode, so Salesforce sends the receipt and the invoice. The Developer Edition daily email limit must be checked.
 - **Donation object:** the standard Opportunity, not a custom `Donation` object.
+- **Invoice as its own object:** `Invoice_Request__c` is a child of the donation, for its own status, reissues and RFC isolation.
+- **No Payment object for now:** a donation exists only after one successful payment, so it has one PaymentIntent. `Stripe_Event__c` keeps the attempt history. A Payment object becomes worthwhile if refunds, stored failed attempts, or more Stripe data (charge, fees) enter scope.
 
 ### Open technical checks
 - The Guest User can call the Apex REST API from the team's origin (CORS on a public site).
@@ -75,6 +77,7 @@ erDiagram
   Campaign ||--o{ Opportunity : "CampaignId"
   Opportunity }o--|| Contact : "contact role"
   Contact }o--o| Account : "AccountId"
+  Opportunity ||--o{ Invoice_Request__c : "Opportunity__c"
   Opportunity ||--o{ Stripe_Event__c : "Opportunity__c"
 
   Campaign {
@@ -98,12 +101,6 @@ erDiagram
     string Public_Name__c "+"
     string Display_Status__c "+"
     string Source__c "+"
-    boolean Invoice_Requested__c "+"
-    string Legal_Name__c "+"
-    string RFC__c "+"
-    string Taxpayer_Type__c "+"
-    email Invoice_Email__c "+"
-    datetime Invoice_Sent_At__c "+"
   }
   Contact {
     string Name
@@ -112,8 +109,18 @@ erDiagram
   Account {
     string Name "company donors only"
   }
+  Invoice_Request__c {
+    string Legal_Name__c
+    string RFC__c "sensitive"
+    string Taxpayer_Type__c
+    email Invoice_Email__c
+    string Status__c "Requested, Sent, Failed"
+    string Invoice_Type__c "no CFDI today"
+    datetime Sent_At__c
+  }
   Stripe_Event__c {
     string Stripe_Event_Id__c "unique"
+    string Payment_Intent_Id__c
     string Type__c
     string Status__c
     string Reason__c
@@ -131,6 +138,6 @@ erDiagram
 | Progress toward goal | Campaign roll-up | Simultaneous payments both count, so a campaign can end above 100%. |
 | Anonymous, Credited, Invoiced | `Modality__c` | The supporters list shows Credited and Invoiced donations that are Visible. |
 | Hide or correct a name | `Public_Name__c`, `Display_Status__c` | Hidden donations still count toward the goal. |
-| Invoice request | `Invoice_*` fields, `RFC__c`, `Legal_Name__c` | Fields on the donation. No separate object, since each donation has at most one invoice. |
-| Notice log, duplicate check | `Stripe_Event__c` | The only custom object. No standard object holds a staff-readable integration log. |
+| Invoice request | `Invoice_Request__c` | Child of the donation. Has its own status, can be reissued (1 donation to N invoices), keeps the RFC behind its own permission set, and avoids empty invoice fields on most donations. `Invoice_Type__c` leaves room for CFDI later. |
+| Notice log, duplicate check, attempt history | `Stripe_Event__c` | Logs every Stripe notice, including failed payments, with the PaymentIntent ID. No standard object holds a staff-readable integration log. |
 | Donation entry, moderator | Permission sets | The Guest User gets no permissions on these objects. |
