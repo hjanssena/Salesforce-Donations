@@ -65,4 +65,4 @@ These are settled. Do not reverse them without the team.
 - The Guest User can call the Apex REST API from the team's origin.
 - Stripe can reach the webhook endpoint through the public site.
 - The Developer Edition daily email limit covers the demo.
-- E1 may need to confirm the payment without the webhook; if so, recording must stay idempotent on the PaymentIntent ID.
+- Recording must stay idempotent on the PaymentIntent ID, because E1 drives it from a sample event and E2 from the real webhook.

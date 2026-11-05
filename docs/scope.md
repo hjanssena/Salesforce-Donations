@@ -54,6 +54,19 @@ A donation portal for Mexico Dreamin. Visitors browse fundraising campaigns and 
 - Pending or draft donation records. A donation exists only after a verified successful payment.
 - Stored failed payment attempts as donations. Stripe notices of failed payments go to the event log only.
 
+## Delivery plan
+
+Front and back are built apart against [contract.md](contract.md) and joined in the second delivery.
+
+| | Delivery 1 (E1, Nov 10): working apart | Delivery 2 (E2, Nov 17): joining |
+| :--- | :--- | :--- |
+| **Web app** | Deploy to the team server with TLS; mock server from the contract; campaigns, donation form (suggested and custom amounts), recognition and invoice choices, card field on a mock secret, thank-you page, Spanish copy. (`RF-V1`, `RF-D1a`, `RF-D1b`, `RF-D2`, `RF-C1`, `RF-F1`, `RF-D4`) | Connect to the real endpoints; completed campaigns view and no-open-campaign message; auto-scrolling supporters list; banned-word errors. (`RF-D1c`, `RF-C1`) |
+| **Salesforce, data and staff app** | Data model; three permission sets; Guest User without object permissions; campaign management; donation list; invoice flag and filter; manual donations. (`RF-S5`, `RF-V2`, `RF-S1`, `RF-S1b`, `RF-S2`, `RF-F2`, `RF-S3`) | Name moderation and banned words; rejected notices log. (`RF-C2`, `RF-S4`) |
+| **Salesforce, API and payments** | Connection check from the deployed web app; campaign endpoints; payment session endpoint tested with curl; recording service driven by a sample `payment_intent.succeeded` event, safe to repeat; `docs/seguridad.md`. (`RF-D3`) | Stripe webhook with signature check and duplicate handling; receipt and invoice emails; end-to-end test with test cards; email limit check. (`RF-V3a`, `RF-V3b`, `RF-D5`, `RF-F3`) |
+| **Everyone** | Contract approved; professor's answer on `RF-D3`; demo video. | End-to-end demo and defense preparation. |
+
+If E1 slips, cut in this order: invoice form polish, manual donations (`RF-S3`), staff donation filters. Keep campaigns, the donation form, roles and the recording service.
+
 ## Open points
 
 | Point | Needed from |
@@ -63,4 +76,3 @@ A donation portal for Mexico Dreamin. Visitors browse fundraising campaigns and 
 | Whether manual donations are allowed for completed campaigns, and whether credited manual entries appear on the supporters list (`RF-S3`). | Stakeholder |
 | Whether the Guest User can call the Apex REST API from the team's origin, whether Stripe can reach the webhook, and whether the Developer Edition email limit covers the demo. | Team, by testing |
 | Whether Stripe sends no receipt emails in test mode (assumed). | Team, by testing |
-| Whether E1 confirms payments without the webhook. | Team |
