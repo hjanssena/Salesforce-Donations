@@ -17,7 +17,7 @@ Tickets are also grouped by **Sprint** (Sprint 1 is E1, Sprint 2 is E2) and carr
 
 A ticket that cannot start until another is done uses GitHub's own relationship: open the ticket, then **Relationships → Blocked by**, and pick the blocking ticket. Set its Status to **Blocked** while a blocker is open.
 
-Only block tickets whose work is entirely on one side. A story ticket that holds both web and Salesforce tasks stays unblocked, so the other side can start.
+Only block tickets whose work is entirely on one side. A story ticket that holds both web and Salesforce tasks has no blocker links, so the other side can start. Instead, each side's task list starts with a line saying what it waits for (for example _Can start after #34._). Check that line before picking up a side.
 
 ## Automation
 
