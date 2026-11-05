@@ -30,6 +30,8 @@ Before planning, writing, or reviewing anything, read these three documents. The
 2. [docs/architecture.md](file:///Users/janssen/Documents/UADY/Semestre7/Salesforce/Proyecto/docs/architecture.md): the services, the payment flow, the data model on Salesforce objects, and the decisions that are settled.
 3. [docs/contract.md](file:///Users/janssen/Documents/UADY/Semestre7/Salesforce/Proyecto/docs/contract.md): the agreed API between the React web app and Salesforce: campaign endpoints, the payment session endpoint, errors, and the PaymentIntent metadata. Front and back are built apart against it.
 
+When working on the Salesforce side of the API (the public site, Guest User, Apex REST classes, CORS, the Stripe webhook or callout), also read [docs/salesforce-api.md](file:///Users/janssen/Documents/UADY/Semestre7/Salesforce/Proyecto/docs/salesforce-api.md).
+
 Rules that follow from them:
 - Do not build anything listed under "What we are not doing" in the scope, and do not reverse a decision listed in the architecture without the team.
 - Never change an endpoint, a field, an error code, or a metadata key on one side only. Change `docs/contract.md` first, with the mock or tests that follow it, in the same change.

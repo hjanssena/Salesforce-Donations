@@ -13,7 +13,7 @@ The web app talks only to Salesforce. It never calls Stripe's API; it only uses 
 
 | Topic | Rule |
 | :--- | :--- |
-| Base URL | `{SF_SITE_URL}/services/apexrest/donations/v1`. The web app reads `{SF_SITE_URL}` from its configuration. |
+| Base URL | `{SF_SITE_URL}/services/apexrest/donations/v1`. The web app reads `{SF_SITE_URL}` from its configuration. How Salesforce serves it: [salesforce-api.md](salesforce-api.md). |
 | Auth | None. Guest User; the org allows only the web app's origin through CORS. |
 | Format | JSON, UTF-8. Request header `Content-Type: application/json`. |
 | Money | MXN, a JSON number with at most 2 decimals (`250`, `250.50`). Salesforce converts to centavos for Stripe. |
