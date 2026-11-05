@@ -31,11 +31,13 @@ The requirements are organized by domain (Donor/Public Side, Admin/Internal Side
 
 ## 2. Requirements Traceability Matrix
 
+The milestone column is the team's own delivery plan, described in [docs/scope.md](file:///Users/janssen/Documents/UADY/Semestre7/Salesforce/Proyecto/docs/scope.md#delivery-plan). It replaces the milestones in the course guidelines (`lineamientos.md`) for planning.
+
 | ID | Title | Domain File | Actor | Milestone |
 | :--- | :--- | :--- | :--- | :--- |
 | **RF-V1** | Scoped Public Site (No Login) | [donor/general-flow.md](file:///Users/janssen/Documents/UADY/Semestre7/Salesforce/Proyecto/docs/requirements/donor/general-flow.md) | Visitor | E1 |
 | **RF-D1a** | Select Campaign & View Progress | [donor/general-flow.md](file:///Users/janssen/Documents/UADY/Semestre7/Salesforce/Proyecto/docs/requirements/donor/general-flow.md) | Donor | E1 |
-| **RF-D1b** | Donate Custom Amount | [donor/general-flow.md](file:///Users/janssen/Documents/UADY/Semestre7/Salesforce/Proyecto/docs/requirements/donor/general-flow.md) | Donor | E2 |
+| **RF-D1b** | Donate Custom Amount | [donor/general-flow.md](file:///Users/janssen/Documents/UADY/Semestre7/Salesforce/Proyecto/docs/requirements/donor/general-flow.md) | Donor | E1 |
 | **RF-D1c** | Browse Completed Campaigns & No-Open-Campaign Message | [donor/general-flow.md](file:///Users/janssen/Documents/UADY/Semestre7/Salesforce/Proyecto/docs/requirements/donor/general-flow.md) | Visitor | E2 |
 | **RF-D2** | Donate Anonymously | [donor/modalities.md](file:///Users/janssen/Documents/UADY/Semestre7/Salesforce/Proyecto/docs/requirements/donor/modalities.md) | Anonymous Donor | E1 |
 | **RF-D3** | Donation Recorded After Successful Payment | [donor/general-flow.md](file:///Users/janssen/Documents/UADY/Semestre7/Salesforce/Proyecto/docs/requirements/donor/general-flow.md) | Donor | E1 |
