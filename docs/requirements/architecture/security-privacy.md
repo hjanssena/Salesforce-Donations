@@ -25,27 +25,31 @@ If an API key or secret is accidentally committed to Git:
 
 ## 2. RF-V2 · Visitor Security Proof
 - **Milestone:** Deliverable 1 (E1)
-- **Actor:** Program Coordination / Security Auditor
-- **User Story:** As program coordination, I want verifiable evidence that an unauthenticated visitor cannot read or modify other people's donations, so that donor privacy and financial integrity are protected.
+- **Actor:** Program Coordinator / Security Auditor
+- **User Story:** As a program coordinator, I want evidence that a visitor cannot read or change other people's donations, so that donors' privacy and the program's financial records are protected.
 
 ### Acceptance Criteria
-- **CA1 (Read Isolation):** **Given** donations from other people exist in Salesforce, **when** an unauthenticated visitor attempts to read them via the public site UI or any other vector identified by the team (e.g., URL manipulation, REST/Aura/GraphQL endpoints), **then** they obtain zero data from those donations.
-- **CA2 (Write/Modify Isolation):** **Given** donations from other people exist in Salesforce, **when** an unauthenticated visitor attempts to modify or overwrite them, **then** the attempt fails.
-- **CA3 (Reproducible Documentation):** **Given** the security documentation (`docs/seguridad.md`), **when** another person follows its step-by-step instructions, **then** they can reproduce the test and obtain the exact same result.
+- **CA1 (Read Isolation):** **Given** donations from other people exist, **when** an unauthenticated visitor tries to read them through the public site or any other route the team identified (for example URL changes or REST, Aura, or GraphQL calls), **then** the visitor gets no data from those donations.
+- **CA2 (Write Isolation):** **Given** donations from other people exist, **when** an unauthenticated visitor tries to change or overwrite them, **then** the attempt fails.
+- **CA3 (Negative: No Direct Donation Creation):** **Given** I am an unauthenticated visitor, **when** I try to create a donation without a successful payment, **then** the attempt fails.
+- **CA4 (Reproducible Documentation):** **Given** the security documentation (`docs/seguridad.md`), **when** another person follows its steps, **then** they can repeat the test and get the same result.
 
 ---
 
 ## 3. Platform Security & Data Privacy (`S15` & `OA6`)
 
 ### Principle of Least Privilege (`S15`)
-- **Guest User Profile & Sharing:** Permissions restricted exclusively to reading active Campaign records (and approved public donor recognition summaries) and creating the preliminary Donation record. Organization-Wide Defaults (OWD) for external users must default to `Private` where applicable.
-- **Integration User / Webhook Context:** Integration accounts or webhook handlers must have permissions restricted solely to receiving the webhook, logging the event, and updating the corresponding donation status.
+- **Guest User Profile & Sharing:** The Guest User gets no object permissions on `Donation` (Opportunity) or its related records. It may only call the public API, which returns campaigns and approved public donor recognition summaries (name and amount) and starts a payment session. Organization-Wide Defaults (OWD) for external users must default to `Private` where applicable.
+- **Team Roles:** Admin, Campaign Manager, and Moderator can view donor data, anonymous donors included. All other capabilities are split by role as defined in [roles.md](file:///Users/janssen/Documents/UADY/Semestre7/Salesforce/Proyecto/docs/requirements/admin/roles.md), and each role is a separate permission set.
+- **Integration User / Webhook Context:** Integration accounts or webhook handlers must have permissions restricted solely to receiving the webhook, logging the event, and creating the donation after a verified successful payment.
+- **Web Application Origin:** The donor-facing web app runs outside Salesforce on a team-owned server over HTTPS. The org allows only that origin through CORS.
 
 ### Personal Data Classification (`OA6`)
 - Systematically classify all collected fields:
-  - **Donor Name** (PII — Public only if `Credited`, Internal-only if `Invoiced`, Not stored/displayed if `Anonymous`).
+  - **Display Name** (PII — Asked only from credited donors and public on the supporters list. Not collected from anonymous donors).
+  - **Invoice Data** (Legal name and the other data the invoice needs — Asked only when an invoice is requested, internal, never public, and independent of the display name).
   - **Email Address** (PII — Strictly confidential; used solely for receipt delivery, never displayed publicly).
-  - **RFC** (Sensitive Tax ID — Strictly internal for `Invoiced` modality; validated via regex, never public).
+  - **RFC** (Sensitive Tax ID — Strictly internal, visible to admins and campaign managers only, for donors who request an invoice; validated via regex, never public). It travels in the PaymentIntent metadata until the donation is recorded, so only fictitious RFCs are allowed.
   - **Payment Tokens / References** (Operational — Store only Stripe Checkout Session / PaymentIntent IDs; never capture or store raw card numbers/CVV in Salesforce).
 - **Email Testing Rule:** Only email addresses owned and controlled by the project team may be used during testing to prevent sending emails to real third parties.
 

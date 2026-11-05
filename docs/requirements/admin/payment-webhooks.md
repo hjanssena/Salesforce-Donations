@@ -1,35 +1,38 @@
-# Admin Domain — Payment Webhooks & Automation
+# Admin Domain — Payment Notices and Automation
 
-This document specifies the Deliverable 2 (E2) requirements for receiving asynchronous payment notifications (webhooks) from Stripe Test Mode, verifying their authenticity, preventing duplicates, and providing audit visibility to Treasury staff.
+This document covers the Deliverable 2 (E2) requirements for recording payments automatically from the payment provider's notices (webhooks), accepting only authentic notices, avoiding duplicates, and showing staff which notices were rejected.
 
 ---
 
 ## RF-V3a · Receive Payment Webhook (Minimum Level)
-- **Milestone:** Deliverable 2 (E2 — Mandatory for E2)
-- **Actor:** Treasury / System Integration
-- **User Story:** As treasury staff, I want the payment gateway's payment notification to reach Salesforce automatically, so that donations update themselves without manual intervention.
+- **Milestone:** Deliverable 2 (E2, mandatory)
+- **Actor:** Admin
+- **User Story:** As an admin, I want each successful payment to be recorded automatically, so that donations and campaign progress stay current without manual entry.
 
 ### Acceptance Criteria
-- **CA1 (Webhook Ingestion & Status Update):** **Given** a donor paid using a test card in Stripe, **when** the payment gateway sends its payment notification (webhook), **then** the notification reaches Salesforce and the corresponding `Pending` donation transitions to `Paid` (triggering the automated receipt defined in `RF-D5`).
+- **CA1 (Automatic Recording):** **Given** a donor paid with a test card, **when** the payment provider confirms the payment, **then** the donation is recorded as `Paid` without anyone entering it.
+- **CA2 (Negative: Unsuccessful Payment):** **Given** the payment provider reports a declined or cancelled payment, **when** the notice arrives, **then** no donation is recorded.
+- **CA3 (Negative: Malformed Notice):** **Given** a notice arrives with missing or unreadable data, **when** it is processed, **then** no donation is recorded and the notice is logged for staff (`RF-S4`).
 
 ---
 
-## RF-V3b · Authentic & Idempotent Webhooks (Second Level)
-- **Milestone:** Deliverable 2 (E2 — Optional / Advanced Level)
-- **Actor:** Treasury / System Security
-- **User Story:** As treasury staff, I want Salesforce to accept only authentic payment notifications and ensure repeated notifications do not duplicate records or receipts, so that no external actor can mark donations as paid without paying.
+## RF-V3b · Authentic and Idempotent Notices (Second Level)
+- **Milestone:** Deliverable 2 (E2, optional)
+- **Actor:** Admin
+- **User Story:** As an admin, I want only authentic payment notices to be accepted and repeated notices to be ignored, so that no donation is added without a payment and none is counted twice.
 
 ### Acceptance Criteria
-- **CA1 (Cryptographic Signature Verification):** **Given** an actor other than the payment gateway sends a forged or unsigned notification, **when** it reaches Salesforce, **then** the system rejects it, the donation status remains unchanged, and the rejection is logged and visible to staff (`RF-S4`).
-- **CA2 (Idempotency / Deduplication):** **Given** the payment gateway sends the exact same payment notification twice, **when** both arrive at Salesforce, **then** only a single donation is marked `Paid` (campaign total is not double-counted) and only a single email receipt is sent.
+- **CA1 (Negative: Forged Notice):** **Given** someone other than the payment provider sends a forged or unsigned notice, **when** it arrives, **then** it is rejected, no donation is recorded, and the rejection is visible to staff (`RF-S4`).
+- **CA2 (Duplicate Notice):** **Given** the payment provider sends the same notice twice, **when** both arrive, **then** only one donation is recorded and the campaign total is not counted twice.
 
 ---
 
-## RF-S4 · View Automatic Confirmations and Rejected Webhooks
+## RF-S4 · View Rejected Payment Notices
 - **Milestone:** Deliverable 2 (E2)
-- **Actor:** Staff (Treasury)
-- **User Story:** As treasury staff, I want to see which donations were confirmed automatically by the gateway and which incoming webhook notifications were rejected, so that I can trust the financial data without auditing every transaction manually.
+- **Actor:** Admin
+- **User Story:** As an admin, I want to see which payment notices were rejected and why, so that I can trust the donation data without checking every payment.
 
 ### Acceptance Criteria
-- **CA1 (Confirmation Source Distinction):** **Given** a donation was confirmed via a payment gateway webhook, **when** staff views the donation in Salesforce, **then** they can clearly distinguish that it was confirmed *automatically* rather than *manually* (`RF-S3`).
-- **CA2 (Rejected Webhook Audit Log):** **Given** an incoming webhook notification was rejected (e.g., invalid signature, malformed payload, or unmatched reference), **when** staff reviews the rejected notifications view/log in Salesforce, **then** they can see the timestamp of arrival and the reason for rejection.
+- **CA1 (Rejected Notice Log):** **Given** a notice was rejected (for example an invalid signature or a malformed payload), **when** I open the rejected notices log, **then** I see when it arrived and why it was rejected.
+- **CA2 (Negative: No Donation From Rejected Notices):** **Given** a notice was rejected, **when** I view the donations list, **then** no donation exists for it.
+- **CA3 (Negative: Admin Only):** **Given** I am signed in as a campaign manager or a moderator, or not signed in, **when** I try to open the rejected notices log, **then** access is denied.
