@@ -1,0 +1,92 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1070 550" width="1070" height="550" role="img" aria-label="Data model. A donation is a standard Opportunity in Closed Won stage, linked to a Campaign and to a donor Contact through the opportunity contact role. Company donors also have an Account. Two custom objects point to the Opportunity: the invoice request and the Stripe event log. Banned words live in custom metadata.">
+<style>
+.box{fill:#fff;stroke:#8b979d;stroke-width:1.2}.org{fill:none;stroke:#0a62b8;stroke-width:1.8}.stripe{fill:none;stroke:#5a4fe0;stroke-width:1.8}
+.std{fill:#fff;stroke:#0a62b8;stroke-width:1.5}.cus{fill:#fff;stroke:#b4580a;stroke-width:1.5}
+.ln{fill:none;stroke:#1b2428;stroke-width:1.5;marker-end:url(#a1)}.ln2{fill:none;stroke:#1b2428;stroke-width:1.5;marker-end:url(#a2)}
+.dash{stroke-dasharray:5 4}.mk{fill:#1b2428}
+.t{font:600 13px sans-serif;fill:#1b2428}.s{font:400 11.5px sans-serif;fill:#5a666c}.l{font:400 11.5px sans-serif;fill:#1b2428}
+.o{font:600 12px sans-serif;fill:#0a62b8}.p{font:600 12px sans-serif;fill:#5a4fe0}.f{font:400 11.5px monospace;fill:#1b2428}
+.fc{font:400 11.5px monospace;fill:#b4580a}.tag{font:400 10.5px sans-serif;fill:#5a666c;letter-spacing:.04em}.tagc{font:600 10.5px sans-serif;fill:#b4580a;letter-spacing:.04em}
+</style>
+<rect width="100%" height="100%" fill="#fff"/>
+        <defs>
+          <marker id="a2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path class="mk" d="M0 0L10 5L0 10z"/></marker>
+        </defs>
+
+        <!-- Campaign -->
+        <rect class="std" x="20" y="30" width="280" height="180" rx="5"/>
+        <text class="t" x="34" y="52">Campaign</text><text class="tag" x="286" y="52" text-anchor="end">STANDARD</text>
+        <text class="f" x="34" y="72">Name</text>
+        <text class="f" x="34" y="89">Description</text>
+        <text class="f" x="34" y="106">StartDate, EndDate</text>
+        <text class="f" x="34" y="123">IsActive</text>
+        <text class="f" x="34" y="140">ExpectedRevenue → goal</text>
+        <text class="f" x="34" y="157">AmountWonOpportunities → raised</text>
+        <text class="fc" x="34" y="174">+ Purpose__c</text>
+        <text class="fc" x="34" y="191">+ Image_Url__c</text>
+
+        <!-- Opportunity -->
+        <rect class="std" x="400" y="30" width="310" height="214" rx="5"/>
+        <text class="t" x="414" y="52">Opportunity = the donation</text><text class="tag" x="696" y="52" text-anchor="end">STANDARD</text>
+        <text class="f" x="414" y="72">Name</text>
+        <text class="f" x="414" y="89">Amount</text>
+        <text class="f" x="414" y="106">CloseDate</text>
+        <text class="f" x="414" y="123">StageName → always Closed Won</text>
+        <text class="f" x="414" y="140">CampaignId</text>
+        <text class="fc" x="414" y="157">+ Stripe_Payment_Intent_Id__c · unique</text>
+        <text class="fc" x="414" y="174">+ Is_Anonymous__c</text>
+        <text class="fc" x="414" y="191">+ Public_Name__c</text>
+        <text class="fc" x="414" y="208">+ Display_Status__c</text>
+        <text class="fc" x="414" y="225">+ Source__c</text>
+
+        <!-- Contact, Account -->
+        <rect class="std" x="810" y="30" width="240" height="95" rx="5"/>
+        <text class="t" x="824" y="52">Contact = the donor</text><text class="tag" x="1036" y="52" text-anchor="end">STANDARD</text>
+        <text class="f" x="824" y="72">Name</text>
+        <text class="f" x="824" y="89">Email</text>
+        <text class="f" x="824" y="106">AccountId</text>
+        <rect class="std" x="810" y="190" width="240" height="78" rx="5"/>
+        <text class="t" x="824" y="212">Account</text><text class="tag" x="1036" y="212" text-anchor="end">STANDARD</text>
+        <text class="f" x="824" y="232">Name</text>
+        <text class="s" x="824" y="249">only for company donors</text>
+
+        <path class="ln2" d="M400 100 H302"/>
+        <text class="l" x="350" y="94" text-anchor="middle">CampaignId</text>
+        <path class="ln2" d="M710 100 H808"/>
+        <text class="l" x="760" y="94" text-anchor="middle">contact role</text>
+        <path class="ln2" d="M930 125 V188"/>
+        <text class="l" x="940" y="162">AccountId</text>
+
+        <!-- custom objects -->
+        <rect class="cus" x="340" y="300" width="270" height="214" rx="5"/>
+        <text class="t" x="354" y="322">Invoice_Request__c</text><text class="tagc" x="596" y="322" text-anchor="end">CUSTOM</text>
+        <text class="f" x="354" y="342">Legal_Name__c · full name</text>
+        <text class="f" x="354" y="359">RFC__c</text>
+        <text class="f" x="354" y="376">Taxpayer_Type__c</text>
+        <text class="f" x="354" y="393">Postal_Code__c</text>
+        <text class="f" x="354" y="410">Tax_Regime__c</text>
+        <text class="f" x="354" y="427">Cfdi_Use__c</text>
+        <text class="f" x="354" y="444">Invoice_Email__c</text>
+        <text class="f" x="354" y="461">Status__c · Invoice_Type__c</text>
+        <text class="f" x="354" y="478">Sent_At__c</text>
+        <text class="s" x="340" y="534">own status, reissues; RFC visible to admin and campaign manager</text>
+        <path class="ln2" d="M460 300 V246"/>
+        <text class="l" x="468" y="278">Opportunity__c</text>
+
+        <rect class="cus" x="640" y="300" width="270" height="146" rx="5"/>
+        <text class="t" x="654" y="322">Stripe_Event__c</text><text class="tagc" x="896" y="322" text-anchor="end">CUSTOM</text>
+        <text class="f" x="654" y="342">Stripe_Event_Id__c · unique</text>
+        <text class="f" x="654" y="359">Payment_Intent_Id__c</text>
+        <text class="f" x="654" y="376">Type__c</text>
+        <text class="f" x="654" y="393">Status__c</text>
+        <text class="f" x="654" y="410">Reason__c</text>
+        <text class="f" x="654" y="427">Received_At__c</text>
+        <text class="s" x="640" y="466">blocks duplicates, keeps attempt history, feeds the log</text>
+        <path class="ln2" d="M660 300 V246"/>
+        <text class="l" x="668" y="278">Opportunity__c</text>
+
+        <rect class="cus" x="20" y="290" width="280" height="78" rx="5"/>
+        <text class="t" x="34" y="312">Banned_Word__mdt</text><text class="tagc" x="286" y="312" text-anchor="end">CUSTOM METADATA</text>
+        <text class="f" x="34" y="332">Word__c</text>
+        <text class="s" x="34" y="350">checked when a public name is saved</text>
+      </svg>

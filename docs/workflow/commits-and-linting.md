@@ -27,7 +27,7 @@ All commits in this repository must adhere to the **Conventional Commits** speci
 | `ci` | GitHub Actions or automated verification pipelines. | `ci: add commitlint check on pull requests` |
 
 > [!TIP]
-> **Traceability Tip (Criterion `C9`):** Whenever working on a specific functional requirement, include the requirement ID as the scope (e.g., `feat(rf-d3): create pending donation before checkout`). This makes linking commits in `docs/contribucion.md` straightforward.
+> **Traceability Tip :** Whenever working on a specific functional requirement, include the requirement ID as the scope (e.g., `feat(rf-d3): create pending donation before checkout`). This makes it easy to link commits to tasks in the GitHub Project.
 
 ---
 
