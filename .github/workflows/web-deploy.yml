@@ -24,6 +24,8 @@ env:
 jobs:
   build:
     runs-on: ubuntu-latest
+    # A hung emulated step must not hold the runner for hours.
+    timeout-minutes: 15
     defaults:
       run:
         working-directory: web

@@ -1,7 +1,10 @@
 # syntax=docker/dockerfile:1
 
 # --- Build the static site ---
-FROM node:22-alpine AS build
+# The output is plain HTML, JS and CSS, the same on every platform, so this
+# stage runs natively on the build machine. Under QEMU (arm64 on an amd64
+# runner) `npm ci` can crash with "Illegal instruction".
+FROM --platform=$BUILDPLATFORM node:22-alpine AS build
 WORKDIR /app
 COPY package.json package-lock.json ./
 RUN npm ci
