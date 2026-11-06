@@ -129,14 +129,17 @@ jobs:
           scp -q bundle/docker-compose.yml "server:$DEPLOY_PATH/docker-compose.yml"
           gunzip -c bundle/image.tar.gz | ssh server "docker load"
 
+      # Piped to sh so it runs the same whatever the deploy user's login shell is.
       - name: Restart the site
         run: |
-          ssh server "set -e
-            cd $DEPLOY_PATH
-            test -f .env || { echo '.env is missing in $DEPLOY_PATH (see web/README.md)'; exit 1; }
-            WEB_TAG=latest docker compose up -d --no-build --remove-orphans
-            docker image prune -f >/dev/null
-            docker compose ps"
+          ssh server sh -s <<EOF
+          set -e
+          cd $DEPLOY_PATH
+          test -f .env || { echo ".env is missing in $DEPLOY_PATH (see web/README.md)"; exit 1; }
+          WEB_TAG=latest docker compose up -d --no-build --remove-orphans
+          docker image prune -f >/dev/null
+          docker compose ps
+          EOF
 
       # Resolve through public DNS: inside the tailnet MagicDNS would send the
       # request to the server's Tailscale IP, which tag:ci may not reach.
