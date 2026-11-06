@@ -1,29 +1,15 @@
-# Production stack on the team server. Values come from web/.env (not committed).
+# Runs the web app on the server. Tailscale Funnel publishes it to the internet
+# and terminates TLS, so the container only listens on localhost over HTTP.
+# Values come from .env next to this file (not committed). The deploy workflow
+# loads the image built in GitHub Actions, so the server never builds;
+# `docker compose build` still works locally.
 services:
   web:
     build: .
-    image: mexico-dreamin-web
+    image: mexico-dreamin-web:${WEB_TAG:-latest}
     restart: unless-stopped
     ports:
-      - "80:80"
-      - "443:443"
+      - "127.0.0.1:${WEB_PORT:-8090}:80"
     environment:
-      DOMAIN: ${DOMAIN:?set DOMAIN in .env}
       SF_SITE_URL: ${SF_SITE_URL:?set SF_SITE_URL in .env}
       STRIPE_PUBLISHABLE_KEY: ${STRIPE_PUBLISHABLE_KEY:?set STRIPE_PUBLISHABLE_KEY in .env}
-    volumes:
-      - letsencrypt:/etc/letsencrypt:ro
-      - certbot-webroot:/var/www/certbot:ro
-
-  # Renews the certificate twice a day; the web container reloads every 12 hours.
-  certbot:
-    image: certbot/certbot:v3.0.1
-    restart: unless-stopped
-    entrypoint: /bin/sh -c 'trap exit TERM; while :; do certbot renew --webroot -w /var/www/certbot --quiet; sleep 12h & wait $${!}; done'
-    volumes:
-      - letsencrypt:/etc/letsencrypt
-      - certbot-webroot:/var/www/certbot
-
-volumes:
-  letsencrypt:
-  certbot-webroot:

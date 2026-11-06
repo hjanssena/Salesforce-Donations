@@ -48,7 +48,7 @@ The **Mexico Dreamin Donation Portal** is a Salesforce-backed fundraising platfo
 │       ├── branching-and-merge-strategy.md # Feature branches, PR reviews & Squash Merge
 │       ├── releases-and-tagging.md # SemVer & course milestone tags (entrega-1, entrega-2)
 │       └── ai-and-documentation-logging.md # AI logbook & academic deliverable rules
-├── web/                           # React web app, Dockerfile, Nginx and certbot setup (see web/README.md)
+├── web/                           # React web app, Dockerfile, Nginx config and deploy (see web/README.md)
 ├── AGENTS.md                      # Mandatory instructions and guardrails for AI agents
 ├── CLAUDE.md                      # Pointer linking Claude agents to AGENTS.md
 ├── commitlint.config.js           # Commitlint configuration (@commitlint/config-conventional)
