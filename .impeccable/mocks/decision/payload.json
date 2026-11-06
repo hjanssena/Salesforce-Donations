@@ -1,0 +1,101 @@
+{
+  "title": "Choose the visual world",
+  "question": "The roll dealt the Mérida sign-painter's wall. Keep it, take an alternate, or re-roll. Pride in the students, never playful, never a folk postcard.",
+  "options": [
+    {
+      "id": "assigned", "kind": "assigned", "label": "Rótulo de Mérida", "kicker": "THE ROLL",
+      "lineage": "Hand-painted shop signs (rótulos) on Mérida's lime-washed walls",
+      "thesis": "The campaign is painted on the wall like a neighborhood announcement: big, proud, impossible to miss.",
+      "palette": ["#E6A71C", "#1F2F6B", "#F6F1E7", "#B23A1E", "#15120E"],
+      "materials": ["flat enamel on lime wash", "sign-painter caps with a flat painted shadow"],
+      "viewport": "An Izamal-yellow wall with 'MÉRIDA VA A MEXICO DREAMIN'' lettered in blue with a flat shadow, an añil band with the amount raised and the remaining gap, amount tiles and a black donate sign within reach of the thumb.",
+      "risk": "It drifts toward folk or playful if the lettering gets decorative; it only works if it's lettered with sign-trade discipline: flat, straight and big.",
+      "raised": [
+        {"from": "challenger-seven-segment", "raise": "The amount still missing is painted as boldly as the amount raised: 'FALTAN $18,750'."},
+        {"from": "challenger-fluid-ink", "raise": "The newest supporter is painted darkest, and older names fade like weathered paint."},
+        {"from": "challenger-secession", "raise": "The students' story sits in one calm column, a clearing in the wall."},
+        {"from": "challenger-papercut", "raise": "Depth comes only from overlapping flat coats of paint: no gradients, no blur."},
+        {"from": "challenger-automata", "raise": "Almagre red is reserved for the one element in motion: the chosen amount, the active step."}
+      ],
+      "html": ".impeccable/mocks/decision/assigned.html", "htmlFrame": "390x844"
+    },
+    {
+      "id": "model-pick", "kind": "pick", "label": "Boleto Mérida → CDMX", "kicker": "IMPECCABLE’S PICK",
+      "lineage": "Long-distance bus tickets and boarding passes",
+      "thesis": "The campaign is the trip ticket: each donation moves the students along the 1,320 km from Mérida to Mexico City.",
+      "palette": ["#0F3D3E", "#FBFBF7", "#F25C2A", "#9AA8A4"],
+      "materials": ["thermal ticket paper", "perforated stub", "mono route codes"],
+      "viewport": "A ticket on a deep teal background: MID → CDMX with the route line advancing, the headline, and a perforated stub with amounts and the donate button.",
+      "risk": "The travel ticket is a familiar metaphor, and many runs land there; it's clear but less memorable.",
+      "html": ".impeccable/mocks/decision/model-pick.html", "htmlFrame": "390x844"
+    },
+    {
+      "id": "challenger-kiosk", "kind": "challenger", "catalogId": "vernacular-ephemera-socialist-kiosk-print",
+      "label": "Three-ink kiosk", "verdict": "competitive",
+      "lineage": "Printed goods from a kiosk, three inks on gray board",
+      "thesis": "The whole site printed in three inks on recycled board: each amount is a cell, as at a stall.",
+      "palette": ["#BDB8AE", "#E4E0D6", "#1C1C1C", "#D23B2A", "#2B5DA8"],
+      "materials": ["gray recycled board", "three slightly off-register inks"],
+      "viewport": "A grid of whole cells: an abstract mark and headline, progress cell by cell, four amount cells and a black donate cell.",
+      "case": "Wins on clarity (amounts as cells, progress in segments), but relatives and companies don't recognize themselves in a Central European kiosk.",
+      "risk": "Cold and austere; it can read like a design exercise and not like students from Mérida.",
+      "html": ".impeccable/mocks/decision/challenger-kiosk.html", "htmlFrame": "390x844",
+      "hero": "https://impeccable.style/worlds/cards/vernacular-ephemera-socialist-kiosk-print-hero.webp"
+    },
+    {
+      "id": "challenger-seven-segment", "kind": "challenger", "catalogId": "signals-instruments-seven-segment-alarm-clock",
+      "label": "Seven-segment scoreboard", "verdict": "declined",
+      "lineage": "LED clocks and scoreboards",
+      "thesis": "Progress as a scoreboard that jumps from 98 to 100.", "palette": ["#111111", "#E8321E", "#3A1410"],
+      "materials": ["LED segments", "matte black"], "viewport": "A scoreboard with the amount raised in red segments.",
+      "case": "The dark tech look clashes with 'serious and close'; little identification.",
+      "risk": "Reads like a gadget.", "kept": "The missing amount is drawn as deliberately as the raised amount.",
+      "hero": "https://impeccable.style/worlds/cards/signals-instruments-seven-segment-alarm-clock-hero.webp"
+    },
+    {
+      "id": "challenger-fluid-ink", "kind": "challenger", "catalogId": "medium-native-fluid-ink-basin",
+      "label": "Suminagashi ink", "verdict": "declined",
+      "lineage": "Japanese marbling", "thesis": "A basin of ink that answers the finger.", "palette": ["#1B2A4A", "#F4F2EC", "#7D8596"],
+      "materials": ["ink on water"], "viewport": "A live liquid surface.", "case": "No relation to the students or to donating; heavy on phones.",
+      "risk": "Pure effect.", "kept": "The newest is the darkest: the most recent supporter stands out.",
+      "hero": "https://impeccable.style/worlds/cards/medium-native-fluid-ink-basin-hero.webp"
+    },
+    {
+      "id": "challenger-secession", "kind": "challenger", "catalogId": "design-canon-mloda-polska-secession-page",
+      "label": "Secession border", "verdict": "declined",
+      "lineage": "Kraków Secession magazines", "thesis": "A floral border that grows toward the text.", "palette": ["#F3EBDD", "#4E7A4A", "#C98A8A", "#3D4652"],
+      "materials": ["printed ornament"], "viewport": "Text in a clearing of flowers.", "case": "Ornamental, and close to folk; it doesn't help donating.",
+      "risk": "Decorative.", "kept": "The story in one calm column.",
+      "hero": "https://impeccable.style/worlds/cards/design-canon-mloda-polska-secession-page-hero.webp"
+    },
+    {
+      "id": "challenger-papercut", "kind": "challenger", "catalogId": "craft-making-lowicz-layered-papercut",
+      "label": "Layered papercut", "verdict": "declined",
+      "lineage": "Łowicz papercuts", "thesis": "Depth from layers of flat paper.", "palette": ["#D7263D", "#1B998B", "#F4D35E", "#2E294E"],
+      "materials": ["glossy cut paper"], "viewport": "A symmetrical rosette.", "case": "It turns into papel picado: exactly the folk postcard you ruled out.",
+      "risk": "Folkloric cliché.", "kept": "Depth by overlapping flat coats, never by shading.",
+      "hero": "https://impeccable.style/worlds/cards/craft-making-lowicz-layered-papercut-hero.webp"
+    },
+    {
+      "id": "challenger-automata", "kind": "challenger", "catalogId": "kinetic-sculpture-automata-crank-paper-menagerie",
+      "label": "Paper automata", "verdict": "declined",
+      "lineage": "Crank-driven paper automata", "thesis": "A procession of paper figures moved by a crank.", "palette": ["#F7F3EA", "#B08B5A", "#2B2B2B", "#C1272D"],
+      "materials": ["kraft", "cut paper"], "viewport": "Animated figures.", "case": "Too playful for companies and evaluators.",
+      "risk": "Toy-like.", "kept": "One reserved color only for what's moving.",
+      "hero": "https://impeccable.style/worlds/cards/kinetic-sculpture-automata-crank-paper-menagerie-hero.webp"
+    }
+  ],
+  "reroll": {"registers": ["safer", "bolder"]},
+  "buildPath": {"value": "code"},
+  "canon": true,
+  "canonCard": {
+    "kind": "canon", "label": "The crowdfunding standard",
+    "thesis": "The GoFundMe-style campaign page done with care: photo, progress, donate button.",
+    "palette": ["#FFFFFF", "#111111", "#0E7A4F", "#E6ECE9"],
+    "materials": ["clean grid", "campaign photo"],
+    "viewport": "Large photo, title, progress bar, a round donate button, and the supporters.",
+    "risk": "Exactly the generic charity look you said would feel wrong.",
+    "html": ".impeccable/mocks/decision/canon.html", "htmlFrame": "390x844"
+  },
+  "steer": true
+}
