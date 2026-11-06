@@ -1,4 +1,4 @@
-import { useId, useState } from 'react'
+import { useEffect, useId, useRef, useState, type ReactNode } from 'react'
 import type { CampaignDetail } from '../api/types'
 import { formatDay, formatMoney, formatPlain, progressOf } from './format'
 import { SUGGESTED_AMOUNTS } from './amounts'
@@ -7,9 +7,11 @@ interface Props {
   campaign: CampaignDetail
   /** Shows the "sample data" strip while the page runs on the mock API. */
   isSample?: boolean
+  /** The payment step for the chosen amount. `back` returns to the amounts. */
+  renderPayment: (amount: number, back: () => void) => ReactNode
 }
 
-export default function CampaignPage({ campaign, isSample = false }: Props) {
+export default function CampaignPage({ campaign, isSample = false, renderPayment }: Props) {
   const progress = progressOf(campaign.raisedAmount, campaign.goalAmount)
   const headingId = useId()
 
@@ -63,7 +65,7 @@ export default function CampaignPage({ campaign, isSample = false }: Props) {
         </p>
       </section>
 
-      <DonatePanel />
+      <DonatePanel renderPayment={renderPayment} />
 
       <article className="story">
         <h2 className="sign-small">Para qué es</h2>
@@ -83,44 +85,60 @@ export default function CampaignPage({ campaign, isSample = false }: Props) {
   )
 }
 
-function DonatePanel() {
+function DonatePanel({ renderPayment }: Pick<Props, 'renderPayment'>) {
   const [amount, setAmount] = useState<number>(250)
-  const [notice, setNotice] = useState(false)
+  const [step, setStep] = useState<'amount' | 'details'>('amount')
   const groupId = useId()
+  const [moves, setMoves] = useState(0)
+  const panelRef = useRef<HTMLElement>(null)
+
+  // Each step change brings the panel into view and gives its heading focus,
+  // so the donor (and a screen reader) lands at the start of the new step.
+  useEffect(() => {
+    if (moves === 0) return
+    const panel = panelRef.current
+    panel?.scrollIntoView?.({ block: 'start', behavior: 'smooth' })
+    panel?.querySelector<HTMLElement>('h2')?.focus({ preventScroll: true })
+  }, [moves])
+
+  const go = (next: 'amount' | 'details') => {
+    setStep(next)
+    setMoves((n) => n + 1)
+  }
 
   return (
-    <section id="donar" className="donate" aria-labelledby={groupId}>
+    <section id="donar" ref={panelRef} className="donate" aria-labelledby={groupId} data-step={step}>
       <div className="donate__inner">
-        <h2 id={groupId} className="sign-small">
-          Elige tu donativo
+        <h2 id={groupId} className="sign-small" tabIndex={-1}>
+          {step === 'amount' ? 'Elige tu donativo' : 'Tus datos'}
         </h2>
-        <div className="tiles" role="radiogroup" aria-labelledby={groupId}>
-          {SUGGESTED_AMOUNTS.map((value) => (
-            <button
-              key={value}
-              type="button"
-              role="radio"
-              aria-checked={amount === value}
-              className="tile"
-              aria-label={formatMoney(value)}
-              onClick={() => {
-                setAmount(value)
-                setNotice(false)
-              }}
-            >
-              <span className="tile__value" aria-hidden="true">
-                {formatPlain(value)}
-              </span>
+        {step === 'amount' ? (
+          <>
+            <div className="tiles" role="radiogroup" aria-labelledby={groupId}>
+              {SUGGESTED_AMOUNTS.map((value) => (
+                <button
+                  key={value}
+                  type="button"
+                  role="radio"
+                  aria-checked={amount === value}
+                  className="tile"
+                  aria-label={formatMoney(value)}
+                  onClick={() => setAmount(value)}
+                >
+                  <span className="tile__value" aria-hidden="true">
+                    {formatPlain(value)}
+                  </span>
+                </button>
+              ))}
+            </div>
+            <p className="donate__min">Pesos mexicanos · mínimo $50 · pago seguro con tarjeta</p>
+            <button type="button" className="sign-button" onClick={() => go('details')}>
+              Donar {formatMoney(amount)}
             </button>
-          ))}
-        </div>
-        <p className="donate__min">Pesos mexicanos · mínimo $50 · pago seguro con tarjeta</p>
-        <button type="button" className="sign-button" onClick={() => setNotice(true)}>
-          Donar {formatMoney(amount)}
-        </button>
-        <p className="donate__notice" role="status">
-          {notice ? 'El pago con tarjeta se conecta en la siguiente versión del sitio.' : ''}
-        </p>
+          </>
+        ) : (
+          renderPayment(amount, () => go('amount'))
+        )}
       </div>
     </section>
   )
