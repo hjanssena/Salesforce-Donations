@@ -19,7 +19,7 @@ Per the official grading calendar (deadline **23:59 Mérida time** via Slack):
 | Milestone | Due Date | Required Course Tag | Corresponding SemVer | Scope Required |
 | :--- | :--- | :--- | :--- | :--- |
 | **Deliverable 1 (E1)** | Tue, Nov 10, 2026 | `entrega-1` | `v1.0.0` | Public site URL, 5-min demo video, linked backlog with % progress, `docs/seguridad.md`, backed-up Salesforce metadata, and an updated AI logbook (`docs/bitacora_ia.md`) and the GitHub Project up to date. |
-| **Deliverable 2 (E2)** | Tue, Nov 17, 2026 | `entrega-2` | `v2.0.0` | Complete E1 updates + automated Stripe webhook confirmation (`RF-V3a`), custom amounts (`RF-D1b`), auto-receipts (`RF-D5`), webhook audit (`RF-S4`), and optional signature/idempotency validation (`RF-V3b`). |
+| **Deliverable 2 (E2)** | Tue, Nov 17, 2026 | `entrega-2` | `v2.0.0` | Complete E1 updates + automated Stripe webhook confirmation (`RF-V3a`), auto-receipts (`RF-D5`), webhook audit (`RF-S4`), and optional signature/idempotency validation (`RF-V3b`). |
 
 ---
 

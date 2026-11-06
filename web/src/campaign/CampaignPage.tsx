@@ -1,7 +1,7 @@
 import { useEffect, useId, useRef, useState, type ReactNode } from 'react'
 import type { CampaignDetail } from '../api/types'
 import { formatDay, formatMoney, formatPlain, progressOf } from './format'
-import { SUGGESTED_AMOUNTS } from './amounts'
+import { parseCustomAmount, SUGGESTED_AMOUNTS } from './amounts'
 
 interface Props {
   campaign: CampaignDetail
@@ -86,14 +86,48 @@ export default function CampaignPage({ campaign, isSample = false, renderPayment
 }
 
 function DonatePanel({ renderPayment }: Pick<Props, 'renderPayment'>) {
-  const [amount, setAmount] = useState<number>(250)
+  // A tile, or null when the donor types their own amount in "Otro monto".
+  const [tile, setTile] = useState<number | null>(250)
+  const [otherText, setOtherText] = useState('')
+  const [otherError, setOtherError] = useState('')
+  // The amount the open form pays; set each time the donor presses "Donar".
+  const [payAmount, setPayAmount] = useState(250)
   const [open, setOpen] = useState(false)
   // The form mounts on the first open and stays, so closing the modal keeps what the donor typed.
   const [started, setStarted] = useState(false)
   const groupId = useId()
   const titleId = useId()
+  const otherId = useId()
   const dialogRef = useRef<HTMLDialogElement>(null)
   const donateRef = useRef<HTMLButtonElement>(null)
+  const otherRef = useRef<HTMLInputElement>(null)
+
+  const other = parseCustomAmount(otherText)
+  const amount = tile ?? other.amount
+
+  function pickTile(value: number) {
+    setTile(value)
+    setOtherText('')
+    setOtherError('')
+  }
+
+  function typeOther(text: string) {
+    setOtherText(text)
+    if (text.trim() !== '') setTile(null)
+    // Once an error shows, it follows the typing so a fixed amount clears it.
+    if (otherError) setOtherError(parseCustomAmount(text).error ?? '')
+  }
+
+  function donate() {
+    if (amount === undefined) {
+      setOtherError(other.error ?? '')
+      otherRef.current?.focus()
+      return
+    }
+    setPayAmount(amount)
+    setStarted(true)
+    setOpen(true)
+  }
 
   // Opening and closing go through state; the effect keeps the <dialog> in step.
   useEffect(() => {
@@ -132,10 +166,10 @@ function DonatePanel({ renderPayment }: Pick<Props, 'renderPayment'>) {
               key={value}
               type="button"
               role="radio"
-              aria-checked={amount === value}
+              aria-checked={tile === value}
               className="tile"
               aria-label={formatMoney(value)}
-              onClick={() => setAmount(value)}
+              onClick={() => pickTile(value)}
             >
               <span className="tile__value" aria-hidden="true">
                 {formatPlain(value)}
@@ -143,18 +177,46 @@ function DonatePanel({ renderPayment }: Pick<Props, 'renderPayment'>) {
             </button>
           ))}
         </div>
-        <p className="donate__min">Pesos mexicanos · mínimo $50 · pago seguro con tarjeta</p>
-        <button
-          ref={donateRef}
-          type="button"
-          className="sign-button"
-          aria-haspopup="dialog"
-          onClick={() => {
-            setStarted(true)
-            setOpen(true)
-          }}
+        <div
+          className="other"
+          data-chosen={tile === null && amount !== undefined ? 'true' : undefined}
+          data-invalid={otherError ? 'true' : undefined}
         >
-          Donar {formatMoney(amount)}
+          <label className="other__label" htmlFor={otherId}>
+            Otro monto
+          </label>
+          <div className="other__box">
+            <span className="other__unit" aria-hidden="true">
+              $
+            </span>
+            <input
+              ref={otherRef}
+              id={otherId}
+              className="other__input"
+              type="text"
+              inputMode="decimal"
+              autoComplete="off"
+              value={otherText}
+              aria-invalid={Boolean(otherError)}
+              aria-describedby={otherError ? `${otherId}-error` : undefined}
+              onChange={(e) => typeOther(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') donate()
+              }}
+            />
+            <span className="other__unit" aria-hidden="true">
+              MXN
+            </span>
+          </div>
+          {otherError && (
+            <p id={`${otherId}-error`} className="field__error">
+              {otherError}
+            </p>
+          )}
+        </div>
+        <p className="donate__min">Pesos mexicanos · mínimo $50 · pago seguro con tarjeta</p>
+        <button ref={donateRef} type="button" className="sign-button" aria-haspopup="dialog" onClick={donate}>
+          {amount === undefined ? 'Donar' : `Donar ${formatMoney(amount)}`}
         </button>
       </div>
 
@@ -178,7 +240,7 @@ function DonatePanel({ renderPayment }: Pick<Props, 'renderPayment'>) {
             Cerrar
           </button>
         </div>
-        <div className="sheet__body">{started && renderPayment(amount, close)}</div>
+        <div className="sheet__body">{started && renderPayment(payAmount, close)}</div>
       </dialog>
     </section>
   )

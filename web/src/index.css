@@ -341,6 +341,58 @@ p {
   position: relative;
 }
 
+/* "Otro monto": the donor's own amount. Holding the chosen amount, it takes
+   the almagre outline the chosen tile would have. */
+.other {
+  display: grid;
+  gap: 0.35rem;
+  margin-top: 0.75rem;
+}
+
+.other__label {
+  font-weight: 700;
+}
+
+.other__box {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-height: 3.25rem;
+  padding: 0 0.75rem;
+  border: var(--line) solid var(--enamel);
+  background: #fff;
+}
+
+.other__box:focus-within {
+  outline: 3px solid var(--anil);
+  outline-offset: 3px;
+}
+
+.other[data-chosen] .other__box,
+.other[data-invalid] .other__box {
+  border-color: var(--almagre);
+}
+
+.other__unit {
+  font: 400 1rem / 1 var(--sign);
+  color: var(--weather-2);
+}
+
+.other__input {
+  flex: 1;
+  min-width: 0;
+  padding: 0.65rem 0;
+  border: 0;
+  background: transparent;
+  color: var(--enamel);
+  font: 700 1.125rem / 1.2 var(--read);
+  font-variant-numeric: tabular-nums;
+}
+
+.other__input:focus {
+  outline: none;
+}
+
 .donate__min {
   margin-top: 0.75rem;
   font-size: 0.875rem;
