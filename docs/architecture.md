@@ -65,7 +65,7 @@ These are settled. Do not reverse them without the team.
 Each check and its fallback is described in [salesforce-api.md](salesforce-api.md).
 
 
-- The Guest User can call the Apex REST API from the team's origin.
+- ~~The Guest User can call the Apex REST API from the team's origin.~~ Confirmed on 2026-11-06, preflight included (salesforce-api.md, section 4).
 - Stripe can reach the webhook endpoint through the public site.
 - The Developer Edition daily email limit covers the demo.
 - Recording must stay idempotent on the PaymentIntent ID, because E1 drives it from a sample event and E2 from the real webhook.
