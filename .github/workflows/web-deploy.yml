@@ -1,0 +1,148 @@
+name: Web deploy
+
+# Builds the web app's Docker image here and ships it to the team server over
+# SSH. Runs only when something under web/ changes on main (or by hand).
+on:
+  push:
+    branches: [main]
+    paths: ['web/**']
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+# One deploy at a time; a newer push waits instead of cancelling a half-done one.
+concurrency:
+  group: web-deploy
+  cancel-in-progress: false
+
+env:
+  IMAGE: mexico-dreamin-web
+  SITE_URL: https://dreamforce.hjanssen.xyz/
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: web
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: web/package-lock.json
+
+      # Never ship a build that fails the same checks as the PR workflow.
+      - run: npm ci
+      - run: npm run lint
+      - run: npm run typecheck
+      - run: npm test
+
+      - uses: docker/setup-qemu-action@v3
+      - uses: docker/setup-buildx-action@v3
+
+      - name: Build the image
+        env:
+          # Set the DEPLOY_PLATFORM repository variable to linux/arm64 for an ARM server.
+          PLATFORM: ${{ vars.DEPLOY_PLATFORM || 'linux/amd64' }}
+        run: |
+          docker buildx build . \
+            --platform "$PLATFORM" \
+            --tag "$IMAGE:${GITHUB_SHA::12}" \
+            --tag "$IMAGE:latest" \
+            --output "type=docker,dest=$RUNNER_TEMP/image.tar"
+
+      # One flat folder: the image plus the files the server needs to run it.
+      - name: Bundle the deploy files
+        run: |
+          mkdir -p "$RUNNER_TEMP/bundle/docker"
+          gzip -1 -c "$RUNNER_TEMP/image.tar" > "$RUNNER_TEMP/bundle/image.tar.gz"
+          cp docker-compose.yml "$RUNNER_TEMP/bundle/"
+          cp docker/init-cert.sh "$RUNNER_TEMP/bundle/docker/"
+          ls -lhR "$RUNNER_TEMP/bundle"
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: web-image
+          path: ${{ runner.temp }}/bundle
+          retention-days: 3
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    # Holds the SSH secrets; add required reviewers here if deploys should wait for approval.
+    environment:
+      name: production
+      url: ${{ env.SITE_URL }}
+    env:
+      SSH_HOST: ${{ secrets.DEPLOY_HOST }}
+      SSH_PORT: ${{ secrets.DEPLOY_PORT || '22' }}
+      SSH_USER: ${{ secrets.DEPLOY_USER }}
+      DEPLOY_PATH: ${{ vars.DEPLOY_PATH || '~/mexico-dreamin-web' }}
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: web-image
+          path: bundle
+
+      - name: Set up SSH
+        env:
+          SSH_KEY: ${{ secrets.DEPLOY_SSH_KEY }}
+          KNOWN_HOSTS: ${{ secrets.DEPLOY_KNOWN_HOSTS }}
+        run: |
+          if [ -z "$SSH_HOST" ] || [ -z "$SSH_USER" ] || [ -z "$SSH_KEY" ] || [ -z "$KNOWN_HOSTS" ]; then
+            echo "::error::Missing DEPLOY_HOST, DEPLOY_USER, DEPLOY_SSH_KEY or DEPLOY_KNOWN_HOSTS secret"
+            exit 1
+          fi
+          install -m 700 -d ~/.ssh
+          printf '%s\n' "$SSH_KEY" > ~/.ssh/deploy_key
+          chmod 600 ~/.ssh/deploy_key
+          # Pinned host key: the job refuses to talk to a server it does not recognise.
+          printf '%s\n' "$KNOWN_HOSTS" > ~/.ssh/known_hosts
+          cat > ~/.ssh/config <<EOF
+          Host server
+            HostName $SSH_HOST
+            Port $SSH_PORT
+            User $SSH_USER
+            IdentityFile ~/.ssh/deploy_key
+            IdentitiesOnly yes
+            StrictHostKeyChecking yes
+          EOF
+
+      - name: Copy the image and compose files
+        run: |
+          ssh server "mkdir -p $DEPLOY_PATH/docker"
+          scp -q bundle/docker-compose.yml "server:$DEPLOY_PATH/docker-compose.yml"
+          scp -q bundle/docker/init-cert.sh "server:$DEPLOY_PATH/docker/init-cert.sh"
+          gunzip -c bundle/image.tar.gz | ssh server "docker load"
+
+      - name: Restart the site
+        run: |
+          ssh server "set -e
+            cd $DEPLOY_PATH
+            test -f .env || { echo '.env is missing in $DEPLOY_PATH (see web/README.md)'; exit 1; }
+            WEB_TAG=latest docker compose up -d --no-build --remove-orphans
+            docker image prune -f >/dev/null
+            docker compose ps"
+
+      - name: Check the site answers
+        run: |
+          for _ in $(seq 1 12); do
+            if curl -fsS -o /dev/null --max-time 10 "$SITE_URL"; then
+              echo "Live: $SITE_URL"; exit 0
+            fi
+            sleep 5
+          done
+          # Before the first certificate exists the site serves plain HTTP only.
+          if curl -fsS -o /dev/null --max-time 10 "http://${SITE_URL#https://}"; then
+            echo "::warning::HTTP works but HTTPS does not. Run 'sh docker/init-cert.sh' once on the server."
+            exit 0
+          fi
+          echo "::error::$SITE_URL did not answer"; exit 1
+
+      - name: Remove the SSH key
+        if: always()
+        run: rm -f ~/.ssh/deploy_key

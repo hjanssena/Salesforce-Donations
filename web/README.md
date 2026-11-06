@@ -47,21 +47,52 @@ Without a certificate the container serves plain HTTP and logs `No certificate f
 
 ## Deploy to the team server
 
-Needs Docker with the Compose plugin, ports 80 and 443 free, and the domain's DNS `A` record pointing at the server.
+The site runs at **https://dreamforce.hjanssen.xyz/**. Every push to `main` that changes something under `web/` runs `.github/workflows/web-deploy.yml`, which you can also start by hand from the Actions tab:
 
-First time:
-```bash
-git clone https://github.com/hjanssena/Salesforce-Donations.git
-cd Salesforce-Donations/web
-cp .env.production.example .env    # fill in DOMAIN, CERTBOT_EMAIL, SF_SITE_URL, STRIPE_PUBLISHABLE_KEY
-sh docker/init-cert.sh             # starts over HTTP, gets the certificate, switches to HTTPS
-```
+1. Runs lint, typecheck and tests.
+2. Builds the Docker image in Actions.
+3. Copies the image, `docker-compose.yml` and `docker/init-cert.sh` to the server over SSH, loads the image with `docker load` and restarts it with `docker compose up -d`. The server never builds, and it needs no copy of the repository and no registry login.
+4. Checks that the site answers.
 
-Each later release:
-```bash
-git pull
-docker compose up -d --build
-```
+### One-time server setup
+
+The server needs Docker with the Compose plugin, the domain's DNS pointing at it, and ports 80 and 443 forwarded to it.
+
+1. Create a deploy user that can run Docker, and a key pair just for GitHub:
+   ```bash
+   sudo adduser --disabled-password deploy && sudo usermod -aG docker deploy
+   ssh-keygen -t ed25519 -N "" -C "github-deploy" -f deploy_key   # on your machine
+   # append deploy_key.pub to /home/deploy/.ssh/authorized_keys on the server
+   ```
+2. Create the deploy directory with its `.env` (never committed):
+   ```bash
+   mkdir -p ~/mexico-dreamin-web && cd ~/mexico-dreamin-web
+   cat > .env <<'EOF'
+   DOMAIN=dreamforce.hjanssen.xyz
+   CERTBOT_EMAIL=you@example.com
+   SF_SITE_URL=https://example.my.salesforce-sites.com/donations
+   STRIPE_PUBLISHABLE_KEY=pk_test_replace_me
+   EOF
+   ```
+3. In GitHub → Settings → Environments, create **production** and add these secrets:
+
+   | Secret | Value |
+   | :--- | :--- |
+   | `DEPLOY_HOST` | Server hostname or IP |
+   | `DEPLOY_PORT` | SSH port (optional, default 22) |
+   | `DEPLOY_USER` | `deploy` |
+   | `DEPLOY_SSH_KEY` | Contents of the private `deploy_key` |
+   | `DEPLOY_KNOWN_HOSTS` | Output of `ssh-keyscan -p <port> <host>`, so the job only talks to your server |
+
+   Optional repository variables: `DEPLOY_PATH` (default `~/mexico-dreamin-web`) and `DEPLOY_PLATFORM` (`linux/arm64` for an ARM server; default `linux/amd64`).
+4. Run the workflow once (Actions → Web deploy → Run workflow). The site comes up over HTTP, and the job warns that HTTPS is not ready yet.
+5. On the server, get the first certificate:
+   ```bash
+   cd ~/mexico-dreamin-web && sh docker/init-cert.sh
+   ```
+   From then on the site serves HTTPS, and the `certbot` container renews the certificate.
+
+To change `SF_SITE_URL` or the Stripe key, edit `.env` on the server and run `docker compose up -d` there. No new deploy is needed.
 
 How it fits together:
 - `docker/40-app-config.sh` runs before Nginx. It validates the two values, writes `/config.js`, and picks the HTTPS site config when `/etc/letsencrypt/live/$DOMAIN/fullchain.pem` exists, or the HTTP one when it does not.
