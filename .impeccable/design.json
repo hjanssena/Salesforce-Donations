@@ -337,7 +337,7 @@
     "rules": [
       {
         "name": "The One Moving Colour Rule",
-        "body": "Almagre appears only on the element in motion: the selected amount, a pressed sign, a selection. If nothing is chosen, nothing is red.",
+        "body": "Almagre appears only on the element in motion: the selected amount, a pressed sign, a selection, or a form error the donor has to fix. If nothing is chosen or wrong, nothing is red.",
         "section": "colors"
       },
       {

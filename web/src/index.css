@@ -333,7 +333,7 @@ p {
     background: var(--cal-deep);
   }
 
-  .sign-button:hover {
+  .sign-button:hover:not(:disabled) {
     background: var(--anil);
   }
 }
@@ -377,6 +377,235 @@ p {
   margin-top: 0.75rem;
   font-size: 0.9375rem;
   font-weight: 700;
+}
+
+/* ---- Donation form: the board's second step ---- */
+
+@media (min-width: 960px) {
+  /* The form is taller than the screen, so it scrolls with the page. */
+  .donate[data-step='details'] .donate__inner {
+    position: static;
+  }
+}
+
+.sign-small[tabindex='-1']:focus {
+  outline: none;
+}
+
+.donation {
+  display: grid;
+  gap: 1.25rem;
+  margin-top: 1rem;
+}
+
+.donation__chosen {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 0.25rem 1rem;
+  padding-bottom: 0.75rem;
+  border-bottom: var(--line) solid var(--enamel);
+}
+
+.donation__amount {
+  font-size: 1.25rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.text-button {
+  min-height: 2.75rem;
+  padding: 0.5rem 0;
+  border: 0;
+  background: none;
+  color: var(--enamel);
+  font: 700 0.9375rem / 1.2 var(--read);
+  text-decoration: underline;
+  text-decoration-thickness: 2px;
+  text-underline-offset: 0.2em;
+  cursor: pointer;
+}
+
+.group {
+  display: grid;
+  gap: 0.5rem;
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.group__legend {
+  padding: 0;
+  margin-bottom: 0.5rem;
+  font-weight: 700;
+}
+
+.group--inline {
+  grid-template-columns: repeat(auto-fit, minmax(9rem, 1fr));
+}
+
+.group--inline > .group__legend,
+.group--inline > legend,
+.group--inline > .field__error {
+  grid-column: 1 / -1;
+}
+
+/* The rule sits on a wrapper: on the fieldset it would run through its legend. */
+.invoice {
+  padding-top: 1rem;
+  border-top: var(--line) solid var(--enamel);
+}
+
+.group--invoice {
+  gap: 1rem;
+}
+
+.group legend {
+  padding: 0;
+}
+
+.group__note {
+  font-size: 0.875rem;
+  line-height: 1.45;
+  color: var(--weather-2);
+}
+
+/* Choices are painted tiles too: a 2px enamel outline that turns añil when chosen. */
+.choice {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  min-height: 3rem;
+  padding: 0.75rem;
+  border: var(--line) solid var(--enamel);
+  background: #fff;
+  cursor: pointer;
+}
+
+.choice:has(input:checked) {
+  border-color: var(--anil);
+  outline: 1px solid var(--anil);
+  outline-offset: -3px;
+}
+
+.choice input,
+.check input {
+  flex: none;
+  width: 1.25rem;
+  height: 1.25rem;
+  margin: 0.1rem 0 0;
+}
+
+.choice__text {
+  display: grid;
+  gap: 0.15rem;
+}
+
+.choice__label {
+  font-weight: 700;
+  line-height: 1.3;
+}
+
+.choice__detail {
+  font-size: 0.875rem;
+  line-height: 1.4;
+  color: var(--weather-2);
+}
+
+.check {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  min-height: 2.75rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.field {
+  display: grid;
+  gap: 0.35rem;
+}
+
+.field__label {
+  font-weight: 700;
+  line-height: 1.3;
+}
+
+.field__hint {
+  font-size: 0.875rem;
+  line-height: 1.4;
+  color: var(--weather-2);
+}
+
+/* 16px or more, so phones do not zoom into the field. */
+.field__input {
+  width: 100%;
+  min-height: 3rem;
+  padding: 0.65rem 0.75rem;
+  border: var(--line) solid var(--enamel);
+  border-radius: 0;
+  background: #fff;
+  color: var(--enamel);
+  font: 400 1rem / 1.3 var(--read);
+}
+
+.field__input:focus-visible {
+  outline-offset: 0;
+}
+
+.field__input--code {
+  letter-spacing: 0.06em;
+  font-variant-numeric: tabular-nums;
+}
+
+.field__input--short {
+  max-width: 9rem;
+}
+
+/* An error is the one thing the donor must act on, so it takes the moving colour. */
+.field[data-invalid] .field__input {
+  border-color: var(--almagre);
+}
+
+.field__error,
+.donation__problem {
+  color: var(--almagre);
+  font-weight: 700;
+  font-size: 0.9375rem;
+  line-height: 1.4;
+}
+
+.donation__problem:empty {
+  display: none;
+}
+
+.donation__card {
+  display: grid;
+  gap: 0.5rem;
+}
+
+.donation .sign-button {
+  margin-top: 0;
+}
+
+.sign-button:disabled {
+  background: var(--weather-2);
+  color: var(--cal);
+  cursor: progress;
+}
+
+/* ---- Thank-you page ---- */
+
+.thanks-page .signature {
+  margin-bottom: 0.5rem;
+}
+
+.thanks-page__back {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
 }
 
 /* ---- Story: one calm column, a clearing in the wall ---- */

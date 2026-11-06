@@ -41,6 +41,33 @@ With the mock, the page shows a "Vista previa" strip so nobody mistakes the samp
 
 A successful payment session returns a placeholder `clientSecret` (`pi_mock_0001_secret_mock`), like Salesforce does in E1. If the contract changes, change the fixtures and `validation.ts` in the same pull request.
 
+## Donating
+
+The donate board has two steps. The donor picks an amount, then fills in `src/donate/DonationForm.tsx`:
+- recognition, with their name on the list or anonymous;
+- their email;
+- optionally the invoice data;
+- the card.
+
+Recognition and invoice are independent (`details.ts` builds the request). The card field is Stripe's Payment Element in deferred intent mode (`PaymentStep.tsx`), so it shows before any PaymentIntent exists. On "Pagar" (`submit.ts`):
+1. Stripe checks the card field and `validation.ts` checks the form.
+2. `POST /payment-sessions` returns the `clientSecret`.
+3. The gateway (`src/payment/gateway.ts`) confirms the payment.
+
+Success goes to `/gracias`, which words its message by the payment status (`src/thanks/`) and never says the donation is recorded.
+
+`API_MODE` also picks the gateway:
+- `salesforce` calls `stripe.confirmPayment` with the real `clientSecret`.
+- `mock` cannot confirm the placeholder secret. It turns the card into a PaymentMethod in Stripe test mode and fakes the result from the test card number:
+
+| Test card | Result |
+| :--- | :--- |
+| `4242 4242 4242 4242` | Paid; goes to `/gracias` |
+| `4000 0000 0000 0002` (also `…9995`, `…9987`, `…0069`, `…0127`, `…0119`) | Declined; stays on the form |
+| `4000 0025 0000 3155` (also `…3184`, `…3220`) | Card verification left unfinished; stays on the form |
+
+Any future date and any CVC work. The card field needs a real Stripe **test** publishable key; with the `pk_test_replace_me` placeholder it shows "No pudimos cargar el campo de la tarjeta". Spanish text for every contract code is in `src/donate/messages.ts`.
+
 ## Development
 
 ```bash

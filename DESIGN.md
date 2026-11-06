@@ -153,7 +153,7 @@ A wall-paint palette: two saturated walls, one red oxide for motion, black ename
 - **Weathering 1–3** (weather-1, weather-2, weather-3): progressively faded enamel for older supporter rows; weather-2 also carries helper text such as the minimum-amount line and the empty-supporters message.
 
 ### Named Rules
-**The One Moving Colour Rule.** Almagre appears only on the element in motion: the selected amount, a pressed sign, a selection. If nothing is chosen, nothing is red.
+**The One Moving Colour Rule.** Almagre appears only on the element in motion: the selected amount, a pressed sign, a selection, or a form error the donor has to fix. If nothing is chosen or wrong, nothing is red.
 
 **The Flat Coat Rule.** Colour is applied as solid coats. No gradients, no transparency washes, no blur.
 
@@ -234,6 +234,18 @@ A flat bar 1.25rem tall in a 2px cal outline on añil. The yellow fill scales fr
 
 ### Thanks Wall
 The supporters list: a 2px enamel rule on top, rows with the name on the left and the amount on the right, divided by hairlines. The newest row is enamel and bold; the next three fade through weather-1, weather-2 and weather-3, so older names weather like old paint. Empty state is one line in weather-2.
+
+### Donation Form
+The board's second step, after "Donar $X". It scrolls with the page instead of sticking.
+- **Chosen amount:** "Tu donativo: $X" in tabular Lexend, with a "Cambiar monto" text button, ruled off by the 2px enamel line.
+- **Choices** (recognition, taxpayer type): white tiles with a 2px enamel outline and a native radio; the chosen one is outlined in añil and its radio is almagre.
+- **Fields:** bold Lexend label, a weather-2 hint, then a white input with a 2px enamel outline, square, at least 3rem tall and 16px text so phones do not zoom. Codes (RFC, postal code) are letter-spaced with tabular figures.
+- **Errors:** the input's outline and a bold message under it turn almagre, and focus moves to the first one. A form-level message sits above the pay sign.
+- **Card field:** Stripe's Payment Element themed flat: square corners, the 2px enamel outline, Lexend.
+- **Pay sign:** the donate sign reads "PAGAR $X"; while it works it is weather-2 with cal lettering and reads "Procesando…".
+
+### Thank-You Page
+The unavailable screen's yellow wall with the signature, a display sign ("¡Gracias!" or the status), one sentence and an enamel sign back to the campaign.
 
 ### Unavailable Screen
 A full-height yellow wall with a smaller display sign and one plain sentence, shown when the site cannot load its configuration.

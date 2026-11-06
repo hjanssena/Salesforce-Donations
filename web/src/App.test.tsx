@@ -49,6 +49,13 @@ describe('App', () => {
     expect(screen.queryByText(/Vista previa/)).not.toBeInTheDocument()
   })
 
+  it('serves the thank-you page at /gracias', async () => {
+    window.__APP_CONFIG__ = mockConfig
+    const gateway = { confirm: async () => null, retrieve: async () => null }
+    render(<App api={mockApi()} gateway={gateway} path="/gracias" />)
+    expect(await screen.findByRole('heading', { name: 'Sin pago a la vista' })).toBeInTheDocument()
+  })
+
   it('shows an unavailable notice when the configuration is invalid', () => {
     vi.spyOn(console, 'error').mockImplementation(() => {})
     window.__APP_CONFIG__ = { sfSiteUrl: 'https://example.test', stripePublishableKey: 'pk_live_1' }

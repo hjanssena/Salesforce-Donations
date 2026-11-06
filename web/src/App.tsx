@@ -3,13 +3,19 @@ import { createApi, type ApiClient } from './api'
 import type { CampaignDetail } from './api/types'
 import CampaignPage from './campaign/CampaignPage'
 import { ConfigError, readConfig, type AppConfig } from './config/config'
+import PaymentStep from './donate/PaymentStep'
+import { createGateway } from './payment'
+import { THANKS_PATH, type PaymentGateway } from './payment/gateway'
+import ThankYouPage from './thanks/ThankYouPage'
 
 interface Props {
-  /** Tests pass their own client; the app builds one from the configuration. */
+  /** Tests pass their own client and gateway; the app builds them from the configuration. */
   api?: ApiClient
+  gateway?: PaymentGateway
+  path?: string
 }
 
-export default function App({ api }: Props) {
+export default function App({ api, gateway, path = window.location.pathname }: Props) {
   let config: AppConfig
   try {
     config = readConfig()
@@ -22,7 +28,9 @@ export default function App({ api }: Props) {
       </Notice>
     )
   }
-  return <CampaignLoader config={config} api={api} />
+  const payments = gateway ?? createGateway(config)
+  if (path === THANKS_PATH) return <ThankYouPage gateway={payments} publishableKey={config.stripePublishableKey} />
+  return <CampaignLoader config={config} api={api} gateway={payments} />
 }
 
 type Load =
@@ -31,7 +39,7 @@ type Load =
   | { state: 'none-open' }
   | { state: 'failed' }
 
-function CampaignLoader({ config, api: given }: { config: AppConfig; api?: ApiClient }) {
+function CampaignLoader({ config, api: given, gateway }: { config: AppConfig; api?: ApiClient; gateway: PaymentGateway }) {
   // The configuration is fixed for the page's life, so the client is built once.
   const [api] = useState(() => given ?? createApi(config))
   const [load, setLoad] = useState<Load>({ state: 'loading' })
@@ -96,7 +104,20 @@ function CampaignLoader({ config, api: given }: { config: AppConfig; api?: ApiCl
     case 'ready':
       return (
         <main>
-          <CampaignPage campaign={load.campaign} isSample={config.apiMode === 'mock'} />
+          <CampaignPage
+            campaign={load.campaign}
+            isSample={config.apiMode === 'mock'}
+            renderPayment={(amount, back) => (
+              <PaymentStep
+                campaignId={load.campaign.id}
+                amount={amount}
+                onChangeAmount={back}
+                api={api}
+                gateway={gateway}
+                publishableKey={config.stripePublishableKey}
+              />
+            )}
+          />
         </main>
       )
   }
