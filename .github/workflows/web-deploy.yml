@@ -78,6 +78,8 @@ jobs:
       name: production
       url: ${{ env.SITE_URL }}
     env:
+      # The server's Tailscale address (100.x.y.z or its MagicDNS name). SSH is
+      # never exposed to the internet; the runner joins the tailnet for this job.
       SSH_HOST: ${{ secrets.DEPLOY_HOST }}
       SSH_PORT: ${{ secrets.DEPLOY_PORT || '22' }}
       SSH_USER: ${{ secrets.DEPLOY_USER }}
@@ -87,6 +89,15 @@ jobs:
         with:
           name: web-image
           path: bundle
+
+      # Joins the tailnet as an ephemeral node tagged tag:ci; it is removed
+      # automatically when the job ends. ACLs decide what tag:ci may reach.
+      - name: Join the tailnet
+        uses: tailscale/github-action@v3
+        with:
+          oauth-client-id: ${{ secrets.TS_OAUTH_CLIENT_ID }}
+          oauth-secret: ${{ secrets.TS_OAUTH_SECRET }}
+          tags: tag:ci
 
       - name: Set up SSH
         env:
