@@ -67,7 +67,7 @@ The web app calls the API from the browser, so the org must allow its origin.
 
 - Add `https://<our-domain>` to **Setup → CORS → Allowed Origins List**. No wildcards, no `http://` origins. Add `http://localhost:<port>` only while developing, and remove it before each delivery.
 - **Confirmed (2026-11-06, #39):** the allowlist applies to Apex REST served through a Salesforce Site to the unauthenticated Guest User, including the `OPTIONS` preflight for `POST` with `Content-Type: application/json`. Results are below the test commands.
-- **Test (part of #39):** with the origin in the allowlist, run these against the site and record the headers here.
+- **Test:** run these again whenever the site moves to another org or the origin changes.
   ```bash
   # Preflight, as the browser sends it before a JSON POST
   curl -si -X OPTIONS "$SF_SITE_URL/services/apexrest/donations/v1/health" \
@@ -88,9 +88,7 @@ The web app calls the API from the browser, so the org must allow its origin.
   | `GET` and `POST` from our origin | `200 {"status":"ok"}` | Same allow-origin header |
   | `GET` and preflight from `https://evil.example` | `200` | None, so the browser blocks the read |
 
-  From the deployed web app in Chrome (`API_MODE=salesforce`), `fetch` `GET` and a JSON `POST` both returned `{"status":"ok"}` with no CORS error. **Pass: the fallback below is not needed.** The allowed methods are the org's default for every allowed origin; only the methods our classes define answer. The web app's CSP must list the site origin in `connect-src`, which the Docker image does when `API_MODE=salesforce`.
-- **Decision rule:** if any of those fail, use the fallback below instead of working around it in Apex. Apex REST has no `OPTIONS` handler, so the preflight cannot be fixed from our code.
-- **Fallback (not needed, kept for reference):** the web app's own server (Nginx in the Docker image) proxies `/api/*` to `{SF_SITE_URL}/services/apexrest/donations/v1/*`. The browser then calls our own domain and no cross-origin request happens. The web app only changes its base URL setting; the contract does not change. This stays on the team's server, so it fits the approved hosting exception.
+  From the deployed web app in Chrome (`API_MODE=salesforce`), `fetch` `GET` and a JSON `POST` both returned `{"status":"ok"}` with no CORS error. **Pass.** The allowed methods are the org's default for every allowed origin; only the methods our classes define answer. The web app's CSP must list the site origin in `connect-src`, which the Docker image does when `API_MODE=salesforce`.
 
 The webhook needs no CORS: Stripe calls it server to server.
 
