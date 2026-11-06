@@ -18,7 +18,8 @@ concurrency:
 
 env:
   IMAGE: mexico-dreamin-web
-  SITE_URL: https://dreamforce.hjanssen.xyz/
+  # Public URL through Tailscale Funnel. Override with the SITE_URL repository variable.
+  SITE_URL: ${{ vars.SITE_URL || 'https://dietpi.tail6cb6c6.ts.net:8443/' }}
 
 jobs:
   build:
@@ -58,10 +59,9 @@ jobs:
       # One flat folder: the image plus the files the server needs to run it.
       - name: Bundle the deploy files
         run: |
-          mkdir -p "$RUNNER_TEMP/bundle/docker"
+          mkdir -p "$RUNNER_TEMP/bundle"
           gzip -1 -c "$RUNNER_TEMP/image.tar" > "$RUNNER_TEMP/bundle/image.tar.gz"
           cp docker-compose.yml "$RUNNER_TEMP/bundle/"
-          cp docker/init-cert.sh "$RUNNER_TEMP/bundle/docker/"
           ls -lhR "$RUNNER_TEMP/bundle"
 
       - uses: actions/upload-artifact@v4
@@ -123,11 +123,10 @@ jobs:
             StrictHostKeyChecking yes
           EOF
 
-      - name: Copy the image and compose files
+      - name: Copy the image and compose file
         run: |
-          ssh server "mkdir -p $DEPLOY_PATH/docker"
+          ssh server "mkdir -p $DEPLOY_PATH"
           scp -q bundle/docker-compose.yml "server:$DEPLOY_PATH/docker-compose.yml"
-          scp -q bundle/docker/init-cert.sh "server:$DEPLOY_PATH/docker/init-cert.sh"
           gunzip -c bundle/image.tar.gz | ssh server "docker load"
 
       - name: Restart the site
@@ -139,20 +138,17 @@ jobs:
             docker image prune -f >/dev/null
             docker compose ps"
 
+      # Resolve through public DNS: inside the tailnet MagicDNS would send the
+      # request to the server's Tailscale IP, which tag:ci may not reach.
       - name: Check the site answers
         run: |
           for _ in $(seq 1 12); do
-            if curl -fsS -o /dev/null --max-time 10 "$SITE_URL"; then
+            if curl -fsS -o /dev/null --max-time 10 --doh-url https://1.1.1.1/dns-query "$SITE_URL"; then
               echo "Live: $SITE_URL"; exit 0
             fi
             sleep 5
           done
-          # Before the first certificate exists the site serves plain HTTP only.
-          if curl -fsS -o /dev/null --max-time 10 "http://${SITE_URL#https://}"; then
-            echo "::warning::HTTP works but HTTPS does not. Run 'sh docker/init-cert.sh' once on the server."
-            exit 0
-          fi
-          echo "::error::$SITE_URL did not answer"; exit 1
+          echo "::error::$SITE_URL did not answer. Is Funnel on? (see web/README.md)"; exit 1
 
       - name: Remove the SSH key
         if: always()
