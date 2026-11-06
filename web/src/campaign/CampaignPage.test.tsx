@@ -59,6 +59,50 @@ describe('CampaignPage', () => {
     expect(screen.getByRole('dialog', { name: 'Tus datos' })).toHaveAttribute('open')
   })
 
+  it('takes a custom amount typed by the donor', () => {
+    render(<CampaignPage campaign={sampleCampaign} renderPayment={payment} />)
+    fireEvent.change(screen.getByLabelText('Otro monto'), { target: { value: '1,234.50' } })
+    expect(screen.getAllByRole('radio').every((tile) => tile.getAttribute('aria-checked') === 'false')).toBe(true)
+    fireEvent.click(screen.getByRole('button', { name: 'Donar $1,234.50' }))
+    expect(screen.getByText('Pago de 1234.5')).toBeInTheDocument()
+  })
+
+  it('has no maximum for a custom amount', () => {
+    render(<CampaignPage campaign={sampleCampaign} renderPayment={payment} />)
+    fireEvent.change(screen.getByLabelText('Otro monto'), { target: { value: '50000' } })
+    fireEvent.click(screen.getByRole('button', { name: 'Donar $50,000' }))
+    expect(screen.getByText('Pago de 50000')).toBeInTheDocument()
+  })
+
+  it('blocks a custom amount below the minimum and explains why', () => {
+    render(<CampaignPage campaign={sampleCampaign} renderPayment={payment} />)
+    const other = screen.getByLabelText('Otro monto')
+    fireEvent.change(other, { target: { value: '20' } })
+    fireEvent.click(screen.getByRole('button', { name: 'Donar' }))
+    expect(screen.getByText('El donativo mínimo es de $50.')).toBeInTheDocument()
+    expect(other).toHaveFocus()
+    expect(other).toHaveAttribute('aria-invalid', 'true')
+    expect(screen.queryByText(/Pago de/)).not.toBeInTheDocument()
+    fireEvent.change(other, { target: { value: '80' } })
+    expect(screen.queryByText('El donativo mínimo es de $50.')).not.toBeInTheDocument()
+  })
+
+  it('blocks a custom amount that is not a number', () => {
+    render(<CampaignPage campaign={sampleCampaign} renderPayment={payment} />)
+    fireEvent.change(screen.getByLabelText('Otro monto'), { target: { value: 'mil' } })
+    fireEvent.click(screen.getByRole('button', { name: 'Donar' }))
+    expect(screen.getByText(/solo con números/)).toBeInTheDocument()
+  })
+
+  it('clears the custom amount when a tile is picked', () => {
+    render(<CampaignPage campaign={sampleCampaign} renderPayment={payment} />)
+    const other = screen.getByLabelText('Otro monto')
+    fireEvent.change(other, { target: { value: '777' } })
+    fireEvent.click(screen.getByRole('radio', { name: '$500' }))
+    expect(other).toHaveValue('')
+    expect(screen.getByRole('button', { name: 'Donar $500' })).toBeInTheDocument()
+  })
+
   it('shows an empty thanks wall', () => {
     render(<CampaignPage campaign={{ ...sampleCampaign, supporters: [] }} renderPayment={payment} />)
     expect(screen.getByText(/El tuyo puede ser el primero/)).toBeInTheDocument()
