@@ -66,7 +66,7 @@ Behind them:
 The web app calls the API from the browser, so the org must allow its origin.
 
 - Add `https://<our-domain>` to **Setup → CORS → Allowed Origins List**. No wildcards, no `http://` origins. Add `http://localhost:<port>` only while developing, and remove it before each delivery.
-- **Check:** that the allowlist applies to Apex REST served through a Salesforce Site, including the `OPTIONS` preflight for `POST` with `Content-Type: application/json`. Salesforce documents that the allowlist covers Apex REST, but not whether it covers unauthenticated calls through a Site; an older community source says CORS does not support unauthenticated resources. Treat it as unknown until tested.
+- **Confirmed (2026-11-06, #39):** the allowlist applies to Apex REST served through a Salesforce Site to the unauthenticated Guest User, including the `OPTIONS` preflight for `POST` with `Content-Type: application/json`. Results are below the test commands.
 - **Test (part of #39):** with the origin in the allowlist, run these against the site and record the headers here.
   ```bash
   # Preflight, as the browser sends it before a JSON POST
@@ -80,8 +80,17 @@ The web app calls the API from the browser, so the org must allow its origin.
   curl -si "$SF_SITE_URL/services/apexrest/donations/v1/health" -H "Origin: https://evil.example"
   ```
   Pass: the preflight answers 2xx with `Access-Control-Allow-Origin: https://<our-domain>` and allows `POST` and `content-type`; the real request carries the same header; the other origin gets no allow header (or a `403`). Then confirm once from the deployed web app in a browser, since curl does not enforce CORS.
+- **Result (2026-11-06):** run on the class sandbox `class2026h`, site at the domain root (`SF_SITE_URL` = `https://uady--class2026h.sandbox.my.salesforce-sites.com`), origin `https://dietpi.tail6cb6c6.ts.net:8443` in the allowlist, guest profile with Apex class access to `HealthResource` only.
+
+  | Request | Status | CORS headers |
+  | :--- | :--- | :--- |
+  | Preflight from our origin | `200` | `Access-Control-Allow-Origin: https://dietpi.tail6cb6c6.ts.net:8443`, `Access-Control-Allow-Methods: HEAD, GET, POST, PUT, PATCH, DELETE`, `Access-Control-Allow-Headers: X-SFDC-Request-Id,content-type`, `Access-Control-Allow-Credentials: false` |
+  | `GET` and `POST` from our origin | `200 {"status":"ok"}` | Same allow-origin header |
+  | `GET` and preflight from `https://evil.example` | `200` | None, so the browser blocks the read |
+
+  From the deployed web app in Chrome (`API_MODE=salesforce`), `fetch` `GET` and a JSON `POST` both returned `{"status":"ok"}` with no CORS error. **Pass: the fallback below is not needed.** The allowed methods are the org's default for every allowed origin; only the methods our classes define answer. The web app's CSP must list the site origin in `connect-src`, which the Docker image does when `API_MODE=salesforce`.
 - **Decision rule:** if any of those fail, use the fallback below instead of working around it in Apex. Apex REST has no `OPTIONS` handler, so the preflight cannot be fixed from our code.
-- **Fallback if it does not:** the web app's own server (Nginx in the Docker image) proxies `/api/*` to `{SF_SITE_URL}/services/apexrest/donations/v1/*`. The browser then calls our own domain and no cross-origin request happens. The web app only changes its base URL setting; the contract does not change. This stays on the team's server, so it fits the approved hosting exception.
+- **Fallback (not needed, kept for reference):** the web app's own server (Nginx in the Docker image) proxies `/api/*` to `{SF_SITE_URL}/services/apexrest/donations/v1/*`. The browser then calls our own domain and no cross-origin request happens. The web app only changes its base URL setting; the contract does not change. This stays on the team's server, so it fits the approved hosting exception.
 
 The webhook needs no CORS: Stripe calls it server to server.
 
