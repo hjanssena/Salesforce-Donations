@@ -82,8 +82,8 @@ export default function DonationForm({ campaignId, amount, onChangeAmount, cardF
 
   const isCompany = details.invoice.taxpayerType === 'company'
 
-  const field = (path: string, label: string, input: (props: InputProps) => ReactNode, hint?: string) => (
-    <Field id={idOf(path)} label={label} hint={hint} error={errors[path]} input={input} />
+  const field = (path: string, label: string, input: (props: InputProps) => ReactNode, hint?: string, half = false) => (
+    <Field id={idOf(path)} label={label} hint={hint} error={errors[path]} input={input} half={half} />
   )
 
   return (
@@ -216,20 +216,27 @@ export default function DonationForm({ campaignId, amount, onChangeAmount, cardF
                 />
               ),
               isCompany ? '12 caracteres.' : '13 caracteres para persona física, 12 para empresa.',
+              true,
             )}
 
-            {field('invoice.postalCode', 'Código postal fiscal', (props) => (
-              <input
-                {...props}
-                type="text"
-                className="field__input field__input--code field__input--short"
-                inputMode="numeric"
-                autoComplete="postal-code"
-                maxLength={5}
-                value={details.invoice.postalCode}
-                onChange={(e) => setInvoice('postalCode', e.target.value.replace(/\D/g, ''))}
-              />
-            ))}
+            {field(
+              'invoice.postalCode',
+              'Código postal fiscal',
+              (props) => (
+                <input
+                  {...props}
+                  type="text"
+                  className="field__input field__input--code field__input--short"
+                  inputMode="numeric"
+                  autoComplete="postal-code"
+                  maxLength={5}
+                  value={details.invoice.postalCode}
+                  onChange={(e) => setInvoice('postalCode', e.target.value.replace(/\D/g, ''))}
+                />
+              ),
+              '5 números.',
+              true,
+            )}
 
             {field('invoice.taxRegime', 'Régimen fiscal', (props) => (
               <select
@@ -311,16 +318,19 @@ function Field({
   hint,
   error,
   input,
+  half = false,
 }: {
   id: string
   label: string
   hint?: string
   error?: string
   input: (props: InputProps) => ReactNode
+  /** Shares its row with the next half field when the form is wide enough. */
+  half?: boolean
 }) {
   const described = [hint && `${id}-hint`, error && `${id}-error`].filter(Boolean).join(' ') || undefined
   return (
-    <div className="field" data-invalid={error ? 'true' : undefined}>
+    <div className="field" data-invalid={error ? 'true' : undefined} data-half={half || undefined}>
       <label className="field__label" htmlFor={id}>
         {label}
       </label>

@@ -17,9 +17,7 @@ export default function CampaignPage({ campaign, isSample = false, renderPayment
 
   return (
     <div className="page">
-      {isSample && (
-        <p className="sample-strip">Vista previa: cifras y nombres de ejemplo, no reales.</p>
-      )}
+      {isSample && <p className="sample-strip">Vista previa: cifras y nombres de ejemplo, no reales.</p>}
 
       <header className="wall wall--yellow">
         <div className="wall__top">
@@ -31,7 +29,9 @@ export default function CampaignPage({ campaign, isSample = false, renderPayment
         <h1 id={headingId} className="sign">
           {campaign.name}
         </h1>
-        <p className="wall__line">Somos estudiantes de la UADY en Mérida y vamos a Mexico Dreamin, en la Ciudad de México. Ayúdanos a llegar.</p>
+        <p className="wall__line">
+          Somos estudiantes de la UADY en Mérida y vamos a Mexico Dreamin, en la Ciudad de México. Ayúdanos a llegar.
+        </p>
         {campaign.imageUrl && (
           <figure className="bill">
             <img src={campaign.imageUrl} alt="" loading="eager" />
@@ -87,59 +87,99 @@ export default function CampaignPage({ campaign, isSample = false, renderPayment
 
 function DonatePanel({ renderPayment }: Pick<Props, 'renderPayment'>) {
   const [amount, setAmount] = useState<number>(250)
-  const [step, setStep] = useState<'amount' | 'details'>('amount')
+  const [open, setOpen] = useState(false)
+  // The form mounts on the first open and stays, so closing the modal keeps what the donor typed.
+  const [started, setStarted] = useState(false)
   const groupId = useId()
-  const [moves, setMoves] = useState(0)
-  const panelRef = useRef<HTMLElement>(null)
+  const titleId = useId()
+  const dialogRef = useRef<HTMLDialogElement>(null)
+  const donateRef = useRef<HTMLButtonElement>(null)
 
-  // Each step change brings the panel into view and gives its heading focus,
-  // so the donor (and a screen reader) lands at the start of the new step.
+  // Opening and closing go through state; the effect keeps the <dialog> in step.
   useEffect(() => {
-    if (moves === 0) return
-    const panel = panelRef.current
-    panel?.scrollIntoView?.({ block: 'start', behavior: 'smooth' })
-    panel?.querySelector<HTMLElement>('h2')?.focus({ preventScroll: true })
-  }, [moves])
+    const dialog = dialogRef.current
+    if (!dialog) return
+    if (open && !dialog.open) {
+      if (typeof dialog.showModal === 'function') dialog.showModal()
+      else dialog.setAttribute('open', '')
+      // Reopened after a new amount: start at the top, where the amount shows.
+      dialog.scrollTop = 0
+      dialog.querySelector<HTMLElement>('h2')?.focus()
+    } else if (!open && dialog.open) {
+      if (typeof dialog.close === 'function') dialog.close()
+      else dialog.removeAttribute('open')
+      donateRef.current?.focus()
+    }
+  }, [open])
 
-  const go = (next: 'amount' | 'details') => {
-    setStep(next)
-    setMoves((n) => n + 1)
+  const dialogId = useId()
+  // Read from the DOM when called, never during render.
+  const busy = () => Boolean(document.getElementById(dialogId)?.querySelector('[aria-busy="true"]'))
+  const close = () => {
+    // While a payment is in flight the donor waits for its answer.
+    if (!busy()) setOpen(false)
   }
 
   return (
-    <section id="donar" ref={panelRef} className="donate" aria-labelledby={groupId} data-step={step}>
+    <section id="donar" className="donate" aria-labelledby={groupId}>
       <div className="donate__inner">
-        <h2 id={groupId} className="sign-small" tabIndex={-1}>
-          {step === 'amount' ? 'Elige tu donativo' : 'Tus datos'}
+        <h2 id={groupId} className="sign-small">
+          Elige tu donativo
         </h2>
-        {step === 'amount' ? (
-          <>
-            <div className="tiles" role="radiogroup" aria-labelledby={groupId}>
-              {SUGGESTED_AMOUNTS.map((value) => (
-                <button
-                  key={value}
-                  type="button"
-                  role="radio"
-                  aria-checked={amount === value}
-                  className="tile"
-                  aria-label={formatMoney(value)}
-                  onClick={() => setAmount(value)}
-                >
-                  <span className="tile__value" aria-hidden="true">
-                    {formatPlain(value)}
-                  </span>
-                </button>
-              ))}
-            </div>
-            <p className="donate__min">Pesos mexicanos · mínimo $50 · pago seguro con tarjeta</p>
-            <button type="button" className="sign-button" onClick={() => go('details')}>
-              Donar {formatMoney(amount)}
+        <div className="tiles" role="radiogroup" aria-labelledby={groupId}>
+          {SUGGESTED_AMOUNTS.map((value) => (
+            <button
+              key={value}
+              type="button"
+              role="radio"
+              aria-checked={amount === value}
+              className="tile"
+              aria-label={formatMoney(value)}
+              onClick={() => setAmount(value)}
+            >
+              <span className="tile__value" aria-hidden="true">
+                {formatPlain(value)}
+              </span>
             </button>
-          </>
-        ) : (
-          renderPayment(amount, () => go('amount'))
-        )}
+          ))}
+        </div>
+        <p className="donate__min">Pesos mexicanos · mínimo $50 · pago seguro con tarjeta</p>
+        <button
+          ref={donateRef}
+          type="button"
+          className="sign-button"
+          aria-haspopup="dialog"
+          onClick={() => {
+            setStarted(true)
+            setOpen(true)
+          }}
+        >
+          Donar {formatMoney(amount)}
+        </button>
       </div>
+
+      <dialog
+        ref={dialogRef}
+        id={dialogId}
+        className="sheet"
+        aria-labelledby={titleId}
+        onCancel={(event) => {
+          // Escape: close through state, or not at all while paying.
+          event.preventDefault()
+          close()
+        }}
+        onClose={() => setOpen(false)}
+      >
+        <div className="sheet__head">
+          <h2 id={titleId} className="sign-small" tabIndex={-1}>
+            Tus datos
+          </h2>
+          <button type="button" className="text-button" onClick={close}>
+            Cerrar
+          </button>
+        </div>
+        <div className="sheet__body">{started && renderPayment(amount, close)}</div>
+      </dialog>
     </section>
   )
 }

@@ -236,7 +236,7 @@ A flat bar 1.25rem tall in a 2px cal outline on añil. The yellow fill scales fr
 The supporters list: a 2px enamel rule on top, rows with the name on the left and the amount on the right, divided by hairlines. The newest row is enamel and bold; the next three fade through weather-1, weather-2 and weather-3, so older names weather like old paint. Empty state is one line in weather-2.
 
 ### Donation Form
-The board's second step, after "Donar $X". It scrolls with the page instead of sticking.
+Opens over the page after "Donar $X", as a sheet: a cal board with the 2px enamel line, centred, up to 44rem wide, on a flat enamel coat (no shadow, no blur). On phones the sheet is the whole screen. A yellow head with "Tus datos" and a "Cerrar" text button stays put while only the sheet scrolls. Closing it (Cerrar, Escape or "Cambiar monto") keeps what the donor typed; it cannot close while a payment is in flight. With more room, the RFC and the postal code share a row.
 - **Chosen amount:** "Tu donativo: $X" in tabular Lexend, with a "Cambiar monto" text button, ruled off by the 2px enamel line.
 - **Choices** (recognition, taxpayer type): white tiles with a 2px enamel outline and a native radio; the chosen one is outlined in añil and its radio is almagre.
 - **Fields:** bold Lexend label, a weather-2 hint, then a white input with a 2px enamel outline, square, at least 3rem tall and 16px text so phones do not zoom. Codes (RFC, postal code) are letter-spaced with tabular figures.

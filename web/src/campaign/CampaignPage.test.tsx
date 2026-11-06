@@ -36,14 +36,27 @@ describe('CampaignPage', () => {
     expect(screen.getByRole('button', { name: 'Donar $1,000' })).toBeInTheDocument()
   })
 
-  it('opens the payment step for the chosen amount and comes back', () => {
+  it('opens the payment step in a modal for the chosen amount and comes back', () => {
     render(<CampaignPage campaign={sampleCampaign} renderPayment={payment} />)
     fireEvent.click(screen.getByRole('radio', { name: '$500' }))
-    fireEvent.click(screen.getByRole('button', { name: 'Donar $500' }))
+    const donate = screen.getByRole('button', { name: 'Donar $500' })
+    fireEvent.click(donate)
+    const dialog = screen.getByRole('dialog', { name: 'Tus datos' })
+    expect(dialog).toHaveAttribute('open')
     expect(screen.getByText('Pago de 500')).toBeInTheDocument()
     expect(screen.getByRole('heading', { name: 'Tus datos' })).toHaveFocus()
     fireEvent.click(screen.getByRole('button', { name: 'Cambiar monto' }))
+    expect(dialog).not.toHaveAttribute('open')
+    expect(donate).toHaveFocus()
     expect(screen.getByRole('radio', { name: '$500' })).toHaveAttribute('aria-checked', 'true')
+  })
+
+  it('keeps the modal open while a payment is in flight', () => {
+    const busyPayment = () => <form aria-busy="true">Pagando</form>
+    render(<CampaignPage campaign={sampleCampaign} renderPayment={busyPayment} />)
+    fireEvent.click(screen.getByRole('button', { name: 'Donar $250' }))
+    fireEvent.click(screen.getByRole('button', { name: 'Cerrar' }))
+    expect(screen.getByRole('dialog', { name: 'Tus datos' })).toHaveAttribute('open')
   })
 
   it('shows an empty thanks wall', () => {
