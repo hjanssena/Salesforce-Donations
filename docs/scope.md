@@ -75,5 +75,5 @@ If E1 slips, cut in this order: invoice form polish, manual donations (`RF-S3`),
 | :--- | :--- |
 | Whether the invoice needs a tax breakdown (`RF-F3`). | Stakeholder |
 | Whether manual donations are allowed for completed campaigns, and whether credited manual entries appear on the supporters list (`RF-S3`). | Stakeholder |
-| Whether the Guest User can call the Apex REST API from the team's origin, whether Stripe can reach the webhook, and whether the Developer Edition email limit covers the demo. | Team, by testing |
+| Whether Stripe can reach the webhook, and whether the Developer Edition email limit covers the demo. | Team, by testing |
 | Whether Stripe sends no receipt emails in test mode (assumed). | Team, by testing |

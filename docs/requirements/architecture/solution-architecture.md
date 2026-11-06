@@ -81,7 +81,7 @@ Why this is safe and where it stops:
 
 ### Open technical checks
 How each is set up and tested, with fallbacks: [salesforce-api.md](file:///Users/janssen/Documents/UADY/Semestre7/Salesforce/Proyecto/docs/salesforce-api.md).
-- The Guest User can call the Apex REST API from the team's origin (CORS on a public site).
+- ~~The Guest User can call the Apex REST API from the team's origin (CORS on a public site).~~ Confirmed on 2026-11-06 ([salesforce-api.md](../../salesforce-api.md), section 4).
 - The webhook endpoint is reachable by Stripe through the public site.
 - The Developer Edition daily email limit covers the demo.
 - Resolved by the delivery plan: E1 records donations from a sample event, E2 connects the real webhook. Earlier open question: whether the E1 deliverable confirms the payment without the webhook (for example, Salesforce asks Stripe for the payment status when the donor returns). Recording must be idempotent on the Stripe payment ID so both paths can coexist.

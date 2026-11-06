@@ -148,4 +148,4 @@ How it fits together:
 - `docker/40-app-config.sh` runs before Nginx. It validates the values and writes `/config.js`. On the Pi the container serves plain HTTP on localhost, and Funnel adds TLS in front. The image can also terminate TLS itself if a Let's Encrypt certificate is mounted at `/etc/letsencrypt/live/$DOMAIN/`, but the deploy does not use that.
 - Security headers (CSP allowing only Stripe and the Salesforce site origin, HSTS, `nosniff`, `frame-ancestors 'none'`) are in `docker/templates/security-headers.conf.template`.
 
-If CORS on the Salesforce site does not work (see [docs/salesforce-api.md](../docs/salesforce-api.md), section 4), the fallback is an `/api/` proxy location in this Nginx config. It is not set up yet.
+The browser calls the Salesforce site directly. Its CORS allowlist must include this site's origin; the check and its result are in [docs/salesforce-api.md](../docs/salesforce-api.md), section 4.
