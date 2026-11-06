@@ -485,6 +485,22 @@ p {
   font-size: clamp(2rem, 6vw, 3.5rem);
 }
 
+.notice {
+  display: grid;
+  gap: 1rem;
+}
+
+.notice__text {
+  max-width: 40ch;
+  font-size: 1.125rem;
+  font-weight: 700;
+}
+
+.notice__retry {
+  max-width: 20rem;
+  margin-top: 0;
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,

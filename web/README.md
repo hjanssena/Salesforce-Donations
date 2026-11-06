@@ -4,16 +4,42 @@ The public donation site, in Spanish. React + TypeScript built with Vite, served
 
 ## Configuration
 
-Two values, neither of them secret:
+Three values, none of them secret:
 
 | Variable | What it is |
 | :--- | :--- |
-| `SF_SITE_URL` | Public Salesforce Site URL, no trailing slash. The API is under `/services/apexrest/donations/v1`. |
+| `API_MODE` | `mock` answers from the contract examples inside the browser, with no Salesforce. `salesforce` (the image default) calls the real API. The deploy's compose file defaults to `mock` until the Salesforce site is ready (#39, #44). |
+| `SF_SITE_URL` | Public Salesforce Site URL, no trailing slash. The API is under `/services/apexrest/donations/v1`. Required with `API_MODE=salesforce`, ignored with `mock`. |
 | `STRIPE_PUBLISHABLE_KEY` | Stripe **test** publishable key (`pk_test_...`). The app and the container refuse anything else (`M1`). |
 
-The Docker image reads them **at container start** and writes `/config.js`, so one image runs on any server. In development they come from `VITE_SF_SITE_URL` and `VITE_STRIPE_PUBLISHABLE_KEY` in `.env.local`. See `src/config/config.ts`.
+The Docker image reads them **at container start** and writes `/config.js`, so one image runs on any server. In development they come from `VITE_API_MODE`, `VITE_SF_SITE_URL` and `VITE_STRIPE_PUBLISHABLE_KEY` in `.env.local`. See `src/config/config.ts`.
 
 Never commit `.env`, `.env.local`, a Stripe secret key (`sk_...`) or a webhook secret. The secret key lives only in Salesforce (`M3`).
+
+## API and mock
+
+`src/api/` holds the contract ([docs/contract.md](../docs/contract.md)) in code:
+
+| File | What it is |
+| :--- | :--- |
+| `types.ts` | Request, response and error shapes. |
+| `client.ts` | The three endpoints. Errors become an `ApiError` with the HTTP status, the contract `code` and the `fields`. |
+| `validation.ts` | The `POST /payment-sessions` rules. The donation form runs them before sending; the mock answers with them. |
+| `mock/` | The mock API: a `fetch` that answers in the browser from the contract examples (`fixtures.ts`). |
+| `index.ts` | Picks the real API or the mock from `API_MODE`. |
+
+With the mock, the page shows a "Vista previa" strip so nobody mistakes the sample data for real progress. Every error in the contract can be reproduced:
+
+| To get | Do |
+| :--- | :--- |
+| No open campaign | Open the site with `?mock=no-open`. |
+| `400 VALIDATION_FAILED` | Break any rule, for example an amount under 50 or the public name `spam` (banned word). |
+| `404 CAMPAIGN_NOT_FOUND` | Ask for an unknown campaign ID. |
+| `409 CAMPAIGN_NOT_OPEN` | Start a payment for the completed campaign `701Hs00000XyZwVUTS`. |
+| `502 PAYMENT_PROVIDER_ERROR` | Donor email `provider-error@example.com`. |
+| `500 INTERNAL_ERROR` | Donor email `internal-error@example.com`. |
+
+A successful payment session returns a placeholder `clientSecret` (`pi_mock_0001_secret_mock`), like Salesforce does in E1. If the contract changes, change the fixtures and `validation.ts` in the same pull request.
 
 ## Development
 
@@ -38,7 +64,7 @@ The same checks and a Docker build run on every pull request that touches `web/`
 ```bash
 docker build -t mexico-dreamin-web .
 docker run --rm -p 8080:80 \
-  -e SF_SITE_URL=https://example.my.salesforce-sites.com/donations \
+  -e API_MODE=mock \
   -e STRIPE_PUBLISHABLE_KEY=pk_test_replace_me \
   mexico-dreamin-web
 ```
@@ -68,7 +94,7 @@ Every push to `main` that changes something under `web/` runs `.github/workflows
    ```bash
    mkdir -p ~/mexico-dreamin-web && cd ~/mexico-dreamin-web
    cat > .env <<'EOF'
-   SF_SITE_URL=https://example.my.salesforce-sites.com/donations
+   API_MODE=mock
    STRIPE_PUBLISHABLE_KEY=pk_test_replace_me
    EOF
    # Publish localhost:8090 on the internet; persists across reboots
@@ -89,10 +115,10 @@ Every push to `main` that changes something under `web/` runs `.github/workflows
    Repository variables: `DEPLOY_PLATFORM=linux/arm64`. Optional: `DEPLOY_PATH` (default `~/mexico-dreamin-web`) and `SITE_URL`.
 5. Run the workflow once (Actions → Web deploy → Run workflow).
 
-To change `SF_SITE_URL` or the Stripe key, edit `.env` on the Pi and run `docker compose up -d` there. No new deploy is needed. To take the site offline: `sudo tailscale funnel --https=8443 off`.
+To switch to the real API, set `API_MODE=salesforce` and `SF_SITE_URL` in `.env` on the Pi and run `docker compose up -d` there. The same goes for the Stripe key. No new deploy is needed. To take the site offline: `sudo tailscale funnel --https=8443 off`.
 
 How it fits together:
-- `docker/40-app-config.sh` runs before Nginx. It validates the two values and writes `/config.js`. On the Pi the container serves plain HTTP on localhost, and Funnel adds TLS in front. The image can also terminate TLS itself if a Let's Encrypt certificate is mounted at `/etc/letsencrypt/live/$DOMAIN/`, but the deploy does not use that.
+- `docker/40-app-config.sh` runs before Nginx. It validates the values and writes `/config.js`. On the Pi the container serves plain HTTP on localhost, and Funnel adds TLS in front. The image can also terminate TLS itself if a Let's Encrypt certificate is mounted at `/etc/letsencrypt/live/$DOMAIN/`, but the deploy does not use that.
 - Security headers (CSP allowing only Stripe and the Salesforce site origin, HSTS, `nosniff`, `frame-ancestors 'none'`) are in `docker/templates/security-headers.conf.template`.
 
 If CORS on the Salesforce site does not work (see [docs/salesforce-api.md](../docs/salesforce-api.md), section 4), the fallback is an `/api/` proxy location in this Nginx config. It is not set up yet.

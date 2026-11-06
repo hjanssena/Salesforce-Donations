@@ -1,11 +1,11 @@
 import { useId, useState } from 'react'
 import type { CampaignDetail } from '../api/types'
 import { formatDay, formatMoney, formatPlain, progressOf } from './format'
-import { SUGGESTED_AMOUNTS } from './sample'
+import { SUGGESTED_AMOUNTS } from './amounts'
 
 interface Props {
   campaign: CampaignDetail
-  /** Shows the "sample data" strip while the page runs on fixtures. */
+  /** Shows the "sample data" strip while the page runs on the mock API. */
   isSample?: boolean
 }
 

@@ -1,7 +1,9 @@
 import { fireEvent, render, screen } from '@testing-library/react'
 import { describe, expect, it } from 'vitest'
 import CampaignPage from './CampaignPage'
-import { sampleCampaign } from './sample'
+import { openCampaign } from '../api/mock/fixtures'
+
+const sampleCampaign = { ...openCampaign, raisedAmount: 31250 }
 
 describe('CampaignPage', () => {
   it('letters the missing amount', () => {
