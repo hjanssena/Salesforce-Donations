@@ -11,5 +11,8 @@ services:
     ports:
       - "127.0.0.1:${WEB_PORT:-8090}:80"
     environment:
-      SF_SITE_URL: ${SF_SITE_URL:?set SF_SITE_URL in .env}
+      # mock until the Salesforce site is ready (#39, #44); then set
+      # API_MODE=salesforce and SF_SITE_URL in .env.
+      API_MODE: ${API_MODE:-mock}
+      SF_SITE_URL: ${SF_SITE_URL:-}
       STRIPE_PUBLISHABLE_KEY: ${STRIPE_PUBLISHABLE_KEY:?set STRIPE_PUBLISHABLE_KEY in .env}

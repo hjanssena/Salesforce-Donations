@@ -3,8 +3,11 @@
 # Runs from the official image's /docker-entrypoint.d before Nginx starts.
 set -eu
 
-: "${SF_SITE_URL:?SF_SITE_URL is required}"
+# API_MODE=mock answers from the contract examples in the browser (no
+# Salesforce); salesforce calls the real site at SF_SITE_URL.
+API_MODE="${API_MODE:-salesforce}"
 : "${STRIPE_PUBLISHABLE_KEY:?STRIPE_PUBLISHABLE_KEY is required}"
+SF_SITE_URL="${SF_SITE_URL:-}"
 SF_SITE_URL="${SF_SITE_URL%/}"
 
 # M1/M3: test publishable keys only. Refuse live or secret keys outright.
@@ -12,19 +15,26 @@ case "$STRIPE_PUBLISHABLE_KEY" in
   pk_test_*) ;;
   *) echo "STRIPE_PUBLISHABLE_KEY must start with pk_test_" >&2; exit 1 ;;
 esac
-case "$SF_SITE_URL" in
-  https://*|http://localhost*) ;;
-  *) echo "SF_SITE_URL must be an https:// URL" >&2; exit 1 ;;
+case "$API_MODE" in
+  mock) SF_SITE_URL="" ;;
+  salesforce)
+    case "$SF_SITE_URL" in
+      https://*|http://localhost*) ;;
+      *) echo "SF_SITE_URL must be an https:// URL" >&2; exit 1 ;;
+    esac ;;
+  *) echo "API_MODE must be mock or salesforce" >&2; exit 1 ;;
 esac
 
 cat > /usr/share/nginx/html/config.js <<JS
 window.__APP_CONFIG__ = {
+  apiMode: "${API_MODE}",
   sfSiteUrl: "${SF_SITE_URL}",
   stripePublishableKey: "${STRIPE_PUBLISHABLE_KEY}"
 };
 JS
 
 # Origin only (scheme + host), for the Content-Security-Policy connect-src.
+# Empty in mock mode: the page then connects only to itself and Stripe.
 SF_SITE_ORIGIN=$(echo "$SF_SITE_URL" | sed -E 's#^(https?://[^/]+).*#\1#')
 export SF_SITE_ORIGIN
 DOMAIN="${DOMAIN:-localhost}"
