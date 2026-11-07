@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>RFC_format</fullName>
+    <active>true</active>
+    <errorConditionFormula>NOT(REGEX(RFC__c, &quot;^[A-ZÑ&amp;]{3,4}[0-9]{6}[A-Z0-9]{3}$&quot;))</errorConditionFormula>
+    <errorDisplayField>RFC__c</errorDisplayField>
+    <errorMessage>Invalid RFC format.</errorMessage>
+</ValidationRule>
