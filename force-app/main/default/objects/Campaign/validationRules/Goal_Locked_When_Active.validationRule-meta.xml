@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Goal_Locked_When_Active</fullName>
+    <active>true</active>
+    <errorConditionFormula>AND(ISCHANGED(ExpectedRevenue), PRIORVALUE(StartDate) &lt;= TODAY())</errorConditionFormula>
+    <errorMessage>The goal can&apos;t change once the campaign is active.</errorMessage>
+</ValidationRule>
