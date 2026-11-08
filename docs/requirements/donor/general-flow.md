@@ -35,7 +35,7 @@ This document covers the public experience and the donation lifecycle shared by 
 ---
 
 ## RF-D1b · Donate Any Custom Amount
-- **Milestone:** Deliverable 2 (E2)
+- **Milestone:** Deliverable 1 (E1), moved up from E2
 - **Actor:** Donor
 - **User Story:** As a donor, I want to donate any amount I choose, so that I can give what I can afford instead of being limited to suggested amounts.
 

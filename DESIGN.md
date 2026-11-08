@@ -221,6 +221,7 @@ Square painted tiles in a radio group: choosing one paints it almagre with a bru
 - **Hover:** second-coat cal face (hover-capable devices only).
 - **Selected:** an almagre coat is wiped left to right with a clip-path reveal (280ms, cubic-bezier(0.16, 1, 0.3, 1)); the outline turns almagre and the numerals turn cal.
 - **Reduced motion:** the wipe completes instantly.
+- **Otro monto:** under the tiles, a white field framed in the 2px enamel line, with "$" and "MXN" lettered in weather-2 Bungee on either side of a bold tabular amount. Typing an amount unpicks the tiles; picking a tile empties the field. While it holds the chosen amount its outline turns almagre, like a chosen tile. A wrong amount (empty, not a number, under $50, more than 2 decimals) is caught when the donor presses the sign: the message sits under the field in almagre and focus returns to it. Until the amount is valid the sign reads just "DONAR".
 
 ### Containers
 - **Yellow wall:** the header; izamal ground, the signature and a skip-to-donate link in its top row, then the display headline, the purpose line and the pasted bill.
