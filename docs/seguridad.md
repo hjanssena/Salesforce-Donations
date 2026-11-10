@@ -164,6 +164,7 @@ If a secret leaks: rotate it in Stripe the same day, purge it from the repositor
 | R6 | RFC in Stripe metadata | Tax ID stored outside Salesforce | Fictitious RFCs only; metadata is not public | Revisit before any real use. |
 | R7 | The self-hosted web server goes down | Site unavailable during the demo | Docker restart policy, TLS with certbot | No second host. |
 | R8 | Daily email limit of the sandbox | Receipts or invoices not sent | Low volume in tests | Check before the demo (#47). |
+| R9 | Another team's `OpportunityTrigger` runs on every Opportunity insert in the shared sandbox and adds the amount to their campaign "FONDOS SDU" | This team's donations would also be counted in another team's fund; if that campaign is missing, donation inserts fail | Found by `StaffConsoleConfigurationTest` on 2026-11-10 | Raise with the professor and that team; the webhook recording service must be tested against it. |
 
 ---
 

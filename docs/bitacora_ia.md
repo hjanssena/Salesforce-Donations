@@ -10,6 +10,7 @@ All three team members add their own entries. Never paste secrets, tokens or rea
 | :--- | :--- | :--- | :--- | :--- |
 | 1 | 2026-11-07 | Esmeralda | RF-S5, RF-F2 | Yes: data model contradicted the agreed architecture |
 | 2 | 2026-11-10 | Esmeralda | RF-C1, RF-C2 | Yes: picklist values copied as a single broken value |
+| 3 | 2026-11-10 | Esmeralda | RF-S3, RF-S5, RF-S1 | Yes: setup guide missed record types; found by automated tests |
 
 ---
 
@@ -46,3 +47,23 @@ All three team members add their own entries. Never paste secrets, tokens or rea
 | **Corrections applied** | Edited the value to `Visible` (label and API name) and added a new value `Hidden`; Visible stays the default. The metadata in the repo was retrieved again with the fix. |
 | **Lesson** | When the AI gives picklist values, check that each one is on its own line before saving, and open the field afterwards to confirm the list of values. |
 | **Estimated time saved** | The step-by-step guide saved about 1 hour; the fix took about 10 minutes. |
+
+---
+
+## 3. Setup guide missed record types, found by automated tests (AI error)
+
+| Field | Detail |
+| :--- | :--- |
+| **Date** | 2026-11-10 |
+| **Author** | Esmeralda |
+| **AI tool / model** | Claude Code (Claude Opus 5.5) |
+| **Requirement** | RF-S3 (manual donations), RF-S5 (roles), RF-S1 (campaigns) |
+| **Prompt** | "I want to finish all the tests." |
+| **Output obtained** | An Apex test class, `StaffConsoleConfigurationTest`, with 18 tests that create test users inside the test (no licenses used, nothing kept in the shared org), give them each role, and try the acceptance criteria with user-mode DML and describe calls. Run as a validation-only deploy. |
+| **Verification** | The first run failed 9 of 18 tests. Each failure was traced to its cause in the org. |
+| **Error found** | The AI's earlier setup guide never covered record types. Campaign and Opportunity have record types in this org (NPSP and other teams), so: (1) the value **Manual** of `Source__c` was not enabled on the Donation record type, and nobody could have recorded a manual donation; (2) the three permission sets gave no record type access, so a user with only the Admin or Campaign Manager role could not create campaigns or donations. A third failure was the test's fault: Salesforce's own end-date check fires before the team rule. |
+| **Corrections applied** | By hand in Setup: enabled Manual (and Visible / Hidden, default Visible) on the Donation record type; gave Donations Admin the Campaign Default and Opportunity Donation record types, and Campaign Manager the Campaign Default record type. The test now accepts either end-date message. The AI's attempt to deploy the record type change itself was blocked, because that record type is shared with other teams, so the change was made by hand. |
+| **Other finding** | Another team's `OpportunityTrigger` runs on every Opportunity insert and adds the amount to their campaign "FONDOS SDU". Tests create that campaign to run; in the real org, this team's donations would also be added to that other team's fund. Raised with the team and recorded as residual risk R9 in `docs/seguridad.md`. |
+| **Lesson** | Configuration that looks complete when checked as a System Administrator can still fail for a user with only the role. Test each role as that role. |
+| **Estimated time saved** | Writing 18 tests by hand would take about 3 hours; the run and fixes took about 40 minutes. |
+
