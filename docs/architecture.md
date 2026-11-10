@@ -41,7 +41,7 @@ A donation is a standard Opportunity that is always Closed Won. Campaign, Contac
 | Donor | Contact, matched by email, linked through the opportunity contact role |
 | Company donor | Account, created only when the invoice's taxpayer type is a company |
 | Anonymous or credited | `Is_Anonymous__c`, with `Public_Name__c` and `Display_Status__c` for the supporters list |
-| Invoice request | `Invoice_Request__c`, a child of the donation; the RFC sits behind its own permission |
+| Invoice request | `Invoice_Request__c`, a child of the donation; the RFC sits behind its own permission. The `Invoice_Requests__c` roll-up on the donation counts them for the donations list |
 | Stripe notice log and duplicate check | `Stripe_Event__c`, unique on the Stripe event ID |
 | Banned words | `Banned_Word__mdt` |
 | Team roles | Three permission sets: Admin, Campaign Manager, Moderator |
