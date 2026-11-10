@@ -1,5 +1,7 @@
 # Salesforce API — How It Is Served
 
+**E1 implementation:** the public campaign resources, validated placeholder payment sessions and internal transactional donation recorder are implemented. Real Stripe callouts, signature-verifying webhooks and emails remain E2 work.
+
 How the Salesforce org serves the API in [contract.md](contract.md) and the Stripe webhook: the public site, the Guest User, the Apex REST classes, CORS, the Stripe callout, and the limits to watch. The contract says what the API looks like; this page says how Salesforce provides it. Context: [architecture.md](architecture.md).
 
 Items marked **Check** are not confirmed on our org yet. Confirm them with the hello-world endpoint (#39) before building on them, and update this page with the result.
