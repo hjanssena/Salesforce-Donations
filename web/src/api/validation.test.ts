@@ -64,6 +64,8 @@ describe('validatePaymentSession', () => {
     expect(codes({ ...contractExample, publicName: 'x'.repeat(81) })).toEqual(['publicName:TOO_LONG'])
     expect(codes({ ...contractExample, publicName: 'Ñ'.repeat(80) })).toEqual([])
     expect(codes({ ...anonymous, publicName: 'Ana' })).toEqual(['publicName:NOT_ALLOWED'])
+    expect(codes({ ...anonymous, publicName: null })).toEqual(['publicName:NOT_ALLOWED'])
+    expect(codes({ ...anonymous, publicName: '' })).toEqual(['publicName:NOT_ALLOWED'])
   })
 
   it('reports a banned word in the public name', () => {
@@ -106,5 +108,13 @@ describe('containsBannedWord', () => {
   it('ignores case and accents and matches whole words', () => {
     expect(containsBannedWord('Una Grosería', ['groseria'])).toBe(true)
     expect(containsBannedWord('Groserías', ['groseria'])).toBe(false)
+  })
+
+  it('splits on whitespace only, so punctuation stays part of the word', () => {
+    expect(containsBannedWord('Ana\tSPAM\nLópez', ['spam'])).toBe(true)
+    expect(containsBannedWord('  spam  ', ['spam'])).toBe(true)
+    expect(containsBannedWord('spam!', ['spam'])).toBe(false)
+    expect(containsBannedWord('Ana-spam', ['spam'])).toBe(false)
+    expect(containsBannedWord('Spamalot', ['spam'])).toBe(false)
   })
 })
