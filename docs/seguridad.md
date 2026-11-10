@@ -7,7 +7,7 @@ The security proof for the Mexico Dreamin Donation Portal: what an unauthenticat
 | **Org** | Class sandbox `class2026h` (shared with other teams) |
 | **Public site** | Salesforce Site `donations`, served at the domain root: `{SF_SITE_URL}` = `https://uady--class2026h.sandbox.my.salesforce-sites.com` |
 | **Guest User** | `donations Usuario invitado al sitio Web`, profile `donations Perfil` |
-| **Last checked** | 2026-11-10 (configuration read from the org; live tests in section 1.3 still to be run) |
+| **Last checked** | 2026-11-10 (configuration read from the org; live tests in section 1.3 run by Esmeralda from a machine with no Salesforce session) |
 
 ---
 
@@ -67,17 +67,17 @@ curl -s -w "\n%{http_code}\n" -X POST -H "Content-Type: application/json" \
 
 | # | Attempt | Criterion | Expected | Actual |
 | :--- | :--- | :--- | :--- | :--- |
-| 0 | `GET /services/apexrest/donations/v1/health` | Control | `200` and `{"status":"ok"}` | Pending |
-| 1 | SOQL query on Opportunity | CA1 | Rejected (`401` or `403`, no records) | Pending |
-| 2 | SOQL query on `RFC__c` | CA1 | Rejected, no RFC returned | Pending |
-| 3 | Read one Opportunity by ID | CA1 | Rejected, no fields returned | Pending |
-| 4 | GraphQL query on Opportunity | CA1 | Rejected, no records | Pending |
-| 5 | Aura endpoint | CA1 | Not available on a Salesforce Site (`404`) or rejected | Pending |
-| 6 | Record URL `/{id}` on the site | CA1 | Redirect to login or "page not found", no data | Pending |
-| 7 | Update an Opportunity | CA2 | Rejected | Pending |
-| 8 | Create an Opportunity without payment | CA3 | Rejected, nothing created | Pending |
+| 0 | `GET /services/apexrest/donations/v1/health` | Control | `200` and `{"status":"ok"}` | ✅ `200` `{"status":"ok"}` |
+| 1 | SOQL query on Opportunity | CA1 | Rejected (`401` or `403`, no records) | ✅ `401` `INVALID_SESSION_ID` |
+| 2 | SOQL query on `RFC__c` | CA1 | Rejected, no RFC returned | ✅ `401` `INVALID_SESSION_ID` |
+| 3 | Read one Opportunity by ID | CA1 | Rejected, no fields returned | ✅ `401` `INVALID_SESSION_ID` |
+| 4 | GraphQL query on Opportunity | CA1 | Rejected, no records | ✅ `403` `API_DISABLED_FOR_ORG` (API not available to the guest) |
+| 5 | Aura endpoint | CA1 | Not available on a Salesforce Site (`404`) or rejected | ✅ `401` `aura:invalidSession` |
+| 6 | Record URL `/{id}` on the site | CA1 | Redirect to login or "page not found", no data | ✅ The site's HTML page, no record data (status code to be noted on the next run) |
+| 7 | Update an Opportunity | CA2 | Rejected | ✅ `401` `INVALID_SESSION_ID` |
+| 8 | Create an Opportunity without payment | CA3 | Rejected, nothing created | ✅ `401` `INVALID_SESSION_ID` |
 
-After running the tests, replace *Pending* with the status code and a short note, and add the date. Attach a screenshot of the terminal (with no secrets in it) to issue #19.
+**Run on 2026-11-10 by Esmeralda: all 8 attempts failed and no donation, donor or RFC data was returned (CA1, CA2, CA3 met).** When repeating the test, update this column with the new status codes and date, and attach a screenshot of the terminal (with no secrets in it) to issue #19.
 
 The Apex tests described in [salesforce-api.md](salesforce-api.md), section 8 (`System.runAs` with the site's guest user), will repeat checks 1, 3 and 8 automatically once the API classes are in the repository.
 
