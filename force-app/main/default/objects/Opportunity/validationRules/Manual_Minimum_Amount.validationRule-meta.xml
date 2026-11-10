@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Manual_Minimum_Amount</fullName>
+    <active>true</active>
+    <description>RF-S3: a donation recorded by hand must be at least 50 MXN. Only applies to Source = Manual.</description>
+    <errorConditionFormula>AND(ISPICKVAL(Source__c, &quot;Manual&quot;), OR(ISBLANK(Amount), Amount &lt; 50))</errorConditionFormula>
+    <errorDisplayField>Amount</errorDisplayField>
+    <errorMessage>A manual donation must be at least 50 MXN.</errorMessage>
+</ValidationRule>
