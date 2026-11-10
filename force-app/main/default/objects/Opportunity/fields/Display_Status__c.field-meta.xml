@@ -11,9 +11,14 @@
         <valueSetDefinition>
             <sorted>false</sorted>
             <value>
-                <fullName>Visible&lt;br&gt;Hidden</fullName>
+                <fullName>Visible</fullName>
                 <default>true</default>
-                <label>Visible&lt;br&gt;Hidden</label>
+                <label>Visible</label>
+            </value>
+            <value>
+                <fullName>Hidden</fullName>
+                <default>false</default>
+                <label>Hidden</label>
             </value>
         </valueSetDefinition>
     </valueSet>
