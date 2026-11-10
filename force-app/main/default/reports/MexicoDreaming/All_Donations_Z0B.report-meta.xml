@@ -21,6 +21,9 @@
         <field>Opportunity.Source__c</field>
     </columns>
     <columns>
+        <field>Opportunity.Invoice_Requests__c</field>
+    </columns>
+    <columns>
         <field>Opportunity.Stripe_Payment_Intent_Id__c</field>
     </columns>
     <columns>

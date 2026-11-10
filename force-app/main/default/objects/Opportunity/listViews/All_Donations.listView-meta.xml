@@ -8,6 +8,7 @@
     <columns>Public_Name__c</columns>
     <columns>Display_Status__c</columns>
     <columns>Source__c</columns>
+    <columns>Invoice_Requests__c</columns>
     <filterScope>Everything</filterScope>
     <filters>
         <field>Source__c</field>

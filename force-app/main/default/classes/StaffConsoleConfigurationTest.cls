@@ -261,6 +261,30 @@ private class StaffConsoleConfigurationTest {
         assertInsertFails(buildInvoice(o.Id, 'NOT-AN-RFC'), 'Invalid RFC format.', 'RFC pattern');
     }
 
+    // ---------- RF-S2 CA1: invoice flag on the donations list ----------
+
+    @IsTest
+    static void everyRoleSeesWhetherAnInvoiceWasRequested() {
+        createSharedOrgFundCampaign();
+        Campaign c = buildCampaign(Date.today().addDays(-1), 5000);
+        insert c;
+        Opportunity withInvoice = buildManualDonation(c.Id, 500);
+        Opportunity withoutInvoice = buildManualDonation(c.Id, 300);
+        insert new List<Opportunity>{ withInvoice, withoutInvoice };
+        insert buildInvoice(withInvoice.Id, 'XAXX010101000');
+
+        for (String alias : new List<String>{ ALIAS_ADMIN, ALIAS_MANAGER, ALIAS_MODERATOR }) {
+            System.runAs(userByAlias(alias)) {
+                Map<Id, Opportunity> rows = new Map<Id, Opportunity>(
+                    [SELECT Id, Invoice_Requests__c FROM Opportunity
+                     WHERE Id IN (:withInvoice.Id, :withoutInvoice.Id) WITH USER_MODE]
+                );
+                Assert.areEqual(1, rows.get(withInvoice.Id).Invoice_Requests__c, alias + ' sees the request');
+                Assert.areEqual(0, rows.get(withoutInvoice.Id).Invoice_Requests__c, alias + ' sees none');
+            }
+        }
+    }
+
     // ---------- Helpers ----------
 
     /**

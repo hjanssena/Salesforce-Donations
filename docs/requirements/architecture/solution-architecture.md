@@ -121,6 +121,7 @@ erDiagram
     string Public_Name__c "+"
     string Display_Status__c "+"
     string Source__c "+"
+    number Invoice_Requests__c "+ roll-up"
   }
   Contact {
     string Name
@@ -161,6 +162,6 @@ erDiagram
 | Progress toward goal | Campaign roll-up | Simultaneous payments both count, so a campaign can end above 100%. |
 | Anonymous or credited | `Is_Anonymous__c` | Two independent choices with the invoice request. The supporters list shows donations that are not anonymous and are Visible. |
 | Hide or correct a name | `Public_Name__c`, `Display_Status__c` | Hidden donations still count toward the goal. |
-| Invoice request | `Invoice_Request__c` | Child of the donation. Has its own status, can be reissued (1 donation to N invoices), keeps the RFC behind its own permission set, and avoids empty invoice fields on most donations. `Invoice_Type__c` leaves room for CFDI later. The donor gives five SAT items (full name, RFC, postal code, fiscal regime, fiscal use); the invoice fills in the rest (description, quantity 1, amount, single payment, card) from the donation. |
+| Invoice request | `Invoice_Request__c` | Child of the donation. Has its own status, can be reissued (1 donation to N invoices), keeps the RFC behind its own permission set, and avoids empty invoice fields on most donations. The roll-up `Invoice_Requests__c` on the donation counts its requests, so the donations list shows and filters whether an invoice was requested without exposing the RFC. `Invoice_Type__c` leaves room for CFDI later. The donor gives five SAT items (full name, RFC, postal code, fiscal regime, fiscal use); the invoice fills in the rest (description, quantity 1, amount, single payment, card) from the donation. |
 | Notice log, duplicate check, attempt history | `Stripe_Event__c` | Logs every Stripe notice, including failed payments, with the PaymentIntent ID. No standard object holds a staff-readable integration log. |
 | Admin, campaign manager, moderator | Three permission sets | See [roles.md](file:///Users/janssen/Documents/UADY/Semestre7/Salesforce/Proyecto/docs/requirements/admin/roles.md). The Guest User gets no permissions on these objects. |
