@@ -40,8 +40,13 @@ function fold(text: string): string {
   return text.normalize('NFD').replace(/\p{M}/gu, '').toLowerCase()
 }
 
+/**
+ * Splits the text on whitespace only and compares each piece with each banned
+ * word as a whole word (docs/contract.md, section 3). Punctuation stays part of
+ * the piece, so "spam!" does not match "spam".
+ */
 export function containsBannedWord(text: string, bannedWords: readonly string[]): boolean {
-  const words = new Set(fold(text).split(/[^\p{L}\p{N}]+/u).filter(Boolean))
+  const words = new Set(fold(text).split(/\s+/u).filter(Boolean))
   return bannedWords.some((word) => words.has(fold(word)))
 }
 
@@ -119,7 +124,8 @@ export function validatePaymentSession(request: unknown, bannedWords: readonly s
   if (typeof anonymous !== 'boolean') {
     errors.push({ field: 'isAnonymous', code: anonymous === undefined || anonymous === null ? 'REQUIRED' : 'INVALID_FORMAT' })
   } else if (anonymous) {
-    if (body.publicName !== undefined && body.publicName !== null) errors.push({ field: 'publicName', code: 'NOT_ALLOWED' })
+    // The contract says absent, so the key is refused even when it holds null.
+    if (body.publicName !== undefined) errors.push({ field: 'publicName', code: 'NOT_ALLOWED' })
   } else if (checkText('publicName', body.publicName, MAX_PUBLIC_NAME_LENGTH, errors)) {
     if (containsBannedWord(body.publicName as string, bannedWords)) errors.push({ field: 'publicName', code: 'BANNED_WORD' })
   }
