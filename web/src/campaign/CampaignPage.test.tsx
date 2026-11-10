@@ -108,6 +108,16 @@ describe('CampaignPage', () => {
     expect(screen.getByText(/El tuyo puede ser el primero/)).toBeInTheDocument()
   })
 
+  it('suggests 250 at rest and paints the chosen amount only once the donor picks it', () => {
+    render(<CampaignPage campaign={sampleCampaign} renderPayment={payment} />)
+    const suggested = screen.getByRole('radio', { name: '$250' })
+    expect(suggested).toHaveAttribute('aria-checked', 'true')
+    expect(suggested).toHaveAttribute('data-suggested', 'true')
+    fireEvent.click(suggested)
+    expect(suggested).toHaveAttribute('aria-checked', 'true')
+    expect(suggested).not.toHaveAttribute('data-suggested')
+  })
+
   it('never renders the sample strip for real data', () => {
     render(<CampaignPage campaign={sampleCampaign} renderPayment={payment} />)
     expect(screen.queryByText(/Vista previa/)).not.toBeInTheDocument()
@@ -136,6 +146,25 @@ describe('CampaignPage', () => {
     unmount()
     render(<CampaignPage campaign={sampleCampaign} showBack renderPayment={payment} />)
     expect(screen.getByRole('link', { name: 'Todas las campañas' })).toHaveAttribute('href', '/campanas')
-    expect(screen.queryByRole('link', { name: 'Donar' })).not.toBeInTheDocument()
+    expect(screen.queryByRole('link', { name: 'Ir a donar' })).not.toBeInTheDocument()
+  })
+
+  it('offers a jump to the donate board from the root campaign, named apart from the donate button', () => {
+    render(<CampaignPage campaign={sampleCampaign} renderPayment={payment} />)
+    expect(screen.getByRole('link', { name: 'Ir a donar' })).toHaveAttribute('href', '#donar')
+  })
+
+  it('says what Mexico Dreamin is and asks for help at full weight', () => {
+    render(<CampaignPage campaign={sampleCampaign} renderPayment={payment} />)
+    expect(screen.getByText(/una conferencia en la Ciudad de México/)).toBeInTheDocument()
+    expect(screen.getByText('Ayúdanos a llegar.').tagName).toBe('STRONG')
+  })
+
+  it('weathers the wall of a completed campaign', () => {
+    const { container, unmount } = render(<CampaignPage campaign={completedCampaign} renderPayment={payment} />)
+    expect(container.querySelector('header.wall')).toHaveClass('wall--weathered')
+    unmount()
+    const open = render(<CampaignPage campaign={sampleCampaign} renderPayment={payment} />)
+    expect(open.container.querySelector('header.wall')).toHaveClass('wall--yellow')
   })
 })

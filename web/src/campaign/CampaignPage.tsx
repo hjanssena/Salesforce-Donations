@@ -3,6 +3,7 @@ import type { CampaignDetail } from '../api/types'
 import { Link } from '../Link'
 import { ROUTES, useFocusOnNavigate } from '../router'
 import SiteFooter, { SampleStrip } from '../site/SiteFooter'
+import Bill from './Bill'
 import { formatDay, formatFullDay, formatMoney, formatPlain, progressOf } from './format'
 import { parseCustomAmount, SUGGESTED_AMOUNTS } from './amounts'
 
@@ -28,32 +29,42 @@ export default function CampaignPage({ campaign, isSample = false, showBack = fa
     <div className={closed ? 'page page--closed' : 'page'}>
       {isSample && <SampleStrip />}
 
-      <header className="wall wall--yellow">
+      {/* A closed campaign's wall is weathered: the coat has faded, the lettering stays. */}
+      <header className={closed ? 'wall wall--weathered' : 'wall wall--yellow'}>
         <div className="wall__top">
           <span className="signature">SF Vibe Lab · Mérida</span>
           {showBack || closed ? (
-            <Link className="wall__skip" href={closed ? ROUTES.completed : ROUTES.open}>
-              {closed ? 'Campañas terminadas' : 'Todas las campañas'}
+            // Short enough to share the row with the signature on a 320px phone; the full name is for screen readers.
+            <Link
+              className="wall__skip"
+              href={closed ? ROUTES.completed : ROUTES.open}
+              aria-label={closed ? 'Campañas terminadas' : 'Todas las campañas'}
+            >
+              <span aria-hidden="true">← </span>Campañas
             </Link>
           ) : (
-            <a className="wall__skip" href="#donar">
-              Donar
+            // Only phones need the jump: on desktop the donate board is already beside the wall.
+            <a className="wall__skip wall__skip--jump" href="#donar">
+              Ir a donar
             </a>
           )}
         </div>
-        <h1 id={headingId} ref={headingRef} tabIndex={-1} className="sign">
-          {campaign.name}
-        </h1>
-        <p className="wall__line">
-          {closed
-            ? 'Esta campaña ya terminó. Gracias a quienes la apoyaron.'
-            : 'Somos estudiantes de la UADY en Mérida y vamos a Mexico Dreamin, en la Ciudad de México. Ayúdanos a llegar.'}
-        </p>
-        {campaign.imageUrl && (
-          <figure className="bill">
-            <img src={campaign.imageUrl} alt="" loading="eager" />
-          </figure>
-        )}
+        <div className="wall__copy">
+          <h1 id={headingId} ref={headingRef} tabIndex={-1} className="sign">
+            {campaign.name}
+          </h1>
+          <p className="wall__line">
+            {closed ? (
+              'Esta campaña ya terminó. Gracias a quienes la apoyaron.'
+            ) : (
+              <>
+                Somos estudiantes de la UADY en Mérida y vamos a Mexico Dreamin, una conferencia en la Ciudad de
+                México. <strong>Ayúdanos a llegar.</strong>
+              </>
+            )}
+          </p>
+        </div>
+        <Bill src={campaign.imageUrl} loading="eager" />
       </header>
 
       <section className="band" aria-label="Avance de la campaña">
@@ -119,6 +130,9 @@ function ClosedPanel({ endDate }: { endDate: string }) {
 function DonatePanel({ renderPayment }: Pick<Props, 'renderPayment'>) {
   // A tile, or null when the donor types their own amount in "Otro monto".
   const [tile, setTile] = useState<number | null>(250)
+  // 250 is a suggestion until the donor picks an amount: chosen, but not painted almagre,
+  // because nothing at rest is almagre (the One Moving Colour Rule).
+  const [touched, setTouched] = useState(false)
   const [otherText, setOtherText] = useState('')
   const [otherError, setOtherError] = useState('')
   // The amount the open form pays; set each time the donor presses "Donar".
@@ -137,12 +151,14 @@ function DonatePanel({ renderPayment }: Pick<Props, 'renderPayment'>) {
   const amount = tile ?? other.amount
 
   function pickTile(value: number) {
+    setTouched(true)
     setTile(value)
     setOtherText('')
     setOtherError('')
   }
 
   function typeOther(text: string) {
+    setTouched(true)
     setOtherText(text)
     if (text.trim() !== '') setTile(null)
     // Once an error shows, it follows the typing so a fixed amount clears it.
@@ -198,6 +214,7 @@ function DonatePanel({ renderPayment }: Pick<Props, 'renderPayment'>) {
               type="button"
               role="radio"
               aria-checked={tile === value}
+              data-suggested={!touched && tile === value ? 'true' : undefined}
               className="tile"
               aria-label={formatMoney(value)}
               onClick={() => pickTile(value)}

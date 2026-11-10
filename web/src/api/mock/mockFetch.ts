@@ -6,9 +6,11 @@ import {
   MOCK_TRIGGERS,
   completedCampaign,
   futureCampaign,
+  noImageOpenCampaign,
   openCampaign,
   secondOpenCampaign,
   shortCompletedCampaign,
+  tinyImageOpenCampaign,
 } from './fixtures'
 
 /**
@@ -18,7 +20,8 @@ import {
  *
  * Scenarios, picked with `?mock=` in the page URL:
  * - `default`: one open and one completed campaign.
- * - `many-open`: two open campaigns, for the list of open campaigns.
+ * - `many-open`: four open campaigns, for the list of open campaigns, with
+ *   photos of different shapes and one without a photo.
  * - `no-open`: no open campaign, for the "none open" message.
  * Every scenario has two completed campaigns, one past its goal and one short of it.
  */
@@ -53,7 +56,7 @@ function error(status: number, code: ErrorCode, message: string, fields?: FieldE
 const listItem = ({ supporters: _supporters, ...campaign }: CampaignDetail) => campaign
 
 export function createMockFetch({ scenario = 'default', delayMs = 0, today = meridaToday() }: MockOptions = {}): FetchLike {
-  const opened = { default: [openCampaign], 'many-open': [openCampaign, secondOpenCampaign], 'no-open': [] }[scenario]
+  const opened = { default: [openCampaign], 'many-open': [openCampaign, secondOpenCampaign, tinyImageOpenCampaign, noImageOpenCampaign], 'no-open': [] }[scenario]
   const all = [...opened, completedCampaign, shortCompletedCampaign, futureCampaign]
   // Campaigns that have not started are never returned (contract, section 2).
   const started = () => all.filter((c) => c.startDate <= today)

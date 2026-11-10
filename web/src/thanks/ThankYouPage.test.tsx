@@ -1,4 +1,4 @@
-import { render, screen } from '@testing-library/react'
+import { act, render, screen } from '@testing-library/react'
 import { describe, expect, it, vi } from 'vitest'
 import type { PaymentGateway, PaymentRecord } from '../payment/gateway'
 import ThankYouPage from './ThankYouPage'
@@ -47,5 +47,26 @@ describe('thanksWording', () => {
     })
     expect(thanksWording({ status: 'requires_action', amount: 100 }).text).toMatch(/no se hizo ningún cargo/)
     expect(thanksWording({ status: 'canceled', amount: 100 }).text).toMatch(/No se hizo ningún cargo/)
+  })
+
+  it('waits as the thank-you page itself, and never forever', async () => {
+    vi.useFakeTimers()
+    try {
+      const gateway: PaymentGateway = { confirm: async () => null, retrieve: () => new Promise(() => {}) }
+      render(<ThankYouPage gateway={gateway} publishableKey="pk_test_1" search={RETURN} />)
+      expect(screen.getByRole('heading', { name: 'Un momento' })).toBeInTheDocument()
+      expect(screen.getByText(/Revisando tu pago\. No cierres esta página/)).toBeInTheDocument()
+      expect(screen.queryByRole('link')).not.toBeInTheDocument()
+      await act(async () => {
+        vi.advanceTimersByTime(5000)
+      })
+      expect(screen.getByText(/la conexión está lenta/)).toBeInTheDocument()
+      await act(async () => {
+        vi.advanceTimersByTime(10000)
+      })
+      expect(screen.getByRole('heading', { name: thanksWording(null).title })).toBeInTheDocument()
+    } finally {
+      vi.useRealTimers()
+    }
   })
 })

@@ -9,6 +9,9 @@ import { createGateway } from './payment'
 import { THANKS_PATH, type PaymentGateway } from './payment/gateway'
 import { Link } from './Link'
 import { matchRoute, ROUTES, useFocusOnNavigate, usePath } from './router'
+import Announcer from './site/Announcer'
+import { useAnnounceReady } from './site/announce'
+import Waiting from './site/Waiting'
 import ThankYouPage from './thanks/ThankYouPage'
 import { useLoad } from './useLoad'
 
@@ -51,6 +54,16 @@ function Site({ config, api: givenApi, gateway: givenGateway, initialPath }: Sit
   const route = matchRoute(usePath(initialPath), THANKS_PATH)
   const views: ViewProps = { config, api, gateway }
 
+  return (
+    <>
+      <Announcer />
+      <Route route={route} views={views} />
+    </>
+  )
+}
+
+function Route({ route, views }: { route: ReturnType<typeof matchRoute>; views: ViewProps }) {
+  const { config, gateway } = views
   switch (route.name) {
     case 'thanks':
       return <ThankYouPage gateway={gateway} publishableKey={config.stripePublishableKey} />
@@ -90,8 +103,18 @@ function HomeView({ config, api, gateway }: ViewProps) {
     return { kind: 'one', campaign: await api.getCampaign(list[0].id) }
   }, 'home')
   useTitle(null)
+  useAnnounceReady(
+    load.state !== 'ready'
+      ? null
+      : load.value.kind === 'one'
+        ? `Campaña lista: ${load.value.campaign.name}`
+        : load.value.kind === 'many'
+          ? 'Campañas abiertas listas'
+          : null,
+  )
 
-  if (load.state === 'loading') return <Loading text="Cargando la campaña…" />
+  // The root does not know yet whether it opens one campaign or the list.
+  if (load.state === 'loading') return <Waiting text="Un momento…" isSample={config.apiMode === 'mock'} />
   if (load.state === 'failed') return <FailedNotice title="No cargó la campaña" retry={retry} />
   const home = load.value
   if (home.kind === 'none') return <NoneOpenNotice />
@@ -108,8 +131,17 @@ function HomeView({ config, api, gateway }: ViewProps) {
 function ListView({ config, api, status }: ViewProps & { status: 'open' | 'completed' }) {
   const [load, retry] = useLoad(() => api.listCampaigns(status), status)
   useTitle(status === 'open' ? 'Campañas abiertas' : 'Campañas terminadas')
+  useAnnounceReady(load.state === 'ready' ? (status === 'open' ? 'Campañas abiertas listas' : 'Campañas terminadas listas') : null)
 
-  if (load.state === 'loading') return <Loading text="Cargando las campañas…" />
+  if (load.state === 'loading') {
+    return (
+      <Waiting
+        text="Preparando las campañas…"
+        tone={status === 'open' ? 'yellow' : 'anil'}
+        isSample={config.apiMode === 'mock'}
+      />
+    )
+  }
   if (load.state === 'failed') return <FailedNotice title="No cargaron las campañas" retry={retry} />
   if (status === 'open' && load.value.length === 0) return <NoneOpenNotice />
   return (
@@ -122,8 +154,10 @@ function ListView({ config, api, status }: ViewProps & { status: 'open' | 'compl
 function CampaignView({ config, api, gateway, id }: ViewProps & { id: string }) {
   const [load, retry] = useLoad(() => api.getCampaign(id), id)
   useTitle(load.state === 'ready' ? load.value.name : null)
+  useAnnounceReady(load.state === 'ready' ? `Campaña lista: ${load.value.name}` : null)
 
-  if (load.state === 'loading') return <Loading text="Cargando la campaña…" />
+  // Open or completed is not known until it loads: a primer coat, not a guess.
+  if (load.state === 'loading') return <Waiting text="Preparando la campaña…" tone="primer" isSample={config.apiMode === 'mock'} />
   if (load.state === 'failed') {
     if (load.error instanceof ApiError && load.error.code === 'CAMPAIGN_NOT_FOUND') return <NotFoundNotice />
     return <FailedNotice title="No cargó la campaña" retry={retry} />
@@ -149,17 +183,6 @@ function CampaignScreen({ config, api, gateway, campaign, showBack }: ViewProps 
           />
         )}
       />
-    </main>
-  )
-}
-
-function Loading({ text }: { text: string }) {
-  // No big lettering for a wait this short: just the wall and a line.
-  return (
-    <main className="unavailable">
-      <p role="status" className="notice__text">
-        {text}
-      </p>
     </main>
   )
 }
