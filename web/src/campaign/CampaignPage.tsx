@@ -53,16 +53,8 @@ export default function CampaignPage({ campaign, isSample = false, showBack = fa
           <h1 id={headingId} ref={headingRef} tabIndex={-1} className="sign">
             {campaign.name}
           </h1>
-          <p className="wall__line">
-            {closed ? (
-              'Esta campaña ya terminó. Gracias a quienes la apoyaron.'
-            ) : (
-              <>
-                Somos estudiantes de la UADY en Mérida y vamos a Mexico Dreamin, una conferencia en la Ciudad de
-                México. <strong>Ayúdanos a llegar.</strong>
-              </>
-            )}
-          </p>
+          {/* The campaign's own purpose, from Salesforce; the closed state is told by the wall, band and board. */}
+          <p className="wall__line">{campaign.purpose}</p>
         </div>
         <Bill src={campaign.imageUrl} loading="eager" />
       </header>
@@ -98,8 +90,7 @@ export default function CampaignPage({ campaign, isSample = false, showBack = fa
 
       <article className="story">
         <h2 className="sign-small">Para qué es</h2>
-        <p className="story__lead">{campaign.purpose}</p>
-        <p>{campaign.description}</p>
+        <p className="story__lead">{campaign.description}</p>
       </article>
 
       <Supporters supporters={campaign.supporters} />
