@@ -1,6 +1,14 @@
 import { describe, expect, it } from 'vitest'
 import { ApiError, createApiClient } from './client'
-import { MOCK_TRIGGERS, completedCampaign, openCampaign, secondOpenCampaign, shortCompletedCampaign } from './mock/fixtures'
+import {
+  MOCK_TRIGGERS,
+  completedCampaign,
+  noImageOpenCampaign,
+  openCampaign,
+  secondOpenCampaign,
+  shortCompletedCampaign,
+  tinyImageOpenCampaign,
+} from './mock/fixtures'
 import { createMockFetch, type MockScenario } from './mock/mockFetch'
 import type { PaymentSessionRequest } from './types'
 
@@ -42,7 +50,13 @@ describe('campaigns against the mock', () => {
 
   it('lists several open campaigns, soonest end first', async () => {
     const campaigns = await client('many-open').listCampaigns()
-    expect(campaigns.map((c) => c.id)).toEqual([secondOpenCampaign.id, openCampaign.id])
+    // Soonest end first: Nov 28, Dec 5, Dec 15, Dec 20.
+    expect(campaigns.map((c) => c.id)).toEqual([
+      secondOpenCampaign.id,
+      tinyImageOpenCampaign.id,
+      openCampaign.id,
+      noImageOpenCampaign.id,
+    ])
   })
 
   it('returns an empty list when nothing is open', async () => {

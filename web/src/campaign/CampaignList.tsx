@@ -4,6 +4,7 @@ import { Link } from '../Link'
 import { ROUTES, useFocusOnNavigate } from '../router'
 import SiteFooter, { SampleStrip } from '../site/SiteFooter'
 import { formatDay, formatFullDay, formatMoney, formatPercent, progressOf } from './format'
+import Bill from './Bill'
 
 interface Props {
   status: CampaignStatus
@@ -42,9 +43,14 @@ export default function CampaignList({ status, campaigns, isSample = false }: Pr
           {open ? 'Elige una campaña' : 'Campañas terminadas'}
         </h1>
         <p className="wall__line">
-          {open
-            ? 'Somos estudiantes de la UADY en Mérida y vamos a Mexico Dreamin, en la Ciudad de México. Ayúdanos a llegar.'
-            : 'Lo que juntamos en campañas anteriores, gracias a quienes donaron.'}
+          {open ? (
+            <>
+              Somos estudiantes de la UADY en Mérida y vamos a Mexico Dreamin, una conferencia en la Ciudad de México.{' '}
+              <strong>Ayúdanos a llegar.</strong>
+            </>
+          ) : (
+            'Lo que juntamos en campañas anteriores, gracias a quienes donaron.'
+          )}
         </p>
       </header>
 
@@ -67,15 +73,6 @@ export default function CampaignList({ status, campaigns, isSample = false }: Pr
   )
 }
 
-function Bill({ campaign }: { campaign: Campaign }) {
-  if (!campaign.imageUrl) return null
-  return (
-    <figure className="bill board__bill">
-      <img src={campaign.imageUrl} alt="" loading="lazy" />
-    </figure>
-  )
-}
-
 function OpenBoard({ campaign }: { campaign: Campaign }) {
   const progress = progressOf(campaign.raisedAmount, campaign.goalAmount)
   const href = ROUTES.campaign(campaign.id)
@@ -83,9 +80,11 @@ function OpenBoard({ campaign }: { campaign: Campaign }) {
 
   return (
     <li className="board" aria-labelledby={nameId}>
+      {/* The photo is the board's own left coat, full height, not a bill framed inside it. */}
+      <Bill src={campaign.imageUrl} className="board__bill" />
       <div className="board__body">
-        <Bill campaign={campaign} />
         <h2 id={nameId} className="board__name">
+          {/* Its hit area covers the whole board, so the photo and the tally open the campaign too. */}
           <Link href={href}>{campaign.name}</Link>
         </h2>
         <p className="board__purpose">{campaign.purpose}</p>
@@ -122,9 +121,11 @@ function ClosedBoard({ campaign }: { campaign: Campaign }) {
 
   return (
     <li className="board board--closed" aria-labelledby={nameId}>
+      {/* The photo is the board's own left coat, full height, not a bill framed inside it. */}
+      <Bill src={campaign.imageUrl} className="board__bill" />
       <div className="board__body">
-        <Bill campaign={campaign} />
         <h2 id={nameId} className="board__name">
+          {/* Its hit area covers the whole board, so the photo and the tally open the campaign too. */}
           <Link href={href}>{campaign.name}</Link>
         </h2>
         <p className="board__purpose">{campaign.purpose}</p>

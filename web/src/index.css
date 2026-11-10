@@ -141,12 +141,6 @@ p {
   padding: 1rem var(--gutter) 3.75rem;
 }
 
-@media (min-width: 960px) {
-  .wall {
-    padding: 1.25rem var(--gutter) 4.5rem;
-  }
-}
-
 .wall--yellow {
   background: var(--izamal);
   color: var(--enamel);
@@ -173,6 +167,21 @@ p {
   padding: 0.5rem 0;
 }
 
+/* On the smallest phones the signature and the corner link still share one row. */
+@media (max-width: 359px) {
+  .wall__top {
+    column-gap: 0.75rem;
+  }
+
+  .signature {
+    font-size: 0.8rem;
+  }
+
+  .wall__skip {
+    font-size: 0.875rem;
+  }
+}
+
 .wall__line {
   margin-top: 1rem;
   max-width: 34ch;
@@ -180,6 +189,12 @@ p {
   line-height: 1.45;
   color: var(--on-izamal-muted);
   font-weight: 700;
+  text-wrap: pretty;
+}
+
+.wall__line strong {
+  font-weight: 700;
+  color: var(--enamel);
 }
 
 /* A campaign photo is pasted on the wall like a bill: flat, framed in enamel. */
@@ -187,14 +202,50 @@ p {
   margin: 1.75rem 0 0;
   border: var(--line) solid var(--enamel);
   background: var(--cal);
-  max-width: 640px;
+  /* Sized to the copy, not the wall: never wider than 440px, and never taller than about a third of a short screen. */
+  max-width: min(440px, 60vh);
 }
 
 .bill img {
   display: block;
   width: 100%;
+  height: auto;
   aspect-ratio: 16 / 9;
   object-fit: cover;
+  /* Faces in a portrait photo sit high; crop from just above the middle. */
+  object-position: 50% 35%;
+}
+
+/* On the campaign wall the bill runs past the wall's foot and is pasted over the
+   band's top edge: a coat over both coats, never over the band's lettering. */
+.wall > .bill {
+  position: relative;
+  z-index: 2;
+  margin-bottom: -2.5rem;
+}
+
+/* On a phone the bill is a short strip, so the tally still reaches the first screen. */
+@media (max-width: 959px) {
+  .wall > .bill img {
+    aspect-ratio: 21 / 9;
+  }
+}
+
+/* The completed campaign's wall: the coat has weathered to a second lime wash. */
+.wall--weathered {
+  background: var(--cal-deep);
+  color: var(--enamel);
+}
+
+.wall--weathered .sign {
+  color: var(--enamel);
+  text-shadow:
+    0.05em 0.05em 0 var(--cal),
+    0.1em 0.1em 0 var(--weather-3);
+}
+
+.wall--weathered .wall__line {
+  color: var(--weather-1);
 }
 
 /* ---- The indigo band: raised and missing, lettered alike ---- */
@@ -327,6 +378,17 @@ p {
 
 .tile[aria-checked='true']::before {
   clip-path: inset(0 0 0 0);
+}
+
+/* The suggested amount before the donor picks one: chosen, but at rest, so it is
+   lettered on enamel like a sign. Picking any amount wipes the almagre coat on. */
+.tile[data-suggested='true'] {
+  background: var(--enamel);
+  border-color: var(--enamel);
+}
+
+.tile[data-suggested='true']::before {
+  clip-path: inset(0 100% 0 0);
 }
 
 @media (hover: hover) {
@@ -520,6 +582,7 @@ html:has(.sheet[open]) {
   }
 }
 
+.sign[tabindex='-1']:focus,
 .sign-small[tabindex='-1']:focus {
   outline: none;
 }
@@ -801,7 +864,7 @@ html:has(.sheet[open]) {
   padding: 0;
   display: grid;
   gap: 2rem;
-  max-width: 72rem;
+  max-width: 64rem;
 }
 
 .boards__empty {
@@ -813,6 +876,7 @@ html:has(.sheet[open]) {
 }
 
 .board {
+  position: relative;
   display: grid;
   border: var(--line) solid var(--enamel);
   background: var(--cal);
@@ -825,9 +889,16 @@ html:has(.sheet[open]) {
   padding: clamp(1.25rem, 3vw, 2rem);
 }
 
-.board__bill {
-  margin: 0 0 0.5rem;
+/* On a phone the photo is a strip across the top of the board, edge to edge. */
+.bill.board__bill {
+  margin: 0;
   max-width: none;
+  border: 0;
+  border-bottom: var(--line) solid var(--enamel);
+}
+
+.board__bill img {
+  aspect-ratio: 21 / 9;
 }
 
 .board__name {
@@ -841,6 +912,20 @@ html:has(.sheet[open]) {
 
 .board__name a {
   text-decoration: none;
+}
+
+/* The name's link covers the whole board: one target, as large as the board. */
+.board__name a::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+}
+
+/* The sign and the text link stay pressable above it. */
+.board__go,
+.board__more {
+  position: relative;
+  z-index: 1;
 }
 
 @media (hover: hover) {
@@ -860,13 +945,20 @@ html:has(.sheet[open]) {
 .board__description {
   color: var(--weather-1);
   max-width: 60ch;
+  text-wrap: pretty;
+  /* The list is for choosing; the full description is on the campaign page. */
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  overflow: hidden;
 }
 
 /* The tally is an añil coat on the board: raised and missing, lettered alike. */
 .board__tally {
   display: grid;
   align-content: start;
-  padding: 1.25rem clamp(1.25rem, 3vw, 1.75rem) 1.5rem;
+  padding: 1rem 1.25rem 1.25rem;
   background: var(--anil);
   color: var(--cal);
 }
@@ -900,7 +992,8 @@ html:has(.sheet[open]) {
 }
 
 .board__go {
-  margin-top: 1.25rem;
+  margin-top: 1rem;
+  max-width: 22rem;
 }
 
 @media (hover: hover) {
@@ -911,13 +1004,51 @@ html:has(.sheet[open]) {
 }
 
 @media (min-width: 820px) {
+  /* Three columns, each as big as what it holds: the photo coat, the words, and the
+     tally sized to its content. The board is as tall as the tallest of them. */
   .board {
-    grid-template-columns: minmax(0, 1.4fr) minmax(18rem, 1fr);
+    grid-template-columns: clamp(11rem, 24%, 16rem) minmax(0, 1fr) minmax(15rem, 18rem);
+    align-items: start;
   }
 
-  /* On wide screens the coat hangs off the board's top right corner. */
+  .board:not(:has(> .bill)) {
+    grid-template-columns: minmax(0, 1fr) minmax(15rem, 18rem);
+  }
+
+  /* The photo fills whatever height the words and the tally give the board; its own
+     shape never sets the height, so a portrait photo cannot stretch the board. */
+  .board > .bill {
+    position: relative;
+    align-self: stretch;
+    min-height: 10rem;
+    border-bottom: 0;
+    border-right: var(--line) solid var(--enamel);
+  }
+
+  .board > .bill img {
+    position: absolute;
+    inset: 0;
+    height: 100%;
+    aspect-ratio: auto;
+  }
+
+  .board__body {
+    align-self: center;
+  }
+
+  /* The coat hangs off the board's top right corner, sized to what it says:
+     a hanging sign, not a pillar to the floor. */
   .board__tally {
-    margin: -0.75rem -0.75rem 1.5rem 0;
+    margin: -0.75rem -0.75rem 1.25rem 0;
+  }
+
+  .board__go {
+    max-width: none;
+  }
+
+  /* A weathered coat on lime wash needs its enamel edge where it overhangs. */
+  .board--closed .board__tally {
+    border: var(--line) solid var(--enamel);
   }
 }
 
@@ -1131,6 +1262,71 @@ html:has(.sheet[open]) {
   margin-top: 0;
 }
 
+/* ---- Waiting: the page before its words ----
+   The same wall the page will have, top-aligned like it, with the line where the
+   headline will land. Only the words change when the page is ready. */
+
+.waiting-page {
+  min-height: 100dvh;
+}
+
+.waiting {
+  min-height: min(30rem, 72dvh);
+}
+
+/* The page's top row also holds a link; keep the same height so the line lands where the headline will. */
+.waiting .wall__top {
+  min-height: 2.55rem;
+}
+
+.waiting__line {
+  min-height: 1.3em;
+  max-width: 30ch;
+  font: 700 clamp(1.25rem, 3.2vw, 1.6rem) / 1.3 var(--read);
+}
+
+/* The one thing in motion while the page waits: a short almagre stroke being
+   painted on, again and again. Square ends, a flat coat, no fade. */
+.waiting__brush {
+  display: block;
+  width: 6rem;
+  height: 0.5rem;
+  margin-top: 1rem;
+  background: var(--almagre);
+  animation: waiting-brush 1.4s cubic-bezier(0.16, 1, 0.3, 1) infinite;
+}
+
+@keyframes waiting-brush {
+  from {
+    clip-path: inset(0 100% 0 0);
+  }
+
+  70%,
+  to {
+    clip-path: inset(0 0 0 0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  /* The global rule only shortens transitions; the stroke stays painted and still. */
+  .waiting__brush {
+    animation: none;
+  }
+}
+
+/* Read by screen readers, never seen. */
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
 /* ---- Desktop: a tighter scale ----
    Phones keep the big lettering, because they are held at arm's length and
    read by relatives. On a desktop screen the same sizes shout, so the signs
@@ -1166,7 +1362,33 @@ html:has(.sheet[open]) {
 
   .bill {
     margin-top: 1.25rem;
-    max-width: 520px;
+    max-width: min(360px, 50vh);
+  }
+
+  .wall > .bill {
+    max-width: min(300px, 40vh);
+    margin-bottom: -2.25rem;
+  }
+
+  .waiting {
+    min-height: 21rem;
+  }
+
+  .waiting__line {
+    font-size: 1.25rem;
+  }
+
+  /* The donate board is already beside the wall: no jump needed. */
+  .wall__skip--jump {
+    display: none;
+  }
+
+  .wall__line strong {
+    color: inherit;
+  }
+
+  .page--closed .donate {
+    background: var(--cal-deep);
   }
 
   .band {
@@ -1249,16 +1471,16 @@ html:has(.sheet[open]) {
 
   .board__purpose {
     font-size: 1.0625rem;
-    font-weight: 400;
+    font-weight: 700;
   }
 
   .board__description {
-    font-size: 1rem;
+    font-size: 0.9375rem;
     color: var(--weather-2);
   }
 
   .board__tally {
-    padding: 1rem 1.5rem 1.25rem;
+    padding: 1rem 1.25rem 1.25rem;
   }
 
   .tally__numeral {
@@ -1288,5 +1510,33 @@ html:has(.sheet[open]) {
   *::before,
   *::after {
     transition-duration: 0.01ms !important;
+  }
+}
+
+/* Wide desktop: the bill hangs beside the headline instead of under it, so the
+   wall keeps its height and the empty half of the wall becomes the photo. */
+@media (min-width: 1200px) {
+  .wall:has(> .bill) {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) clamp(220px, 34%, 400px);
+    grid-template-areas:
+      'top top'
+      'copy bill';
+    column-gap: clamp(1.5rem, 3vw, 3rem);
+  }
+
+  .wall:has(> .bill) > .wall__top {
+    grid-area: top;
+  }
+
+  .wall:has(> .bill) > .wall__copy {
+    grid-area: copy;
+  }
+
+  .wall > .bill {
+    grid-area: bill;
+    align-self: end;
+    margin-top: 0;
+    max-width: none;
   }
 }

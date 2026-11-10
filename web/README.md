@@ -33,6 +33,7 @@ With the mock, the page shows a "Vista previa" strip so nobody mistakes the samp
 | To get | Do |
 | :--- | :--- |
 | Several open campaigns (the list) | Open the site with `?mock=many-open`. |
+| Campaign photos of different shapes | `?mock=many-open` has four open campaigns: 16:9, portrait, a tiny 240×135 file, and no photo. The completed list has a square and a 3000×600 panorama. Each placeholder shows its size and corner marks, so the crop is visible. |
 | No open campaign | Open the site with `?mock=no-open`. |
 | `400 VALIDATION_FAILED` | Break any rule, for example an amount under 50 or the public name `spam` (banned word). |
 | `404 CAMPAIGN_NOT_FOUND` | Ask for an unknown campaign ID. |

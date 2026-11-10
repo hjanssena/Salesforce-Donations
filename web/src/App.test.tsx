@@ -19,10 +19,14 @@ describe('App', () => {
   it('opens the open campaign from the mock API and marks it as sample data', async () => {
     window.__APP_CONFIG__ = mockConfig
     render(<App api={mockApi()} />)
-    expect(screen.getByRole('status')).toHaveTextContent('Cargando')
+    // The page waits as its own bare wall, with the sample strip already in place.
+    expect(document.querySelector('main[aria-busy="true"] .wall')).not.toBeNull()
+    expect(screen.getByText(/Vista previa/)).toBeInTheDocument()
     expect(await screen.findByRole('heading', { level: 1, name: 'Becas Mexico Dreamin 2026' })).toBeInTheDocument()
     expect(screen.getByText(/Vista previa/)).toBeInTheDocument()
     expect(screen.getByText('Ana López')).toBeInTheDocument()
+    // A first load is announced; an in-app move is read out through the focused heading instead.
+    expect(await screen.findByText('Campaña lista: Becas Mexico Dreamin 2026')).toHaveClass('visually-hidden')
   })
 
   it('says so when no campaign is open, and leads to the completed ones (RF-D1c CA2)', async () => {
@@ -38,7 +42,7 @@ describe('App', () => {
     window.__APP_CONFIG__ = mockConfig
     render(<App api={mockApi('many-open')} />)
     expect(await screen.findByRole('heading', { level: 1, name: 'Elige una campaña' })).toBeInTheDocument()
-    expect(screen.getAllByRole('listitem')).toHaveLength(2)
+    expect(screen.getAllByRole('listitem')).toHaveLength(4)
   })
 
   it('goes from the list to a campaign and back', async () => {
