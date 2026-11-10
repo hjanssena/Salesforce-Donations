@@ -154,10 +154,13 @@ describe('CampaignPage', () => {
     expect(screen.getByRole('link', { name: 'Ir a donar' })).toHaveAttribute('href', '#donar')
   })
 
-  it('says what Mexico Dreamin is and asks for help at full weight', () => {
-    render(<CampaignPage campaign={sampleCampaign} renderPayment={payment} />)
-    expect(screen.getByText(/una conferencia en la Ciudad de México/)).toBeInTheDocument()
-    expect(screen.getByText('Ayúdanos a llegar.').tagName).toBe('STRONG')
+  it("letters the campaign's own purpose on the wall and its description under \"Para qué es\"", () => {
+    const { container } = render(<CampaignPage campaign={sampleCampaign} renderPayment={payment} />)
+    expect(container.querySelector('.wall__line')).toHaveTextContent(sampleCampaign.purpose)
+    expect(container.querySelector('.story__lead')).toHaveTextContent(sampleCampaign.description)
+    // Each field shows once: the purpose on the wall, the description in "Para qué es".
+    expect(screen.getAllByText(sampleCampaign.purpose)).toHaveLength(1)
+    expect(screen.queryByText(/Somos estudiantes/)).not.toBeInTheDocument()
   })
 
   it('weathers the wall of a completed campaign', () => {
