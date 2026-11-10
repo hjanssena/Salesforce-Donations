@@ -43,6 +43,39 @@ export const completedCampaign: CampaignDetail = {
   ],
 }
 
+/** A second open campaign, for the list of open campaigns (`?mock=many-open`). Goal not reached yet. */
+export const secondOpenCampaign: CampaignDetail = {
+  id: '701Hs00000HoSpEDAJ',
+  name: 'Hospedaje en la Ciudad de México',
+  description: 'Tres noches de hotel cerca de la sede para el grupo que viaja.',
+  purpose: 'Pagar el hospedaje de 20 estudiantes durante el evento.',
+  imageUrl: null,
+  goalAmount: 30000,
+  raisedAmount: 8450,
+  startDate: '2026-11-03',
+  endDate: '2026-11-28',
+  status: 'open',
+  supporters: [
+    { displayName: 'Familia Canul', amount: 2000 },
+    { displayName: 'Luis Pech', amount: 450 },
+  ],
+}
+
+/** A completed campaign that ended short of its goal. */
+export const shortCompletedCampaign: CampaignDetail = {
+  id: '701Hs00000TaLLeRAB',
+  name: 'Taller de Trailhead 2025',
+  description: 'Un taller de fin de semana en Mérida para preparar a la primera generación.',
+  purpose: 'Rentar el salón y las computadoras del taller.',
+  imageUrl: null,
+  goalAmount: 15000,
+  raisedAmount: 9800,
+  startDate: '2025-05-01',
+  endDate: '2025-06-15',
+  status: 'completed',
+  supporters: [{ displayName: 'Comunidad Trailblazer Mérida', amount: 3000 }],
+}
+
 /** Starts on a date far ahead: the API never returns it. */
 export const futureCampaign: CampaignDetail = {
   id: '701Hs00000FuTuReAA',

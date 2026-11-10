@@ -1,7 +1,7 @@
 import { fireEvent, render, screen } from '@testing-library/react'
 import { describe, expect, it } from 'vitest'
 import CampaignPage from './CampaignPage'
-import { openCampaign } from '../api/mock/fixtures'
+import { completedCampaign, openCampaign, shortCompletedCampaign } from '../api/mock/fixtures'
 
 const sampleCampaign = { ...openCampaign, raisedAmount: 31250 }
 const payment = (amount: number, back: () => void) => (
@@ -111,5 +111,31 @@ describe('CampaignPage', () => {
   it('never renders the sample strip for real data', () => {
     render(<CampaignPage campaign={sampleCampaign} renderPayment={payment} />)
     expect(screen.queryByText(/Vista previa/)).not.toBeInTheDocument()
+  })
+
+  it('shows a completed campaign read only, with what it raised and no way to donate (RF-D1c CA3)', () => {
+    render(<CampaignPage campaign={completedCampaign} showBack renderPayment={payment} />)
+    expect(screen.getByText('$22,400')).toBeInTheDocument()
+    expect(screen.getByText(/cerró el 20 de noviembre de 2025/)).toBeInTheDocument()
+    expect(screen.getByRole('heading', { name: 'Campaña cerrada' })).toBeInTheDocument()
+    expect(screen.queryByRole('radio')).not.toBeInTheDocument()
+    expect(screen.queryByRole('button', { name: /Donar/ })).not.toBeInTheDocument()
+    expect(screen.queryByRole('link', { name: 'Donar' })).not.toBeInTheDocument()
+    // Back to the list it came from: in the wall, and again in the footer.
+    expect(screen.getAllByRole('link', { name: 'Campañas terminadas' })[0]).toHaveAttribute('href', '/campanas/finalizadas')
+  })
+
+  it('says how much a completed campaign fell short', () => {
+    render(<CampaignPage campaign={shortCompletedCampaign} renderPayment={payment} />)
+    expect(screen.getByText('Faltaron $5,200')).toBeInTheDocument()
+  })
+
+  it('links back to the open campaigns only when asked', () => {
+    const { unmount } = render(<CampaignPage campaign={sampleCampaign} renderPayment={payment} />)
+    expect(screen.queryByRole('link', { name: 'Todas las campañas' })).not.toBeInTheDocument()
+    unmount()
+    render(<CampaignPage campaign={sampleCampaign} showBack renderPayment={payment} />)
+    expect(screen.getByRole('link', { name: 'Todas las campañas' })).toHaveAttribute('href', '/campanas')
+    expect(screen.queryByRole('link', { name: 'Donar' })).not.toBeInTheDocument()
   })
 })

@@ -1,13 +1,13 @@
 import { describe, expect, it } from 'vitest'
 import { ApiError, createApiClient } from './client'
-import { MOCK_TRIGGERS, completedCampaign, openCampaign } from './mock/fixtures'
-import { createMockFetch } from './mock/mockFetch'
+import { MOCK_TRIGGERS, completedCampaign, openCampaign, secondOpenCampaign, shortCompletedCampaign } from './mock/fixtures'
+import { createMockFetch, type MockScenario } from './mock/mockFetch'
 import type { PaymentSessionRequest } from './types'
 
 const BASE = 'https://example.my.salesforce-sites.com/donations/services/apexrest/donations/v1'
 const TODAY = '2026-11-05'
 
-const client = (scenario: 'default' | 'no-open' = 'default') =>
+const client = (scenario: MockScenario = 'default') =>
   createApiClient(BASE, createMockFetch({ scenario, today: TODAY }))
 
 const request: PaymentSessionRequest = {
@@ -35,9 +35,14 @@ describe('campaigns against the mock', () => {
     expect(campaigns[0]).not.toHaveProperty('supporters')
   })
 
-  it('lists completed campaigns', async () => {
+  it('lists completed campaigns, latest end first', async () => {
     const campaigns = await client().listCampaigns('completed')
-    expect(campaigns.map((c) => c.id)).toEqual([completedCampaign.id])
+    expect(campaigns.map((c) => c.id)).toEqual([completedCampaign.id, shortCompletedCampaign.id])
+  })
+
+  it('lists several open campaigns, soonest end first', async () => {
+    const campaigns = await client('many-open').listCampaigns()
+    expect(campaigns.map((c) => c.id)).toEqual([secondOpenCampaign.id, openCampaign.id])
   })
 
   it('returns an empty list when nothing is open', async () => {
