@@ -47,6 +47,9 @@ export default function ThankYouPage({ gateway, publishableKey, search = window.
           console.error(error)
         }
       }
+      // The answer came first: the deadline and the slow notice must not overwrite it.
+      window.clearTimeout(deadline)
+      window.clearTimeout(slowTimer)
       if (active) setLoad({ state: 'ready', payment })
     })()
     return () => {

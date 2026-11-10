@@ -69,4 +69,21 @@ describe('thanksWording', () => {
       vi.useRealTimers()
     }
   })
+
+  it('keeps the payment it read after the deadline passes', async () => {
+    vi.useFakeTimers()
+    try {
+      render(<ThankYouPage gateway={gatewayWith({ status: 'succeeded', amount: 250 })} publishableKey="pk_test_1" search={RETURN} />)
+      await act(async () => {})
+      expect(screen.getByRole('heading', { name: '¡Gracias!' })).toBeInTheDocument()
+      // Regression: the 15s deadline used to replace the answer with "not confirmed".
+      await act(async () => {
+        vi.advanceTimersByTime(20000)
+      })
+      expect(screen.getByRole('heading', { name: '¡Gracias!' })).toBeInTheDocument()
+      expect(screen.queryByText(/la conexión está lenta/)).not.toBeInTheDocument()
+    } finally {
+      vi.useRealTimers()
+    }
+  })
 })

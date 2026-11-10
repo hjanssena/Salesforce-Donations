@@ -21,9 +21,15 @@ describe('useLoad', () => {
     expect(loaded.state === 'failed' && loaded.error).toBeInstanceOf(LoadTimeoutError)
   })
 
-  it('keeps an answer that arrives before the deadline', async () => {
+  it('keeps an answer that arrives before the deadline, even after the deadline passes', async () => {
+    vi.useFakeTimers()
     const { result } = renderHook(() => useLoad(async () => 7, 'k', { timeoutMs: 1000 }))
     await act(async () => {})
+    expect(result.current[0]).toEqual({ state: 'ready', value: 7 })
+    // Regression: the deadline used to fire anyway and fail a page that had loaded.
+    await act(async () => {
+      vi.advanceTimersByTime(5000)
+    })
     expect(result.current[0]).toEqual({ state: 'ready', value: 7 })
   })
 })

@@ -37,11 +37,15 @@ export function useLoad<T>(
       console.error(error)
       setResult({ state: 'failed', error })
     }, timeoutMs)
+    // Whichever comes first, the answer or the deadline, settles the load; the answer
+    // cancels the deadline so a page that loaded is never failed afterwards.
     load().then(
       (value) => {
+        window.clearTimeout(deadline)
         if (active) setResult({ state: 'ready', value })
       },
       (error: unknown) => {
+        window.clearTimeout(deadline)
         console.error(error)
         if (active) setResult({ state: 'failed', error })
       },
