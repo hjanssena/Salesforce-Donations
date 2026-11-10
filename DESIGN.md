@@ -176,6 +176,9 @@ A wall-paint palette: two saturated walls, one red oxide for motion, black ename
 - **Body** (Lexend 400, 1.0625rem, line-height 1.6): all running text, story column capped near 68ch; supporter rows at the same size.
 - **Small** (Lexend 400, 0.875rem–0.9375rem): helper lines, the notice under the donate sign (700), the preview strip (0.8125rem) and the footer.
 
+### Desktop scale
+From 960px the scale steps down, because the phone sizes shout on a desktop screen: display clamp 2.5rem–3.75rem, raised numeral 2.5rem, gap line 1.75rem, titles 1.25rem, the donate sign 1.25rem at 3.25rem tall, tiles and the amount field 2.75rem tall. The wall's purpose line drops to Lexend 400 at 1.0625rem in enamel (on-anil-muted on the añil wall). Walls and sections pack tighter. Phones keep the full scale.
+
 ### Named Rules
 **The Two Voices Rule.** Bungee is for signs, never for sentences. Anything a donor has to read in full is Lexend.
 
@@ -244,6 +247,17 @@ Opens over the page after "Donar $X", as a sheet: a cal board with the 2px ename
 - **Errors:** the input's outline and a bold message under it turn almagre, and focus moves to the first one. A form-level message sits above the pay sign.
 - **Card field:** Stripe's Payment Element themed flat: square corners, the 2px enamel outline, Lexend.
 - **Pay sign:** the donate sign reads "PAGAR $X"; while it works it is weather-2 with cal lettering and reads "Procesando…".
+
+### Campaign Boards (lists)
+The open and completed lists (`/campanas`, `/campanas/finalizadas`) stack one board per campaign, full width, never a grid of cards. A board is a cal ground in the 2px enamel line that climbs onto the foot of the wall above it. The left side carries the name (Bungee, añil, a link to the campaign), the purpose and the description; from 820px the right side is the tally coat, which hangs 0.75rem off the board's top right corner.
+- **Open:** the wall is izamal and the heading reads "Elige una campaña". The tally is añil, with the raised numeral in yellow, the goal and closing date, the meter, the gap line and an enamel "VER Y DONAR" sign whose hover coat is izamal.
+- **Completed:** the wall is añil and the heading reads "Campañas terminadas", lettered izamal. The board is weathered: an enamel name and a cal-deep tally with "Juntamos" and "Meta" side by side, an enamel meter filled weather-1, the result ("112% de la meta" or "Llegó al 65%"), the closing date with its year, and a plain text link to the campaign. There is no sign, because nothing can be donated.
+
+### Completed Campaign Page
+The same page as an open campaign, read only. The band says "cerró el …" with the year and "Faltaron $X" when the goal was missed. Where the donate board hangs, a "Campaña cerrada" board says when it ended and offers an enamel sign back to the open campaigns. The wall's top corner links back to the completed list; an open campaign reached from the list links back to "Todas las campañas" instead of "Donar".
+
+### Footer
+An enamel strip on every campaign page, with the links to the open and completed campaigns above the test-mode notice.
 
 ### Thank-You Page
 The unavailable screen's yellow wall with the signature, a display sign ("¡Gracias!" or the status), one sentence and an enamel sign back to the campaign.

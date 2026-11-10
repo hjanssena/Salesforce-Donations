@@ -154,9 +154,11 @@ p {
 
 .wall__top {
   display: flex;
+  flex-wrap: wrap;
   justify-content: space-between;
   align-items: baseline;
-  gap: 1rem;
+  gap: 0 1rem;
+  white-space: nowrap;
   margin-bottom: clamp(1.25rem, 6vw, 4.5rem);
 }
 
@@ -345,6 +347,7 @@ p {
    the almagre outline the chosen tile would have. */
 .other {
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
   gap: 0.35rem;
   margin-top: 0.75rem;
 }
@@ -413,6 +416,15 @@ p {
   text-transform: uppercase;
   cursor: pointer;
   transition: background-color 160ms ease-out;
+}
+
+/* A link painted as the sign. */
+a.sign-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  text-decoration: none;
 }
 
 .sign-button:active {
@@ -728,6 +740,259 @@ html:has(.sheet[open]) {
   text-decoration: none;
 }
 
+/* ---- Campaign lists: boards hung on the wall ---- */
+
+/* An añil wall, for the past: completed campaigns are lettered in yellow on it. */
+.wall--anil {
+  background: var(--anil);
+  color: var(--cal);
+}
+
+.wall--anil .sign {
+  color: var(--izamal);
+  text-shadow:
+    0.05em 0.05em 0 var(--anil),
+    0.1em 0.1em 0 var(--enamel);
+}
+
+.wall--anil .wall__line {
+  color: var(--on-anil-muted);
+}
+
+.wall--anil :focus-visible,
+.foot :focus-visible {
+  outline-color: var(--izamal);
+}
+
+.listing {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-areas:
+    'strip'
+    'wall'
+    'boards'
+    'foot';
+  grid-template-rows: auto auto 1fr auto;
+  min-height: 100dvh;
+}
+
+.listing__wall {
+  padding-bottom: 5rem;
+}
+
+@media (min-width: 960px) {
+  .listing__wall {
+    padding-bottom: 6rem;
+  }
+}
+
+/* The boards climb onto the foot of the wall, like the band does. */
+.boards {
+  grid-area: boards;
+  position: relative;
+  z-index: 1;
+  margin-top: -2.75rem;
+  padding: 0 var(--gutter) 3rem;
+}
+
+.boards__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 2rem;
+  max-width: 72rem;
+}
+
+.boards__empty {
+  max-width: 40ch;
+  padding: 1.25rem 1.5rem;
+  border: var(--line) solid var(--enamel);
+  background: var(--cal);
+  font-weight: 700;
+}
+
+.board {
+  display: grid;
+  border: var(--line) solid var(--enamel);
+  background: var(--cal);
+}
+
+.board__body {
+  display: grid;
+  align-content: start;
+  gap: 0.75rem;
+  padding: clamp(1.25rem, 3vw, 2rem);
+}
+
+.board__bill {
+  margin: 0 0 0.5rem;
+  max-width: none;
+}
+
+.board__name {
+  font: 400 clamp(1.5rem, 3.4vw, 2.25rem) / 1.05 var(--sign);
+  text-transform: uppercase;
+  text-wrap: balance;
+  overflow-wrap: break-word;
+  hyphens: auto;
+  color: var(--anil);
+}
+
+.board__name a {
+  text-decoration: none;
+}
+
+@media (hover: hover) {
+  .board__name a:hover {
+    text-decoration: underline;
+    text-decoration-thickness: 3px;
+  }
+}
+
+.board__purpose {
+  font-size: clamp(1.05rem, 1.6vw, 1.2rem);
+  line-height: 1.45;
+  font-weight: 700;
+  max-width: 52ch;
+}
+
+.board__description {
+  color: var(--weather-1);
+  max-width: 60ch;
+}
+
+/* The tally is an añil coat on the board: raised and missing, lettered alike. */
+.board__tally {
+  display: grid;
+  align-content: start;
+  padding: 1.25rem clamp(1.25rem, 3vw, 1.75rem) 1.5rem;
+  background: var(--anil);
+  color: var(--cal);
+}
+
+.board__tally :focus-visible {
+  outline-color: var(--izamal);
+}
+
+.tally__raised {
+  display: grid;
+  gap: 0.35rem;
+}
+
+.tally__numeral {
+  font: 400 clamp(2rem, 4.6vw, 2.75rem) / 1 var(--sign);
+  color: var(--izamal);
+  font-variant-numeric: tabular-nums;
+}
+
+.tally__of {
+  color: var(--on-anil-muted);
+  font-size: 0.9375rem;
+  line-height: 1.4;
+  font-variant-numeric: tabular-nums;
+}
+
+.tally__gap {
+  font: 400 clamp(1.35rem, 3vw, 1.75rem) / 1.05 var(--sign);
+  text-transform: uppercase;
+  font-variant-numeric: tabular-nums;
+}
+
+.board__go {
+  margin-top: 1.25rem;
+}
+
+@media (hover: hover) {
+  .board__tally .sign-button:hover {
+    background: var(--izamal);
+    color: var(--enamel);
+  }
+}
+
+@media (min-width: 820px) {
+  .board {
+    grid-template-columns: minmax(0, 1.4fr) minmax(18rem, 1fr);
+  }
+
+  /* On wide screens the coat hangs off the board's top right corner. */
+  .board__tally {
+    margin: -0.75rem -0.75rem 1.5rem 0;
+  }
+}
+
+/* A completed campaign is a weathered board: no añil coat and no sign to
+   press, only what it raised against its goal. */
+.board--closed .board__name {
+  color: var(--enamel);
+}
+
+.board--closed .board__tally {
+  background: var(--cal-deep);
+  color: var(--enamel);
+}
+
+.board--closed .board__tally :focus-visible {
+  outline-color: var(--anil);
+}
+
+.board--closed .tally__numeral {
+  color: var(--enamel);
+}
+
+.board--closed .tally__of {
+  color: var(--weather-2);
+}
+
+.board--closed .meter {
+  border-color: var(--enamel);
+}
+
+.board--closed .meter__paint {
+  background: var(--weather-1);
+}
+
+.tally__sums {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.5rem 1.75rem;
+  margin: 0;
+}
+
+.tally__sums dt {
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: var(--weather-2);
+}
+
+.tally__sums dd {
+  margin: 0.15rem 0 0;
+}
+
+.tally__goal {
+  font: 700 1.25rem / 1.2 var(--read);
+  font-variant-numeric: tabular-nums;
+}
+
+.board__more {
+  justify-self: start;
+  display: inline-flex;
+  align-items: center;
+  margin-top: 0.75rem;
+}
+
+/* ---- Completed campaign page: the board says it is closed ---- */
+
+.closed__text {
+  margin-top: 0.75rem;
+  color: var(--weather-1);
+}
+
+.closed .sign-button {
+  margin-top: 1.25rem;
+}
+
 /* ---- Story: one calm column, a clearing in the wall ---- */
 
 .story {
@@ -819,6 +1084,22 @@ html:has(.sheet[open]) {
   max-width: 70ch;
 }
 
+.foot__nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0 1.75rem;
+  margin-bottom: 0.75rem;
+}
+
+.foot__nav a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 2.75rem;
+  color: var(--cal);
+  font-weight: 700;
+  font-size: 0.9375rem;
+}
+
 /* ---- Unavailable shell ---- */
 
 .unavailable {
@@ -848,6 +1129,158 @@ html:has(.sheet[open]) {
 .notice__retry {
   max-width: 20rem;
   margin-top: 0;
+}
+
+/* ---- Desktop: a tighter scale ----
+   Phones keep the big lettering, because they are held at arm's length and
+   read by relatives. On a desktop screen the same sizes shout, so the signs
+   step down, reading lines go back to regular weight, and walls pack tighter. */
+
+@media (min-width: 960px) {
+  .sign {
+    font-size: clamp(2.5rem, 4vw, 3.75rem);
+  }
+
+  .sign-small {
+    font-size: 1.25rem;
+  }
+
+  .wall {
+    padding: 1rem var(--gutter) 3.5rem;
+  }
+
+  .wall__top {
+    margin-bottom: 2rem;
+  }
+
+  .wall__line {
+    max-width: 44ch;
+    font-size: 1.0625rem;
+    font-weight: 400;
+    color: var(--enamel);
+  }
+
+  .wall--anil .wall__line {
+    color: var(--on-anil-muted);
+  }
+
+  .bill {
+    margin-top: 1.25rem;
+    max-width: 520px;
+  }
+
+  .band {
+    padding: 1rem var(--gutter) 1.25rem;
+  }
+
+  .numeral {
+    font-size: 2.5rem;
+  }
+
+  .band__gap {
+    font-size: 1.75rem;
+  }
+
+  .meter {
+    height: 1rem;
+    margin: 0.75rem 0 0.6rem;
+  }
+
+  .donate {
+    padding-top: 3.5rem;
+  }
+
+  .donate__inner {
+    padding: 1.25rem;
+  }
+
+  .tile {
+    min-height: 2.75rem;
+  }
+
+  .other__box {
+    min-height: 2.75rem;
+  }
+
+  .sign-button {
+    min-height: 3.25rem;
+    padding: 0.75rem 1rem;
+    font-size: 1.25rem;
+  }
+
+  .story {
+    padding-top: 2rem;
+  }
+
+  .story__lead {
+    font-size: 1.125rem;
+  }
+
+  .thanks {
+    padding: 2rem var(--gutter) 2.5rem;
+  }
+
+  .thanks__row {
+    padding: 0.6rem 0;
+    font-size: 1rem;
+  }
+
+  /* Lists */
+  .listing__wall {
+    padding-bottom: 4.5rem;
+  }
+
+  .boards {
+    margin-top: -2.25rem;
+  }
+
+  .boards__list {
+    gap: 1.5rem;
+  }
+
+  .board__body {
+    gap: 0.5rem;
+    padding: 1.5rem 1.75rem;
+  }
+
+  .board__name {
+    font-size: 1.5rem;
+  }
+
+  .board__purpose {
+    font-size: 1.0625rem;
+    font-weight: 400;
+  }
+
+  .board__description {
+    font-size: 1rem;
+    color: var(--weather-2);
+  }
+
+  .board__tally {
+    padding: 1rem 1.5rem 1.25rem;
+  }
+
+  .tally__numeral {
+    font-size: 2rem;
+  }
+
+  .tally__gap {
+    font-size: 1.25rem;
+  }
+
+  .board__go {
+    margin-top: 1rem;
+  }
+
+  /* Notices */
+  .unavailable .sign {
+    font-size: clamp(2rem, 3.6vw, 3rem);
+  }
+
+  .notice__text {
+    font-size: 1.0625rem;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {

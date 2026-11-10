@@ -1,36 +1,53 @@
 import { useEffect, useId, useRef, useState, type ReactNode } from 'react'
 import type { CampaignDetail } from '../api/types'
-import { formatDay, formatMoney, formatPlain, progressOf } from './format'
+import { Link } from '../Link'
+import { ROUTES, useFocusOnNavigate } from '../router'
+import SiteFooter, { SampleStrip } from '../site/SiteFooter'
+import { formatDay, formatFullDay, formatMoney, formatPlain, progressOf } from './format'
 import { parseCustomAmount, SUGGESTED_AMOUNTS } from './amounts'
 
 interface Props {
   campaign: CampaignDetail
   /** Shows the "sample data" strip while the page runs on the mock API. */
   isSample?: boolean
+  /** Shows the way back to the campaign list. Off when the campaign opens directly at the site's root. */
+  showBack?: boolean
   /** The payment step for the chosen amount. `back` returns to the amounts. */
   renderPayment: (amount: number, back: () => void) => ReactNode
 }
 
-export default function CampaignPage({ campaign, isSample = false, renderPayment }: Props) {
+export default function CampaignPage({ campaign, isSample = false, showBack = false, renderPayment }: Props) {
   const progress = progressOf(campaign.raisedAmount, campaign.goalAmount)
   const headingId = useId()
+  const headingRef = useRef<HTMLHeadingElement>(null)
+  useFocusOnNavigate(headingRef)
+  // A completed campaign is read only: its tally and supporters, never a way to donate (RF-D1c CA3).
+  const closed = campaign.status === 'completed'
 
   return (
-    <div className="page">
-      {isSample && <p className="sample-strip">Vista previa: cifras y nombres de ejemplo, no reales.</p>}
+    <div className={closed ? 'page page--closed' : 'page'}>
+      {isSample && <SampleStrip />}
 
       <header className="wall wall--yellow">
         <div className="wall__top">
           <span className="signature">SF Vibe Lab · Mérida</span>
-          <a className="wall__skip" href="#donar">
-            Donar
-          </a>
+          {showBack || closed ? (
+            <Link className="wall__skip" href={closed ? ROUTES.completed : ROUTES.open}>
+              {closed ? 'Campañas terminadas' : 'Todas las campañas'}
+            </Link>
+          ) : (
+            <a className="wall__skip" href="#donar">
+              Donar
+            </a>
+          )}
         </div>
-        <h1 id={headingId} className="sign">
+        <h1 id={headingId} ref={headingRef} tabIndex={-1} className="sign">
           {campaign.name}
         </h1>
         <p className="wall__line">
-          Somos estudiantes de la UADY en Mérida y vamos a Mexico Dreamin, en la Ciudad de México. Ayúdanos a llegar.
+          {closed
+            ? 'Esta campaña ya terminó. Gracias a quienes la apoyaron.'
+            : 'Somos estudiantes de la UADY en Mérida y vamos a Mexico Dreamin, en la Ciudad de México. Ayúdanos a llegar.'}
         </p>
         {campaign.imageUrl && (
           <figure className="bill">
@@ -43,7 +60,8 @@ export default function CampaignPage({ campaign, isSample = false, renderPayment
         <p className="band__raised">
           <span className="numeral">{formatMoney(campaign.raisedAmount)}</span>
           <span className="band__of">
-            de {formatMoney(campaign.goalAmount)} MXN · cierra el {formatDay(campaign.endDate)}
+            de {formatMoney(campaign.goalAmount)} MXN ·{' '}
+            {closed ? `cerró el ${formatFullDay(campaign.endDate)}` : `cierra el ${formatDay(campaign.endDate)}`}
           </span>
         </p>
         <div
@@ -58,14 +76,14 @@ export default function CampaignPage({ campaign, isSample = false, renderPayment
         </div>
         <p className="band__gap">
           {progress.remaining > 0
-            ? `Faltan ${formatMoney(progress.remaining)}`
+            ? `${closed ? 'Faltaron' : 'Faltan'} ${formatMoney(progress.remaining)}`
             : progress.over > 0
               ? `Meta superada por ${formatMoney(progress.over)}`
               : 'Meta alcanzada'}
         </p>
       </section>
 
-      <DonatePanel renderPayment={renderPayment} />
+      {closed ? <ClosedPanel endDate={campaign.endDate} /> : <DonatePanel renderPayment={renderPayment} />}
 
       <article className="story">
         <h2 className="sign-small">Para qué es</h2>
@@ -75,13 +93,26 @@ export default function CampaignPage({ campaign, isSample = false, renderPayment
 
       <Supporters supporters={campaign.supporters} />
 
-      <footer className="foot">
-        <p>
-          Proyecto académico del SF Vibe Lab. Los pagos usan Stripe en modo de prueba: no se cobra dinero real y no se
-          emiten facturas fiscales.
-        </p>
-      </footer>
+      <SiteFooter />
     </div>
+  )
+}
+
+/** Where the donate board hangs on an open campaign: a board that says the campaign is closed. */
+function ClosedPanel({ endDate }: { endDate: string }) {
+  const titleId = useId()
+  return (
+    <section className="donate" aria-labelledby={titleId}>
+      <div className="donate__inner closed">
+        <h2 id={titleId} className="sign-small">
+          Campaña cerrada
+        </h2>
+        <p className="closed__text">Terminó el {formatFullDay(endDate)} y ya no recibe donativos.</p>
+        <Link className="sign-button closed__go" href={ROUTES.open}>
+          Ver campañas abiertas
+        </Link>
+      </div>
+    </section>
   )
 }
 

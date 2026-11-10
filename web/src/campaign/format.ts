@@ -23,6 +23,19 @@ export function formatDay(isoDate: string): string {
   )
 }
 
+/** "20 de noviembre de 2025": past campaigns can be from another year. */
+export function formatFullDay(isoDate: string): string {
+  const [y, m, d] = isoDate.split('-').map(Number)
+  return new Intl.DateTimeFormat('es-MX', { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC' }).format(
+    new Date(Date.UTC(y, m - 1, d)),
+  )
+}
+
+/** "112%", rounded down so a campaign never shows 100% before it gets there. */
+export function formatPercent(percent: number): string {
+  return `${Math.floor(percent)}%`
+}
+
 export interface Progress {
   percent: number // can pass 100
   fill: number // 0..1 for the bar
