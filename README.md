@@ -4,9 +4,9 @@
 **Deliverable 1 (E1):** November 10, 2026
 
 **Team**
-Hugo Janssen
-Esmeralda Collí
-Jesus Estrella
+- Hugo Janssen
+- Esmeralda Collí
+- Jesus Estrella
 
 **First Delivery Video**: [Click here!](https://alumnosuady-my.sharepoint.com/:v:/g/personal/a14016364_alumnos_uady_mx/IQDELK-u5yLkQ6jNwpEBz8pqAcQ2D30jNBe2KdstUjd_42A?nav=eyJyZWZlcnJhbEluZm8iOnsicmVmZXJyYWxBcHAiOiJPbmVEcml2ZUZvckJ1c2luZXNzIiwicmVmZXJyYWxBcHBQbGF0Zm9ybSI6IldlYiIsInJlZmVycmFsTW9kZSI6InZpZXciLCJyZWZlcnJhbFZpZXciOiJNeUZpbGVzTGlua0NvcHkifX0&e=PAzjkW)
 
