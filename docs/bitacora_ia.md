@@ -1,6 +1,6 @@
 # AI Logbook (Bitácora de IA)
 
-Formal record of how the team used AI tools, evaluated under criterion **C3** in E1 and E2. Each entry keeps the nine fields required in [ai-and-documentation-logging.md](workflow/ai-and-documentation-logging.md). Entries marked **AI error** count toward the minimum of three documented cases where the AI was wrong and the team caught and fixed it.
+Formal record of how the team used AI tools, evaluated under criterion **C3** in E1 and E2. Each entry keeps the nine fields required in [ai-and-documentation-logging.md](workflow/ai-and-documentation-logging.md). Entries marked **AI error** count toward the minimum of three documented cases where the AI was wrong and the team caught and fixed it. For the full chronological, atomic log of every AI-assisted change in the repository, see our AI Change Log at [AI/log.md](../AI/log.md).
 
 All three team members add their own entries. Never paste secrets, tokens or real personal data into a prompt or into this log.
 
