@@ -1,7 +1,7 @@
 import { fireEvent, render, screen } from '@testing-library/react'
 import { describe, expect, it } from 'vitest'
 import CampaignPage from './CampaignPage'
-import { openCampaign } from '../api/mock/fixtures'
+import { completedCampaign, openCampaign, shortCompletedCampaign } from '../api/mock/fixtures'
 
 const sampleCampaign = { ...openCampaign, raisedAmount: 31250 }
 const payment = (amount: number, back: () => void) => (
@@ -108,8 +108,66 @@ describe('CampaignPage', () => {
     expect(screen.getByText(/El tuyo puede ser el primero/)).toBeInTheDocument()
   })
 
+  it('suggests 250 at rest and paints the chosen amount only once the donor picks it', () => {
+    render(<CampaignPage campaign={sampleCampaign} renderPayment={payment} />)
+    const suggested = screen.getByRole('radio', { name: '$250' })
+    expect(suggested).toHaveAttribute('aria-checked', 'true')
+    expect(suggested).toHaveAttribute('data-suggested', 'true')
+    fireEvent.click(suggested)
+    expect(suggested).toHaveAttribute('aria-checked', 'true')
+    expect(suggested).not.toHaveAttribute('data-suggested')
+  })
+
   it('never renders the sample strip for real data', () => {
     render(<CampaignPage campaign={sampleCampaign} renderPayment={payment} />)
     expect(screen.queryByText(/Vista previa/)).not.toBeInTheDocument()
+  })
+
+  it('shows a completed campaign read only, with what it raised and no way to donate (RF-D1c CA3)', () => {
+    render(<CampaignPage campaign={completedCampaign} showBack renderPayment={payment} />)
+    expect(screen.getByText('$22,400')).toBeInTheDocument()
+    expect(screen.getByText(/cerró el 20 de noviembre de 2025/)).toBeInTheDocument()
+    expect(screen.getByRole('heading', { name: 'Campaña cerrada' })).toBeInTheDocument()
+    expect(screen.queryByRole('radio')).not.toBeInTheDocument()
+    expect(screen.queryByRole('button', { name: /Donar/ })).not.toBeInTheDocument()
+    expect(screen.queryByRole('link', { name: 'Donar' })).not.toBeInTheDocument()
+    // Back to the list it came from: in the wall, and again in the footer.
+    expect(screen.getAllByRole('link', { name: 'Campañas terminadas' })[0]).toHaveAttribute('href', '/campanas/finalizadas')
+  })
+
+  it('says how much a completed campaign fell short', () => {
+    render(<CampaignPage campaign={shortCompletedCampaign} renderPayment={payment} />)
+    expect(screen.getByText('Faltaron $5,200')).toBeInTheDocument()
+  })
+
+  it('links back to the open campaigns only when asked', () => {
+    const { unmount } = render(<CampaignPage campaign={sampleCampaign} renderPayment={payment} />)
+    expect(screen.queryByRole('link', { name: 'Todas las campañas' })).not.toBeInTheDocument()
+    unmount()
+    render(<CampaignPage campaign={sampleCampaign} showBack renderPayment={payment} />)
+    expect(screen.getByRole('link', { name: 'Todas las campañas' })).toHaveAttribute('href', '/campanas')
+    expect(screen.queryByRole('link', { name: 'Ir a donar' })).not.toBeInTheDocument()
+  })
+
+  it('offers a jump to the donate board from the root campaign, named apart from the donate button', () => {
+    render(<CampaignPage campaign={sampleCampaign} renderPayment={payment} />)
+    expect(screen.getByRole('link', { name: 'Ir a donar' })).toHaveAttribute('href', '#donar')
+  })
+
+  it("letters the campaign's own purpose on the wall and its description under \"Para qué es\"", () => {
+    const { container } = render(<CampaignPage campaign={sampleCampaign} renderPayment={payment} />)
+    expect(container.querySelector('.wall__line')).toHaveTextContent(sampleCampaign.purpose)
+    expect(container.querySelector('.story__lead')).toHaveTextContent(sampleCampaign.description)
+    // Each field shows once: the purpose on the wall, the description in "Para qué es".
+    expect(screen.getAllByText(sampleCampaign.purpose)).toHaveLength(1)
+    expect(screen.queryByText(/Somos estudiantes/)).not.toBeInTheDocument()
+  })
+
+  it('weathers the wall of a completed campaign', () => {
+    const { container, unmount } = render(<CampaignPage campaign={completedCampaign} renderPayment={payment} />)
+    expect(container.querySelector('header.wall')).toHaveClass('wall--weathered')
+    unmount()
+    const open = render(<CampaignPage campaign={sampleCampaign} renderPayment={payment} />)
+    expect(open.container.querySelector('header.wall')).toHaveClass('wall--yellow')
   })
 })

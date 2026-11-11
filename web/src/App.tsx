@@ -1,12 +1,19 @@
-import { useCallback, useEffect, useState, type ReactNode } from 'react'
-import { createApi, type ApiClient } from './api'
+import { useEffect, useRef, useState, type ReactNode } from 'react'
+import { ApiError, createApi, type ApiClient } from './api'
 import type { CampaignDetail } from './api/types'
+import CampaignList from './campaign/CampaignList'
 import CampaignPage from './campaign/CampaignPage'
 import { ConfigError, readConfig, type AppConfig } from './config/config'
 import PaymentStep from './donate/PaymentStep'
 import { createGateway } from './payment'
 import { THANKS_PATH, type PaymentGateway } from './payment/gateway'
+import { Link } from './Link'
+import { matchRoute, ROUTES, useFocusOnNavigate, usePath } from './router'
+import Announcer from './site/Announcer'
+import { useAnnounceReady } from './site/announce'
+import Waiting from './site/Waiting'
 import ThankYouPage from './thanks/ThankYouPage'
+import { useLoad } from './useLoad'
 
 interface Props {
   /** Tests pass their own client and gateway; the app builds them from the configuration. */
@@ -15,7 +22,9 @@ interface Props {
   path?: string
 }
 
-export default function App({ api, gateway, path = window.location.pathname }: Props) {
+const SITE_TITLE = 'SF Vibe Lab · Ayúdanos a llegar a Mexico Dreamin'
+
+export default function App({ api, gateway, path }: Props) {
   let config: AppConfig
   try {
     config = readConfig()
@@ -28,99 +37,201 @@ export default function App({ api, gateway, path = window.location.pathname }: P
       </Notice>
     )
   }
-  const payments = gateway ?? createGateway(config)
-  if (path === THANKS_PATH) return <ThankYouPage gateway={payments} publishableKey={config.stripePublishableKey} />
-  return <CampaignLoader config={config} api={api} gateway={payments} />
+  return <Site config={config} api={api} gateway={gateway} initialPath={path} />
 }
 
-type Load =
-  | { state: 'loading' }
-  | { state: 'ready'; campaign: CampaignDetail }
-  | { state: 'none-open' }
-  | { state: 'failed' }
+interface SiteProps {
+  config: AppConfig
+  api?: ApiClient
+  gateway?: PaymentGateway
+  initialPath?: string
+}
 
-function CampaignLoader({ config, api: given, gateway }: { config: AppConfig; api?: ApiClient; gateway: PaymentGateway }) {
-  // The configuration is fixed for the page's life, so the client is built once.
-  const [api] = useState(() => given ?? createApi(config))
-  const [load, setLoad] = useState<Load>({ state: 'loading' })
-  const [attempt, setAttempt] = useState(0)
-  const retry = useCallback(() => {
-    setLoad({ state: 'loading' })
-    setAttempt((n) => n + 1)
-  }, [])
+function Site({ config, api: givenApi, gateway: givenGateway, initialPath }: SiteProps) {
+  // The configuration is fixed for the page's life, so the client and the gateway are built once.
+  const [api] = useState(() => givenApi ?? createApi(config))
+  const [gateway] = useState(() => givenGateway ?? createGateway(config))
+  const route = matchRoute(usePath(initialPath), THANKS_PATH)
+  const views: ViewProps = { config, api, gateway }
 
-  useEffect(() => {
-    let active = true
-    ;(async () => {
-      try {
-        // Few campaigns run at once; the soonest to close opens directly.
-        const [first] = await api.listCampaigns('open')
-        if (!first) {
-          if (active) setLoad({ state: 'none-open' })
-          return
-        }
-        const campaign = await api.getCampaign(first.id)
-        if (active) setLoad({ state: 'ready', campaign })
-      } catch (error) {
-        console.error(error)
-        if (active) setLoad({ state: 'failed' })
-      }
-    })()
-    return () => {
-      active = false
-    }
-  }, [api, attempt])
+  return (
+    <>
+      <Announcer />
+      <Route route={route} views={views} />
+    </>
+  )
+}
 
-  switch (load.state) {
-    case 'loading':
-      // No big lettering for a wait this short: just the wall and a line.
-      return (
-        <main className="unavailable">
-          <p role="status" className="notice__text">
-            Cargando la campaña…
-          </p>
-        </main>
-      )
-    case 'none-open':
-      return (
-        <Notice title="Sin campañas abiertas">
-          Por ahora no hay campañas abiertas. Vuelve pronto.
-        </Notice>
-      )
-    case 'failed':
-      return (
-        <Notice
-          title="No cargó la campaña"
-          role="alert"
-          action={
-            <button type="button" className="sign-button notice__retry" onClick={retry}>
-              Reintentar
-            </button>
-          }
-        >
-          Revisa tu conexión e inténtalo de nuevo.
-        </Notice>
-      )
-    case 'ready':
-      return (
-        <main>
-          <CampaignPage
-            campaign={load.campaign}
-            isSample={config.apiMode === 'mock'}
-            renderPayment={(amount, back) => (
-              <PaymentStep
-                campaignId={load.campaign.id}
-                amount={amount}
-                onChangeAmount={back}
-                api={api}
-                gateway={gateway}
-                publishableKey={config.stripePublishableKey}
-              />
-            )}
-          />
-        </main>
-      )
+function Route({ route, views }: { route: ReturnType<typeof matchRoute>; views: ViewProps }) {
+  const { config, gateway } = views
+  switch (route.name) {
+    case 'thanks':
+      return <ThankYouPage gateway={gateway} publishableKey={config.stripePublishableKey} />
+    case 'home':
+      return <HomeView {...views} />
+    case 'open':
+      return <ListView {...views} status="open" />
+    case 'completed':
+      return <ListView {...views} status="completed" />
+    case 'campaign':
+      return <CampaignView {...views} id={route.id} />
+    case 'not-found':
+      return <NotFoundNotice />
   }
+}
+
+interface ViewProps {
+  config: AppConfig
+  api: ApiClient
+  gateway: PaymentGateway
+}
+
+function useTitle(title: string | null) {
+  useEffect(() => {
+    document.title = title ? `${title} · SF Vibe Lab` : SITE_TITLE
+  }, [title])
+}
+
+type Home = { kind: 'none' } | { kind: 'one'; campaign: CampaignDetail } | { kind: 'many'; list: Awaited<ReturnType<ApiClient['listCampaigns']>> }
+
+/** The site's root: one open campaign opens directly, several show the list, none shows a notice (RF-D1a, RF-D1c). */
+function HomeView({ config, api, gateway }: ViewProps) {
+  const [load, retry] = useLoad<Home>(async () => {
+    const list = await api.listCampaigns('open')
+    if (list.length === 0) return { kind: 'none' }
+    if (list.length > 1) return { kind: 'many', list }
+    return { kind: 'one', campaign: await api.getCampaign(list[0].id) }
+  }, 'home')
+  useTitle(null)
+  useAnnounceReady(
+    load.state !== 'ready'
+      ? null
+      : load.value.kind === 'one'
+        ? `Campaña lista: ${load.value.campaign.name}`
+        : load.value.kind === 'many'
+          ? 'Campañas abiertas listas'
+          : null,
+  )
+
+  // The root does not know yet whether it opens one campaign or the list.
+  if (load.state === 'loading') return <Waiting text="Un momento…" isSample={config.apiMode === 'mock'} />
+  if (load.state === 'failed') return <FailedNotice title="No cargó la campaña" retry={retry} />
+  const home = load.value
+  if (home.kind === 'none') return <NoneOpenNotice />
+  if (home.kind === 'many') {
+    return (
+      <main>
+        <CampaignList status="open" campaigns={home.list} isSample={config.apiMode === 'mock'} />
+      </main>
+    )
+  }
+  return <CampaignScreen config={config} api={api} gateway={gateway} campaign={home.campaign} showBack={false} />
+}
+
+function ListView({ config, api, status }: ViewProps & { status: 'open' | 'completed' }) {
+  const [load, retry] = useLoad(() => api.listCampaigns(status), status)
+  useTitle(status === 'open' ? 'Campañas abiertas' : 'Campañas terminadas')
+  useAnnounceReady(load.state === 'ready' ? (status === 'open' ? 'Campañas abiertas listas' : 'Campañas terminadas listas') : null)
+
+  if (load.state === 'loading') {
+    return (
+      <Waiting
+        text="Preparando las campañas…"
+        tone={status === 'open' ? 'yellow' : 'anil'}
+        isSample={config.apiMode === 'mock'}
+      />
+    )
+  }
+  if (load.state === 'failed') return <FailedNotice title="No cargaron las campañas" retry={retry} />
+  if (status === 'open' && load.value.length === 0) return <NoneOpenNotice />
+  return (
+    <main>
+      <CampaignList status={status} campaigns={load.value} isSample={config.apiMode === 'mock'} />
+    </main>
+  )
+}
+
+function CampaignView({ config, api, gateway, id }: ViewProps & { id: string }) {
+  const [load, retry] = useLoad(() => api.getCampaign(id), id)
+  useTitle(load.state === 'ready' ? load.value.name : null)
+  useAnnounceReady(load.state === 'ready' ? `Campaña lista: ${load.value.name}` : null)
+
+  // Open or completed is not known until it loads: a primer coat, not a guess.
+  if (load.state === 'loading') return <Waiting text="Preparando la campaña…" tone="primer" isSample={config.apiMode === 'mock'} />
+  if (load.state === 'failed') {
+    if (load.error instanceof ApiError && load.error.code === 'CAMPAIGN_NOT_FOUND') return <NotFoundNotice />
+    return <FailedNotice title="No cargó la campaña" retry={retry} />
+  }
+  return <CampaignScreen config={config} api={api} gateway={gateway} campaign={load.value} showBack />
+}
+
+function CampaignScreen({ config, api, gateway, campaign, showBack }: ViewProps & { campaign: CampaignDetail; showBack: boolean }) {
+  return (
+    <main>
+      <CampaignPage
+        campaign={campaign}
+        isSample={config.apiMode === 'mock'}
+        showBack={showBack}
+        renderPayment={(amount, back) => (
+          <PaymentStep
+            campaignId={campaign.id}
+            amount={amount}
+            onChangeAmount={back}
+            api={api}
+            gateway={gateway}
+            publishableKey={config.stripePublishableKey}
+          />
+        )}
+      />
+    </main>
+  )
+}
+
+function NoneOpenNotice() {
+  return (
+    <Notice
+      title="Sin campañas abiertas"
+      action={
+        <Link className="sign-button notice__retry notice__link" href={ROUTES.completed}>
+          Ver campañas terminadas
+        </Link>
+      }
+    >
+      Ninguna campaña recibe donativos por ahora. Vuelve pronto, o mira lo que juntamos en campañas anteriores.
+    </Notice>
+  )
+}
+
+function NotFoundNotice() {
+  useTitle('No encontramos la página')
+  return (
+    <Notice
+      title="No encontramos esa campaña"
+      action={
+        <Link className="sign-button notice__retry notice__link" href={ROUTES.open}>
+          Ver campañas abiertas
+        </Link>
+      }
+    >
+      La dirección no corresponde a ninguna campaña. Revisa el enlace o elige una de las campañas abiertas.
+    </Notice>
+  )
+}
+
+function FailedNotice({ title, retry }: { title: string; retry: () => void }) {
+  return (
+    <Notice
+      title={title}
+      role="alert"
+      action={
+        <button type="button" className="sign-button notice__retry" onClick={retry}>
+          Reintentar
+        </button>
+      }
+    >
+      Revisa tu conexión e inténtalo de nuevo.
+    </Notice>
+  )
 }
 
 interface NoticeProps {
@@ -131,10 +242,14 @@ interface NoticeProps {
 }
 
 function Notice({ title, role, action, children }: NoticeProps) {
+  const headingRef = useRef<HTMLHeadingElement>(null)
+  useFocusOnNavigate(headingRef)
   return (
     <main className="unavailable">
       <div role={role} className="notice">
-        <h1 className="sign">{title}</h1>
+        <h1 ref={headingRef} tabIndex={-1} className="sign">
+          {title}
+        </h1>
         <p className="notice__text">{children}</p>
       </div>
       {action}

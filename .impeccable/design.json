@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-11-05T18:49:29+00:00",
+  "generatedAt": "2026-11-10T17:43:24+00:00",
   "title": "Design System: SF Vibe Lab Donation Site",
   "extensions": {
     "colorMeta": {
@@ -173,19 +173,19 @@
     "typographyMeta": {
       "display": {
         "displayName": "Display",
-        "purpose": "Campaign headline on the yellow wall and the unavailable sign; uppercase, carries the painted shadow."
+        "purpose": "Campaign headline on the yellow wall, list headings (\"Elige una campaña\", \"Campañas terminadas\") and notice signs; uppercase, carries the painted shadow. Steps down to clamp(2.5rem, 4vw, 3.75rem) from 960px."
       },
       "headline-numeral": {
         "displayName": "Headline, numeral",
-        "purpose": "Raised amount in yellow on the añil band; tabular figures."
+        "purpose": "Raised amount in yellow on the añil band; tabular figures. 2.5rem from 960px; 2rem–2.75rem inside a campaign board tally."
       },
       "headline-gap": {
         "displayName": "Headline, gap",
-        "purpose": "\"FALTAN $X\" in cal on añil, close in size to the numeral."
+        "purpose": "\"FALTAN $X\", \"Meta superada por $X\" or \"Faltaron $X\" in cal on añil, close in size to the numeral. 1.75rem from 960px."
       },
       "title": {
         "displayName": "Title",
-        "purpose": "Uppercase section signs: Elige tu donativo, Para qué es, Gracias."
+        "purpose": "Uppercase section signs (Elige tu donativo, Para qué es, Gracias, Campaña cerrada) and campaign names on list boards. 1.25rem from 960px."
       },
       "label-sign": {
         "displayName": "Label, sign",
@@ -193,7 +193,7 @@
       },
       "lead": {
         "displayName": "Lead",
-        "purpose": "Campaign purpose opening the story column; Lexend 700."
+        "purpose": "Campaign purpose opening the story column; Lexend 700. The wall line uses Lexend 700 on phones and 400 from 960px."
       },
       "body": {
         "displayName": "Body",
@@ -201,7 +201,7 @@
       },
       "small": {
         "displayName": "Small",
-        "purpose": "Helper lines, donate notice, preview strip and footer."
+        "purpose": "Helper lines, donate notice, preview strip, footer and the tally goal/date lines."
       }
     },
     "shadows": [
@@ -223,6 +223,11 @@
         "purpose": "Donate sign hover repaint (enamel to añil)."
       },
       {
+        "name": "board-sign-hover",
+        "value": "background-color 160ms ease-out",
+        "purpose": "On an añil tally the \"VER Y DONAR\" sign repaints izamal with enamel lettering, since an añil hover would vanish."
+      },
+      {
         "name": "reduced-motion",
         "value": "transition-duration: 0.01ms",
         "purpose": "Under prefers-reduced-motion every transition completes instantly."
@@ -235,9 +240,19 @@
         "purpose": "Below this (max-width) amount tiles drop from 4 to 2 columns."
       },
       {
+        "name": "sheet",
+        "value": "640px",
+        "purpose": "From this (min-width) the donation form is a centred 44rem sheet instead of the whole screen."
+      },
+      {
+        "name": "board",
+        "value": "820px",
+        "purpose": "From this (min-width) a campaign board puts its tally coat beside the text and hangs it 0.75rem off the top right corner."
+      },
+      {
         "name": "desktop",
         "value": "960px",
-        "purpose": "From this (min-width) the page splits into content plus a 360–420px sticky donate column on the yellow wall."
+        "purpose": "From this (min-width) the campaign page splits into content plus a 360–420px sticky donate column on the yellow wall, and the whole site steps down to the tighter desktop scale."
       }
     ],
     "lines": [
@@ -270,9 +285,9 @@
       "name": "Donate Sign",
       "kind": "button",
       "refersTo": "button-sign",
-      "description": "Full-width enamel slab lettered in yellow; repaints with the chosen amount.",
+      "description": "The loudest object after the headline: a full-width enamel slab lettered in yellow, repainting its amount. Also used as a link (\"VER Y DONAR\", \"VER CAMPAÑAS ABIERTAS\"). Steps down to 3.25rem tall from 960px.",
       "html": "<button type=\"button\" class=\"ds-sign-button\">Donar $250</button>",
-      "css": ".ds-sign-button { display: block; width: 100%; min-height: 3.75rem; padding: 0.9rem 1rem; border: 0; border-radius: 0; background: var(--enamel, #15120e); color: var(--izamal, #e6a71c); font: 400 clamp(1.35rem, 5vw, 1.6rem)/1 var(--sign, 'Bungee', 'Lexend', sans-serif); text-transform: uppercase; cursor: pointer; transition: background-color 160ms ease-out; } .ds-sign-button:hover { background: var(--anil, #1f2f6b); } .ds-sign-button:active { background: var(--almagre, #b23a1e); color: var(--cal, #f6f1e7); } .ds-sign-button:focus-visible { outline: 3px solid var(--anil, #1f2f6b); outline-offset: 3px; }"
+      "css": ".ds-sign-button { display: flex; align-items: center; justify-content: center; width: 100%; min-height: 3.75rem; padding: 0.9rem 1rem; border: 0; border-radius: 0; background: var(--enamel, #15120e); color: var(--izamal, #e6a71c); font: 400 clamp(1.35rem, 5vw, 1.6rem)/1 var(--sign, 'Bungee', 'Lexend', sans-serif); text-transform: uppercase; text-decoration: none; cursor: pointer; transition: background-color 160ms ease-out; } @media (hover: hover) { .ds-sign-button:hover { background: var(--anil, #1f2f6b); } } .ds-sign-button:active { background: var(--almagre, #b23a1e); color: var(--cal, #f6f1e7); } .ds-sign-button:focus-visible { outline: 3px solid var(--anil, #1f2f6b); outline-offset: 3px; } @media (min-width: 960px) { .ds-sign-button { min-height: 3.25rem; padding: 0.75rem 1rem; font-size: 1.25rem; } }"
     },
     {
       "name": "Amount Tiles",
@@ -280,7 +295,15 @@
       "refersTo": "tile",
       "description": "Square painted amount tiles in a radio group; the chosen one is wiped almagre left to right.",
       "html": "<div class=\"ds-tiles\" role=\"radiogroup\" aria-label=\"Elige tu donativo\"><button type=\"button\" role=\"radio\" aria-checked=\"false\" class=\"ds-tile\"><span>100</span></button><button type=\"button\" role=\"radio\" aria-checked=\"true\" class=\"ds-tile\"><span>250</span></button><button type=\"button\" role=\"radio\" aria-checked=\"false\" class=\"ds-tile\"><span>500</span></button><button type=\"button\" role=\"radio\" aria-checked=\"false\" class=\"ds-tile\"><span>1,000</span></button></div>",
-      "css": ".ds-tiles { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 0.5rem; } .ds-tile { position: relative; isolation: isolate; min-height: 3.25rem; padding: 0.5rem 0; border: 2px solid var(--enamel, #15120e); border-radius: 0; background: var(--cal, #f6f1e7); color: var(--enamel, #15120e); font: 400 1rem/1 var(--sign, 'Bungee', 'Lexend', sans-serif); font-variant-numeric: tabular-nums; cursor: pointer; } .ds-tile span { position: relative; } .ds-tile::before { content: ''; position: absolute; inset: -2px; z-index: -1; background: var(--almagre, #b23a1e); clip-path: inset(0 100% 0 0); transition: clip-path 280ms cubic-bezier(0.16, 1, 0.3, 1); } .ds-tile:hover:not([aria-checked='true']) { background: var(--cal-deep, #ece4d4); } .ds-tile[aria-checked='true'] { color: var(--cal, #f6f1e7); border-color: var(--almagre, #b23a1e); } .ds-tile[aria-checked='true']::before { clip-path: inset(0 0 0 0); } .ds-tile:focus-visible { outline: 3px solid var(--anil, #1f2f6b); outline-offset: 3px; }"
+      "css": ".ds-tiles { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 0.5rem; } .ds-tile { position: relative; isolation: isolate; min-height: 3.25rem; padding: 0.5rem 0; border: 2px solid var(--enamel, #15120e); border-radius: 0; background: var(--cal, #f6f1e7); color: var(--enamel, #15120e); font: 400 1rem/1 var(--sign, 'Bungee', 'Lexend', sans-serif); font-variant-numeric: tabular-nums; cursor: pointer; } .ds-tile span { position: relative; } .ds-tile::before { content: ''; position: absolute; inset: -2px; z-index: -1; background: var(--almagre, #b23a1e); clip-path: inset(0 100% 0 0); transition: clip-path 280ms cubic-bezier(0.16, 1, 0.3, 1); } .ds-tile:hover:not([aria-checked='true']) { background: var(--cal-deep, #ece4d4); } .ds-tile[aria-checked='true'] { color: var(--cal, #f6f1e7); border-color: var(--almagre, #b23a1e); } .ds-tile[aria-checked='true']::before { clip-path: inset(0 0 0 0); } .ds-tile:focus-visible { outline: 3px solid var(--anil, #1f2f6b); outline-offset: 3px; } @media (min-width: 960px) { .ds-tile { min-height: 2.75rem; } }"
+    },
+    {
+      "name": "Other Amount Field",
+      "kind": "input",
+      "refersTo": "tile",
+      "description": "\"Otro monto\" under the tiles: a white field in the 2px enamel line with $ and MXN lettered in weather-2 Bungee. Its outline turns almagre when it holds the chosen amount or an error.",
+      "html": "<div class=\"ds-other\"><label class=\"ds-other-label\" for=\"ds-other-input\">Otro monto</label><div class=\"ds-other-box\"><span class=\"ds-other-unit\">$</span><input id=\"ds-other-input\" class=\"ds-other-input\" type=\"text\" inputmode=\"decimal\" value=\"1,500\"><span class=\"ds-other-unit\">MXN</span></div></div>",
+      "css": ".ds-other { display: grid; grid-template-columns: minmax(0, 1fr); gap: 0.35rem; max-width: 22rem; color: var(--enamel, #15120e); font-family: var(--read, 'Lexend', system-ui, sans-serif); } .ds-other-label { font-weight: 700; } .ds-other-box { display: flex; align-items: center; gap: 0.5rem; min-height: 3.25rem; padding: 0 0.75rem; border: 2px solid var(--almagre, #b23a1e); background: #fff; } .ds-other-box:focus-within { outline: 3px solid var(--anil, #1f2f6b); outline-offset: 3px; } .ds-other-unit { font: 400 1rem/1 var(--sign, 'Bungee', 'Lexend', sans-serif); color: var(--weather-2, #5a5045); } .ds-other-input { flex: 1; min-width: 0; padding: 0.65rem 0; border: 0; background: transparent; color: var(--enamel, #15120e); font: 700 1.125rem/1.2 var(--read, 'Lexend', system-ui, sans-serif); font-variant-numeric: tabular-nums; } .ds-other-input:focus { outline: none; }"
     },
     {
       "name": "Painted Sign Headline",
@@ -288,7 +311,7 @@
       "refersTo": "display",
       "description": "Display lettering in añil on the yellow wall with the flat two-coat sombra.",
       "html": "<div class=\"ds-wall\"><span class=\"ds-signature\">SF Vibe Lab · Mérida</span><h1 class=\"ds-sign\">Becas Mexico Dreamin 2026</h1><p class=\"ds-wall-line\">Somos estudiantes de la UADY en Mérida. Ayúdanos a llegar.</p></div>",
-      "css": ".ds-wall { background: var(--izamal, #e6a71c); color: var(--enamel, #15120e); padding: 1.25rem clamp(1.25rem, 4vw, 3rem) 3.75rem; } .ds-signature { display: block; margin-bottom: 1.5rem; font: 400 0.9375rem/1.2 var(--sign, 'Bungee', sans-serif); } .ds-sign { margin: 0; font: 400 clamp(2.5rem, 7.2vw, 6rem)/0.98 var(--sign, 'Bungee', sans-serif); letter-spacing: -0.01em; text-transform: uppercase; color: var(--anil, #1f2f6b); text-shadow: 0.05em 0.05em 0 var(--cal, #f6f1e7), 0.1em 0.1em 0 var(--enamel, #15120e); text-wrap: balance; } .ds-wall-line { margin: 1rem 0 0; max-width: 34ch; font: 700 clamp(1rem, 1.6vw, 1.3rem)/1.45 var(--read, 'Lexend', sans-serif); color: var(--on-izamal-muted, #4a3a14); }"
+      "css": ".ds-wall { background: var(--izamal, #e6a71c); color: var(--enamel, #15120e); padding: 1.25rem clamp(1.25rem, 4vw, 3rem) 3.75rem; } .ds-signature { display: block; margin-bottom: 1.5rem; font: 400 0.9375rem/1.2 var(--sign, 'Bungee', sans-serif); } .ds-sign { margin: 0; font: 400 clamp(2.5rem, 7.2vw, 6rem)/0.98 var(--sign, 'Bungee', sans-serif); letter-spacing: -0.01em; text-transform: uppercase; color: var(--anil, #1f2f6b); text-shadow: 0.05em 0.05em 0 var(--cal, #f6f1e7), 0.1em 0.1em 0 var(--enamel, #15120e); text-wrap: balance; } .ds-wall-line { margin: 1rem 0 0; max-width: 34ch; font: 700 clamp(1rem, 1.6vw, 1.3rem)/1.45 var(--read, 'Lexend', sans-serif); color: var(--on-izamal-muted, #4a3a14); } @media (min-width: 960px) { .ds-sign { font-size: clamp(2.5rem, 4vw, 3.75rem); } .ds-wall-line { max-width: 44ch; font-size: 1.0625rem; font-weight: 400; color: var(--enamel, #15120e); } }"
     },
     {
       "name": "Progress Band",
@@ -296,7 +319,7 @@
       "refersTo": "band",
       "description": "Añil band with the raised numeral, goal line, flat meter, and the missing amount lettered as boldly.",
       "html": "<section class=\"ds-band\"><p class=\"ds-band-raised\"><span class=\"ds-numeral\">$31,250</span><span class=\"ds-band-of\">de $50,000 MXN · cierra el 15 de noviembre</span></p><div class=\"ds-meter\" role=\"progressbar\" aria-valuenow=\"63\" aria-valuemin=\"0\" aria-valuemax=\"100\"><span class=\"ds-meter-paint\" style=\"transform: scaleX(0.625)\"></span></div><p class=\"ds-gap\">Faltan $18,750</p></section>",
-      "css": ".ds-band { background: var(--anil, #1f2f6b); color: var(--cal, #f6f1e7); padding: 1.25rem clamp(1.25rem, 4vw, 3rem) 1.5rem; } .ds-band p { margin: 0; } .ds-band-raised { display: flex; flex-wrap: wrap; align-items: baseline; gap: 0.25rem 0.9rem; } .ds-numeral { font: 400 clamp(2.4rem, 5.5vw, 3.75rem)/1 var(--sign, 'Bungee', sans-serif); color: var(--izamal, #e6a71c); font-variant-numeric: tabular-nums; } .ds-band-of { color: var(--on-anil-muted, #d9d2c3); font: 400 1rem/1.4 var(--read, 'Lexend', sans-serif); font-variant-numeric: tabular-nums; } .ds-meter { margin: 0.9rem 0 0.75rem; height: 1.25rem; border: 2px solid var(--cal, #f6f1e7); overflow: hidden; } .ds-meter-paint { display: block; height: 100%; background: var(--izamal, #e6a71c); transform-origin: left center; } .ds-gap { font: 400 clamp(2rem, 4.6vw, 3.25rem)/1 var(--sign, 'Bungee', sans-serif); text-transform: uppercase; color: var(--cal, #f6f1e7); }"
+      "css": ".ds-band { background: var(--anil, #1f2f6b); color: var(--cal, #f6f1e7); padding: 1.25rem clamp(1.25rem, 4vw, 3rem) 1.5rem; } .ds-band p { margin: 0; } .ds-band-raised { display: flex; flex-wrap: wrap; align-items: baseline; gap: 0.25rem 0.9rem; } .ds-numeral { font: 400 clamp(2.4rem, 5.5vw, 3.75rem)/1 var(--sign, 'Bungee', sans-serif); color: var(--izamal, #e6a71c); font-variant-numeric: tabular-nums; } .ds-band-of { color: var(--on-anil-muted, #d9d2c3); font: 400 1rem/1.4 var(--read, 'Lexend', sans-serif); font-variant-numeric: tabular-nums; } .ds-meter { margin: 0.9rem 0 0.75rem; height: 1.25rem; border: 2px solid var(--cal, #f6f1e7); overflow: hidden; } .ds-meter-paint { display: block; height: 100%; background: var(--izamal, #e6a71c); transform-origin: left center; } .ds-gap { font: 400 clamp(2rem, 4.6vw, 3.25rem)/1 var(--sign, 'Bungee', sans-serif); text-transform: uppercase; color: var(--cal, #f6f1e7); } @media (min-width: 960px) { .ds-band { padding: 1rem clamp(1.25rem, 4vw, 3rem) 1.25rem; } .ds-numeral { font-size: 2.5rem; } .ds-gap { font-size: 1.75rem; } }"
     },
     {
       "name": "Donate Board",
@@ -315,20 +338,36 @@
       "css": ".ds-thanks { list-style: none; margin: 0; padding: 0; max-width: 40rem; border-top: 2px solid var(--enamel, #15120e); font: 400 1.0625rem/1.6 var(--read, 'Lexend', sans-serif); background: var(--cal, #f6f1e7); } .ds-thanks li { display: flex; justify-content: space-between; gap: 1rem; padding: 0.8rem 0; border-bottom: 1px solid var(--cal-deep, #ece4d4); font-variant-numeric: tabular-nums; } .ds-thanks li[data-age='0'] { color: var(--enamel, #15120e); font-weight: 700; } .ds-thanks li[data-age='1'] { color: var(--weather-1, #3b342c); } .ds-thanks li[data-age='2'] { color: var(--weather-2, #5a5045); } .ds-thanks li[data-age='3'] { color: var(--weather-3, #6e6356); }"
     },
     {
-      "name": "Bill Photo Frame",
+      "name": "Open Campaign Board",
+      "kind": "card",
+      "refersTo": "band",
+      "description": "One open campaign on the list: full width, never a card grid. Name, purpose and description on the cal board; an añil tally coat with raised, goal, meter, gap line and the VER Y DONAR sign, hanging off the top right corner from 820px.",
+      "html": "<div class=\"ds-boards\"><article class=\"ds-campaign\"><div class=\"ds-campaign-body\"><h2 class=\"ds-campaign-name\"><a href=\"#\">Hospedaje en la Ciudad de México</a></h2><p class=\"ds-campaign-purpose\">Pagar el hospedaje de 20 estudiantes durante el evento.</p><p class=\"ds-campaign-desc\">Tres noches de hotel cerca de la sede para el grupo que viaja.</p></div><div class=\"ds-tally\"><p class=\"ds-tally-numeral\">$8,450</p><p class=\"ds-tally-of\">de $30,000 MXN · cierra el 28 de noviembre</p><div class=\"ds-tally-meter\"><span style=\"transform: scaleX(0.28)\"></span></div><p class=\"ds-tally-gap\">Faltan $21,550</p><a class=\"ds-tally-go\" href=\"#\">Ver y donar</a></div></article></div>",
+      "css": ".ds-boards { background: var(--cal, #f6f1e7); padding: 1.5rem 1.25rem; } .ds-campaign { display: grid; border: 2px solid var(--enamel, #15120e); background: var(--cal, #f6f1e7); color: var(--enamel, #15120e); font: 400 1rem/1.6 var(--read, 'Lexend', system-ui, sans-serif); } .ds-campaign p, .ds-campaign dl, .ds-campaign dd, .ds-campaign h2 { margin: 0; } .ds-campaign-body { display: grid; align-content: start; gap: 0.5rem; padding: 1.5rem 1.75rem; } .ds-campaign-name { font: 400 1.5rem/1.05 var(--sign, 'Bungee', 'Lexend', sans-serif); text-transform: uppercase; color: var(--anil, #1f2f6b); } .ds-campaign-name a { color: inherit; text-decoration: none; } .ds-campaign-name a:hover { text-decoration: underline; text-decoration-thickness: 3px; text-underline-offset: 0.2em; } .ds-campaign-purpose { font-size: 1.0625rem; line-height: 1.45; } .ds-campaign-desc { color: var(--weather-2, #5a5045); } .ds-tally { display: grid; align-content: start; padding: 1rem 1.5rem 1.25rem; background: var(--anil, #1f2f6b); color: var(--cal, #f6f1e7); } .ds-tally-numeral { font: 400 2rem/1 var(--sign, 'Bungee', 'Lexend', sans-serif); color: var(--izamal, #e6a71c); font-variant-numeric: tabular-nums; } .ds-tally-of { color: var(--on-anil-muted, #d9d2c3); font-size: 0.9375rem; line-height: 1.4; font-variant-numeric: tabular-nums; } .ds-tally-meter { height: 1rem; margin: 0.75rem 0 0.6rem; border: 2px solid var(--cal, #f6f1e7); overflow: hidden; } .ds-tally-meter span { display: block; height: 100%; background: var(--izamal, #e6a71c); transform-origin: left center; } .ds-tally-gap { font: 400 1.25rem/1.05 var(--sign, 'Bungee', 'Lexend', sans-serif); text-transform: uppercase; font-variant-numeric: tabular-nums; } .ds-tally-go { display: flex; align-items: center; justify-content: center; margin-top: 1rem; min-height: 3.25rem; background: var(--enamel, #15120e); color: var(--izamal, #e6a71c); font: 400 1.25rem/1 var(--sign, 'Bungee', 'Lexend', sans-serif); text-transform: uppercase; text-decoration: none; transition: background-color 160ms ease-out; } @media (hover: hover) { .ds-tally-go:hover { background: var(--izamal, #e6a71c); color: var(--enamel, #15120e); } } .ds-tally :focus-visible { outline: 3px solid var(--izamal, #e6a71c); outline-offset: 3px; } @media (min-width: 820px) { .ds-campaign { grid-template-columns: minmax(0, 1.4fr) minmax(18rem, 1fr); } .ds-tally { margin: -0.75rem -0.75rem 1.5rem 0; } }"
+    },
+    {
+      "name": "Completed Campaign Board",
       "kind": "card",
       "refersTo": "wall",
-      "description": "Campaign photo pasted on the wall like a bill: 16:9, 2px enamel frame, square.",
-      "html": "<figure class=\"ds-bill\"><div class=\"ds-bill-img\"></div></figure>",
-      "css": ".ds-bill { margin: 0; max-width: 640px; border: 2px solid var(--enamel, #15120e); background: var(--cal, #f6f1e7); } .ds-bill-img { aspect-ratio: 16 / 9; background: var(--cal-deep, #ece4d4); }"
+      "description": "A completed campaign on /campanas/finalizadas: a weathered board with an enamel name and a cal-deep tally of what it raised against its goal. Read only: a text link, never a sign.",
+      "html": "<div class=\"ds-boards\"><article class=\"ds-campaign ds-campaign--closed\"><div class=\"ds-campaign-body\"><h2 class=\"ds-campaign-name\"><a href=\"#\">Taller de Trailhead 2025</a></h2><p class=\"ds-campaign-purpose\">Rentar el salón y las computadoras del taller.</p><p class=\"ds-campaign-desc\">Un taller de fin de semana en Mérida para preparar a la primera generación.</p></div><div class=\"ds-tally\"><dl class=\"ds-tally-sums\"><div><dt>Juntamos</dt><dd class=\"ds-tally-numeral\">$9,800</dd></div><div><dt>Meta</dt><dd class=\"ds-tally-goal\">$15,000</dd></div></dl><div class=\"ds-tally-meter\"><span style=\"transform: scaleX(0.65)\"></span></div><p class=\"ds-tally-gap\">Llegó al 65%</p><p class=\"ds-tally-of\">Cerró el 15 de junio de 2025</p><a class=\"ds-tally-more\" href=\"#\">Ver la campaña y sus donantes</a></div></article></div>",
+      "css": ".ds-boards { background: var(--cal, #f6f1e7); padding: 1.5rem 1.25rem; } .ds-campaign { display: grid; border: 2px solid var(--enamel, #15120e); background: var(--cal, #f6f1e7); color: var(--enamel, #15120e); font: 400 1rem/1.6 var(--read, 'Lexend', system-ui, sans-serif); } .ds-campaign p, .ds-campaign dl, .ds-campaign dd, .ds-campaign h2 { margin: 0; } .ds-campaign-body { display: grid; align-content: start; gap: 0.5rem; padding: 1.5rem 1.75rem; } .ds-campaign-name { font: 400 1.5rem/1.05 var(--sign, 'Bungee', 'Lexend', sans-serif); text-transform: uppercase; color: var(--anil, #1f2f6b); } .ds-campaign-name a { color: inherit; text-decoration: none; } .ds-campaign-name a:hover { text-decoration: underline; text-decoration-thickness: 3px; text-underline-offset: 0.2em; } .ds-campaign-purpose { font-size: 1.0625rem; line-height: 1.45; } .ds-campaign-desc { color: var(--weather-2, #5a5045); } .ds-tally { display: grid; align-content: start; padding: 1rem 1.5rem 1.25rem; background: var(--anil, #1f2f6b); color: var(--cal, #f6f1e7); } .ds-tally-numeral { font: 400 2rem/1 var(--sign, 'Bungee', 'Lexend', sans-serif); color: var(--izamal, #e6a71c); font-variant-numeric: tabular-nums; } .ds-tally-of { color: var(--on-anil-muted, #d9d2c3); font-size: 0.9375rem; line-height: 1.4; font-variant-numeric: tabular-nums; } .ds-tally-meter { height: 1rem; margin: 0.75rem 0 0.6rem; border: 2px solid var(--cal, #f6f1e7); overflow: hidden; } .ds-tally-meter span { display: block; height: 100%; background: var(--izamal, #e6a71c); transform-origin: left center; } .ds-tally-gap { font: 400 1.25rem/1.05 var(--sign, 'Bungee', 'Lexend', sans-serif); text-transform: uppercase; font-variant-numeric: tabular-nums; } .ds-tally-go { display: flex; align-items: center; justify-content: center; margin-top: 1rem; min-height: 3.25rem; background: var(--enamel, #15120e); color: var(--izamal, #e6a71c); font: 400 1.25rem/1 var(--sign, 'Bungee', 'Lexend', sans-serif); text-transform: uppercase; text-decoration: none; transition: background-color 160ms ease-out; } @media (hover: hover) { .ds-tally-go:hover { background: var(--izamal, #e6a71c); color: var(--enamel, #15120e); } } .ds-tally :focus-visible { outline: 3px solid var(--izamal, #e6a71c); outline-offset: 3px; } @media (min-width: 820px) { .ds-campaign { grid-template-columns: minmax(0, 1.4fr) minmax(18rem, 1fr); } .ds-tally { margin: -0.75rem -0.75rem 1.5rem 0; } } .ds-campaign--closed .ds-campaign-name { color: var(--enamel, #15120e); } .ds-campaign--closed .ds-tally { background: var(--cal-deep, #ece4d4); color: var(--enamel, #15120e); } .ds-campaign--closed .ds-tally-numeral { color: var(--enamel, #15120e); } .ds-campaign--closed .ds-tally-of { color: var(--weather-2, #5a5045); } .ds-campaign--closed .ds-tally-meter { border-color: var(--enamel, #15120e); } .ds-campaign--closed .ds-tally-meter span { background: var(--weather-1, #3b342c); } .ds-campaign--closed .ds-tally :focus-visible { outline-color: var(--anil, #1f2f6b); } .ds-tally-sums { display: flex; flex-wrap: wrap; align-items: baseline; gap: 0.5rem 1.75rem; } .ds-tally-sums dt { font-size: 0.875rem; font-weight: 700; color: var(--weather-2, #5a5045); } .ds-tally-sums dd { margin-top: 0.15rem; } .ds-tally-goal { font: 700 1.25rem/1.2 var(--read, 'Lexend', system-ui, sans-serif); font-variant-numeric: tabular-nums; } .ds-tally-more { justify-self: start; display: inline-flex; align-items: center; min-height: 2.75rem; margin-top: 0.75rem; color: var(--enamel, #15120e); font-weight: 700; font-size: 0.9375rem; text-decoration: underline; text-decoration-thickness: 2px; text-underline-offset: 0.2em; }"
+    },
+    {
+      "name": "Footer Nav",
+      "kind": "nav",
+      "refersTo": "strip-enamel",
+      "description": "The enamel strip at the foot of every campaign page: links to the open and completed campaigns, then the test-mode notice.",
+      "html": "<footer class=\"ds-foot\"><nav class=\"ds-foot-nav\" aria-label=\"Campañas\"><a href=\"#\">Campañas abiertas</a><a href=\"#\">Campañas terminadas</a></nav><p>Proyecto académico del SF Vibe Lab. Los pagos usan Stripe en modo de prueba: no se cobra dinero real y no se emiten facturas fiscales.</p></footer>",
+      "css": ".ds-foot { background: var(--enamel, #15120e); color: var(--on-anil-muted, #d9d2c3); padding: 1.5rem clamp(1.25rem, 4vw, 3rem); font: 400 0.875rem/1.6 var(--read, 'Lexend', system-ui, sans-serif); } .ds-foot p { margin: 0; max-width: 70ch; } .ds-foot-nav { display: flex; flex-wrap: wrap; gap: 0 1.75rem; margin-bottom: 0.75rem; } .ds-foot-nav a { display: inline-flex; align-items: center; min-height: 2.75rem; color: var(--cal, #f6f1e7); font-weight: 700; font-size: 0.9375rem; text-decoration: underline; text-decoration-thickness: 2px; text-underline-offset: 0.2em; } .ds-foot-nav a:focus-visible { outline: 3px solid var(--izamal, #e6a71c); outline-offset: 3px; }"
     }
   ],
   "narrative": {
     "northStar": "Rótulo de Mérida",
-    "overview": "The site is a hand-painted shop sign on a lime-washed Mérida wall. Whole sections are painted as flat walls of colour (Izamal yellow, añil blue, black enamel) on a cal ground, and the campaign is lettered across them in big sign-painter capitals.\n\nEverything is flat: no gradients, no blur, no rounded cards, no box shadows. Depth comes only from overlapping coats: the añil band climbs onto the yellow wall, the cal donate board hangs on it, the photo is pasted on like a bill. Almagre red is held back for the single thing in motion, the amount just chosen.\n\nDensity is low and type is large, because most visitors are relatives on phones. Display lettering is loud; everything read sits in calm, legible Lexend.",
+    "overview": "The site is a hand-painted shop sign on a lime-washed Mérida wall. Whole sections are painted as flat walls of colour (Izamal yellow, añil blue, black enamel) on a cal ground, and the campaign is lettered across them in big sign-painter capitals. It is proud and plain-spoken: one campaign, what has been raised, what is still missing, an amount, a donate sign, and the names of the people who gave.\n\nEverything is flat. There are no gradients, no blur, no rounded cards and no box shadows. Depth comes only from coats of paint overlapping: the añil band climbs onto the foot of the yellow wall, the cal donate board hangs on the yellow wall, the campaign photo is pasted on like a bill with an enamel frame. One colour, almagre red, is held back for the single thing in motion: the amount the donor has just chosen.\n\nDensity is low and the type is large, because most visitors are relatives on phones. Display lettering is loud; everything meant to be read sits in a calm, highly legible sans.",
     "keyCharacteristics": [
       "Flat coats of colour as sections; depth only by overlap.",
-      "Bungee sign capitals for display, painted shadow on the headline only.",
+      "Sign-painter capitals (Bungee) for display, with a flat painted shadow on the headline only.",
       "Lexend for all reading text, with a plain zero so amounts read as money.",
       "Square corners and 2px enamel outlines everywhere.",
       "Almagre red only on the selected or pressed element.",
@@ -347,27 +386,27 @@
       },
       {
         "name": "The Readable Wall Rule",
-        "body": "Every text colour sits on a wall it was tested on. Izamal never letters on cal.",
+        "body": "Every text colour sits on a wall it was tested on: enamel or añil on yellow, cal or yellow on añil, yellow or cal on enamel, enamel through weather-3 on cal. Izamal never letters on cal.",
         "section": "colors"
       },
       {
         "name": "The Two Voices Rule",
-        "body": "Bungee is for signs, never for sentences. Anything read in full is Lexend.",
+        "body": "Bungee is for signs, never for sentences. Anything a donor has to read in full is Lexend.",
         "section": "typography"
       },
       {
         "name": "The Painted Shadow Rule",
-        "body": "The flat two-coat shadow belongs to display lettering only.",
+        "body": "The flat two-coat shadow (a cal coat, then an enamel coat) belongs to display lettering only. Titles, numerals and buttons are lettered without it.",
         "section": "typography"
       },
       {
         "name": "The Tabular Money Rule",
-        "body": "Every amount uses tabular figures.",
+        "body": "Every amount (numeral, tiles, supporter amounts, goal line) uses tabular figures.",
         "section": "typography"
       },
       {
         "name": "The Overlap Rule",
-        "body": "Sections meet by overlapping coats (the band climbs 2rem onto the wall and stops short of the right edge), never by a gap with a divider.",
+        "body": "The añil band climbs 2rem onto the yellow wall and stops short of the right edge (0.75rem–2.5rem), so the cal ground shows beside it. Sections meet by overlapping coats, never by a gap with a divider.",
         "section": "layout"
       },
       {
@@ -383,10 +422,10 @@
     ],
     "dos": [
       "Do paint sections as whole flat walls (izamal, anil, enamel) on the cal ground.",
-      "Do keep almagre for the one chosen or pressed element.",
+      "Do keep almagre for the one chosen or pressed element (The One Moving Colour Rule).",
       "Do letter the missing amount as boldly as the raised one.",
       "Do outline tiles, boards and frames with the 2px enamel line and keep every corner square.",
-      "Do use tabular figures for every amount a donor reads.",
+      "Do use Lexend with tabular figures for every amount a donor reads.",
       "Do keep touch targets large: tiles at least 3.25rem, the donate sign at least 3.75rem."
     ],
     "donts": [

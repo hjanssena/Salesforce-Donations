@@ -1,7 +1,17 @@
 import type { FetchLike } from '../client'
 import type { CampaignDetail, ErrorBody, ErrorCode, FieldError, PaymentSession, PaymentSessionRequest } from '../types'
 import { validatePaymentSession } from '../validation'
-import { MOCK_BANNED_WORDS, MOCK_TRIGGERS, completedCampaign, futureCampaign, openCampaign } from './fixtures'
+import {
+  MOCK_BANNED_WORDS,
+  MOCK_TRIGGERS,
+  completedCampaign,
+  futureCampaign,
+  noImageOpenCampaign,
+  openCampaign,
+  secondOpenCampaign,
+  shortCompletedCampaign,
+  tinyImageOpenCampaign,
+} from './fixtures'
 
 /**
  * The contract in executable form (docs/contract.md, section 5): a fetch that
@@ -10,9 +20,14 @@ import { MOCK_BANNED_WORDS, MOCK_TRIGGERS, completedCampaign, futureCampaign, op
  *
  * Scenarios, picked with `?mock=` in the page URL:
  * - `default`: one open and one completed campaign.
+ * - `many-open`: four open campaigns, for the list of open campaigns, with
+ *   photos of different shapes and one without a photo.
  * - `no-open`: no open campaign, for the "none open" message.
+ * Every scenario has two completed campaigns, one past its goal and one short of it.
  */
-export type MockScenario = 'default' | 'no-open'
+export type MockScenario = 'default' | 'many-open' | 'no-open'
+
+export const MOCK_SCENARIOS: readonly MockScenario[] = ['default', 'many-open', 'no-open']
 
 export interface MockOptions {
   scenario?: MockScenario
@@ -41,7 +56,8 @@ function error(status: number, code: ErrorCode, message: string, fields?: FieldE
 const listItem = ({ supporters: _supporters, ...campaign }: CampaignDetail) => campaign
 
 export function createMockFetch({ scenario = 'default', delayMs = 0, today = meridaToday() }: MockOptions = {}): FetchLike {
-  const all = scenario === 'no-open' ? [completedCampaign, futureCampaign] : [openCampaign, completedCampaign, futureCampaign]
+  const opened = { default: [openCampaign], 'many-open': [openCampaign, secondOpenCampaign, tinyImageOpenCampaign, noImageOpenCampaign], 'no-open': [] }[scenario]
+  const all = [...opened, completedCampaign, shortCompletedCampaign, futureCampaign]
   // Campaigns that have not started are never returned (contract, section 2).
   const started = () => all.filter((c) => c.startDate <= today)
   let sessions = 0
