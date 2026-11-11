@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Manual_Requires_Campaign</fullName>
+    <active>true</active>
+    <errorConditionFormula>AND(ISPICKVAL(Source__c, &quot;Manual&quot;), ISBLANK(CampaignId))</errorConditionFormula>
+    <errorDisplayField>CampaignId</errorDisplayField>
+    <errorMessage>A manual donation must belong to a campaign.</errorMessage>
+</ValidationRule>

@@ -113,7 +113,7 @@ Salesforce is the authority; the web app applies the same rules first so the don
 | `amount` | Always | At least `50`, at most 2 decimals, no program maximum. |
 | `donorEmail` | Always | Valid email, up to 254 characters. |
 | `isAnonymous` | Always | `true` or `false`. |
-| `publicName` | If `isAnonymous` is `false` | 1 to 80 characters, no banned word. Must be absent when `isAnonymous` is `true`. |
+| `publicName` | If `isAnonymous` is `false` | 1 to 80 characters, no banned word (see below). Must be absent when `isAnonymous` is `true`: the key itself is rejected with `NOT_ALLOWED`, even with a `null` value. |
 | `invoice` | Optional | Absent or `null` means no invoice. When present, every field below is required. |
 | `invoice.fullName` | With invoice | 1 to 150 characters. |
 | `invoice.rfc` | With invoice | Uppercase, `^[A-ZÑ&]{3,4}[0-9]{6}[A-Z0-9]{3}$`. Individual: 13 characters. Company: 12. |
@@ -122,6 +122,8 @@ Salesforce is the authority; the web app applies the same rules first so the don
 | `invoice.taxRegime` | With invoice | SAT fiscal regime code from the catalog below. |
 | `invoice.cfdiUse` | With invoice | SAT fiscal use code from the catalog below. |
 | `invoice.email` | With invoice | Valid email. Where the invoice is sent. |
+
+Banned words: the name is split on whitespace only, and each piece is compared with each banned word as a whole word, ignoring case and accents. Punctuation stays part of the piece. With `spam` banned, `Mucho SPAM aquí` is rejected, while `Spamalot` and `spam!` are accepted.
 
 Starting catalogs (the web app shows Spanish labels; the team confirms the final list):
 
