@@ -42,7 +42,7 @@ describe('App', () => {
     window.__APP_CONFIG__ = mockConfig
     render(<App api={mockApi('many-open')} />)
     expect(await screen.findByRole('heading', { level: 1, name: 'Elige una campaña' })).toBeInTheDocument()
-    expect(screen.getAllByRole('listitem')).toHaveLength(4)
+    expect(screen.getAllByRole('listitem')).toHaveLength(7)
   })
 
   it('goes from the list to a campaign and back', async () => {

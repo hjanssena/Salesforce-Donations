@@ -4,10 +4,15 @@ import { validatePaymentSession } from '../validation'
 import {
   MOCK_BANNED_WORDS,
   MOCK_TRIGGERS,
+  anonymousCompletedCampaign,
   completedCampaign,
+  fullGoalOpenCampaign,
   futureCampaign,
+  longTextOpenCampaign,
+  manySupportersOpenCampaign,
   noImageOpenCampaign,
   openCampaign,
+  overGoalCompletedCampaign,
   secondOpenCampaign,
   shortCompletedCampaign,
   tinyImageOpenCampaign,
@@ -20,10 +25,12 @@ import {
  *
  * Scenarios, picked with `?mock=` in the page URL:
  * - `default`: one open and one completed campaign.
- * - `many-open`: four open campaigns, for the list of open campaigns, with
- *   photos of different shapes and one without a photo.
+ * - `many-open`: seven open campaigns, for the list of open campaigns, with
+ *   photos of different shapes and one without a photo, one exactly at its
+ *   goal, one with a long supporters list, and one with long text.
  * - `no-open`: no open campaign, for the "none open" message.
- * Every scenario has two completed campaigns, one past its goal and one short of it.
+ * Every scenario has four completed campaigns: past the goal, far past it,
+ * short of it, and one whose donors were all anonymous.
  */
 export type MockScenario = 'default' | 'many-open' | 'no-open'
 
@@ -56,8 +63,17 @@ function error(status: number, code: ErrorCode, message: string, fields?: FieldE
 const listItem = ({ supporters: _supporters, ...campaign }: CampaignDetail) => campaign
 
 export function createMockFetch({ scenario = 'default', delayMs = 0, today = meridaToday() }: MockOptions = {}): FetchLike {
-  const opened = { default: [openCampaign], 'many-open': [openCampaign, secondOpenCampaign, tinyImageOpenCampaign, noImageOpenCampaign], 'no-open': [] }[scenario]
-  const all = [...opened, completedCampaign, shortCompletedCampaign, futureCampaign]
+  const opened = { default: [openCampaign], 'many-open': [
+      openCampaign,
+      secondOpenCampaign,
+      tinyImageOpenCampaign,
+      noImageOpenCampaign,
+      fullGoalOpenCampaign,
+      manySupportersOpenCampaign,
+      longTextOpenCampaign,
+    ], 'no-open': [] }[scenario]
+  const completed = [completedCampaign, overGoalCompletedCampaign, shortCompletedCampaign, anonymousCompletedCampaign]
+  const all = [...opened, ...completed, futureCampaign]
   // Campaigns that have not started are never returned (contract, section 2).
   const started = () => all.filter((c) => c.startDate <= today)
   let sessions = 0
