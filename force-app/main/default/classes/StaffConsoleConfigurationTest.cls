@@ -285,6 +285,51 @@ private class StaffConsoleConfigurationTest {
         }
     }
 
+    // ---------- RF-C2: name moderation ----------
+
+    @IsTest
+    static void moderatorHidesAndCorrectsNamesAndHiddenDonationStillCounts() {
+        createSharedOrgFundCampaign();
+        Campaign c = buildCampaign(Date.today().addDays(-1), 5000);
+        insert c;
+        Opportunity o = buildCreditedDonation(c.Id, 'Ana');
+        insert o;
+
+        Test.startTest();
+        System.runAs(userByAlias(ALIAS_MODERATOR)) {
+            Database.update(new Opportunity(Id = o.Id, Display_Status__c = 'Hidden'), AccessLevel.USER_MODE);
+            Database.update(new Opportunity(Id = o.Id, Public_Name__c = 'Ana López'), AccessLevel.USER_MODE);
+        }
+        Test.stopTest();
+
+        Opportunity saved = [SELECT Display_Status__c, Public_Name__c FROM Opportunity WHERE Id = :o.Id];
+        Assert.areEqual('Hidden', saved.Display_Status__c, 'CA2: the name is hidden');
+        Assert.areEqual('Ana López', saved.Public_Name__c, 'CA3: the name is corrected');
+        Assert.areEqual(500, [SELECT AmountWonOpportunities FROM Campaign WHERE Id = :c.Id].AmountWonOpportunities,
+            'CA4: the hidden donation still counts toward the goal');
+    }
+
+    @IsTest
+    static void correctedNameWithBannedWordIsRejected() {
+        String banned = anyBannedWord();
+        createSharedOrgFundCampaign();
+        Campaign c = buildCampaign(Date.today().addDays(-1), 5000);
+        insert c;
+        Opportunity o = buildCreditedDonation(c.Id, 'Ana');
+        insert o;
+
+        System.runAs(userByAlias(ALIAS_MODERATOR)) {
+            Database.SaveResult blocked = Database.update(
+                new Opportunity(Id = o.Id, Public_Name__c = 'Mucho ' + banned.toUpperCase() + ' aquí'), false, AccessLevel.USER_MODE);
+            Assert.isFalse(blocked.isSuccess(), 'A banned word, in any case, is rejected');
+            Assert.isTrue(blocked.getErrors()[0].getMessage().contains('banned word'), blocked.getErrors()[0].getMessage());
+
+            Database.SaveResult allowed = Database.update(
+                new Opportunity(Id = o.Id, Public_Name__c = banned + 'alot'), false, AccessLevel.USER_MODE);
+            Assert.isTrue(allowed.isSuccess(), 'Only whole words are banned');
+        }
+    }
+
     // ---------- RF-S4: rejected payment notices ----------
 
     @IsTest
@@ -354,6 +399,20 @@ private class StaffConsoleConfigurationTest {
             ExpectedRevenue = goal,
             RecordTypeId = recordTypeId('Campaign', 'Default')
         );
+    }
+
+    private static Opportunity buildCreditedDonation(Id campaignId, String publicName) {
+        Opportunity o = buildManualDonation(campaignId, 500);
+        o.Is_Anonymous__c = false;
+        o.Public_Name__c = publicName;
+        return o;
+    }
+
+    /** Banned words are custom metadata kept in the org; tests read them and cannot create them. */
+    private static String anyBannedWord() {
+        List<Banned_Word__mdt> words = [SELECT Word__c FROM Banned_Word__mdt WHERE Word__c != null LIMIT 1];
+        Assert.isFalse(words.isEmpty(), 'The org needs at least one banned word');
+        return words[0].Word__c.trim().toLowerCase();
     }
 
     private static Opportunity buildManualDonation(Id campaignId, Decimal amount) {
