@@ -1153,16 +1153,29 @@ html:has(.sheet[open]) {
   padding: 2.5rem var(--gutter) 3rem;
 }
 
-.thanks h2 {
+.thanks__head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+  max-width: 40rem;
   margin-bottom: 1rem;
+}
+
+/* About eight rows; a longer list scrolls inside and moves on its own (RF-C1 CA6).
+   The enamel rule sits on the box, so it stays put while the rows pass under it. */
+.thanks__box {
+  max-width: 40rem;
+  max-height: 26rem;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  border-top: var(--line) solid var(--enamel);
 }
 
 .thanks__list {
   list-style: none;
   margin: 0;
   padding: 0;
-  max-width: 40rem;
-  border-top: var(--line) solid var(--enamel);
 }
 
 .thanks__row {
@@ -1445,6 +1458,10 @@ html:has(.sheet[open]) {
   .thanks__row {
     padding: 0.6rem 0;
     font-size: 1rem;
+  }
+
+  .thanks__box {
+    max-height: 22rem;
   }
 
   /* Lists */

@@ -6,6 +6,7 @@ import SiteFooter, { SampleStrip } from '../site/SiteFooter'
 import Bill from './Bill'
 import { formatDay, formatFullDay, formatMoney, formatPlain, progressOf } from './format'
 import { parseCustomAmount, SUGGESTED_AMOUNTS } from './amounts'
+import { useAutoScroll } from './autoScroll'
 
 interface Props {
   campaign: CampaignDetail
@@ -286,23 +287,45 @@ function DonatePanel({ renderPayment }: Pick<Props, 'renderPayment'>) {
 }
 
 function Supporters({ supporters }: { supporters: CampaignDetail['supporters'] }) {
+  const boxRef = useRef<HTMLDivElement>(null)
+  // A list taller than its box moves on its own, so every name gets read (RF-C1 CA6).
+  const scroll = useAutoScroll(boxRef, supporters)
+  const canMove = scroll.overflows && !scroll.reducedMotion
+
   return (
     <section className="thanks" aria-labelledby="thanks-title">
-      <h2 id="thanks-title" className="sign-small">
-        Gracias
-      </h2>
+      <div className="thanks__head">
+        <h2 id="thanks-title" className="sign-small">
+          Gracias
+        </h2>
+        {canMove && (
+          // Moving content needs a way to stop it (WCAG 2.2.2).
+          <button type="button" className="text-button" onClick={() => scroll.setPaused(!scroll.paused)}>
+            {scroll.paused ? 'Reanudar lista' : 'Pausar lista'}
+          </button>
+        )}
+      </div>
       {supporters.length === 0 ? (
         <p className="thanks__empty">Aún no hay nombres en la pared. El tuyo puede ser el primero.</p>
       ) : (
-        <ol className="thanks__list">
-          {supporters.map((s, i) => (
-            // Newest first, painted darkest; older names weather.
-            <li key={`${s.displayName}-${i}`} className="thanks__row" data-age={Math.min(i, 3)}>
-              <span className="thanks__name">{s.displayName}</span>
-              <span className="thanks__amount">{formatMoney(s.amount)}</span>
-            </li>
-          ))}
-        </ol>
+        <div
+          ref={boxRef}
+          className="thanks__box"
+          // Only a box that scrolls needs to take focus, so keyboards can scroll it.
+          tabIndex={scroll.overflows ? 0 : undefined}
+          role={scroll.overflows ? 'region' : undefined}
+          aria-label={scroll.overflows ? `Lista de ${supporters.length} donantes` : undefined}
+        >
+          <ol className="thanks__list">
+            {supporters.map((s, i) => (
+              // Newest first, painted darkest; older names weather.
+              <li key={`${s.displayName}-${i}`} className="thanks__row" data-age={Math.min(i, 3)}>
+                <span className="thanks__name">{s.displayName}</span>
+                <span className="thanks__amount">{formatMoney(s.amount)}</span>
+              </li>
+            ))}
+          </ol>
+        </div>
       )}
     </section>
   )
