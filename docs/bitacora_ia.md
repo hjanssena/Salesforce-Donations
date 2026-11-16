@@ -215,7 +215,7 @@ Across the team we used **Claude in Claude Code** (Janssen and Esmeralda) and **
 | **Author**               | Esmeralda |
 | **AI tool / model**      | Claude Code (Claude Opus 5.5) |
 | **Requirement**          | RF-C2 (moderate public names), RF-S4 (rejected payment notices) |
-| **Prompt**               | "I want to continue with my part of E2." |
+| **Prompt**               | "I want to continue with my part of E2: the rejected payment notices log (RF-S4) and name moderation (RF-C2). Use a flow where it fits, add tests for each acceptance criterion, and check nothing breaks the other team's code before deploying." |
 | **Output obtained**      | A "Rejected Notices" list view for admins (RF-S4); for RF-C2, a before-save flow `Public_Name_Banned_Words` that blocks a new or changed display name with a banned word, a "Donor Entries by Campaign" report, and four new Apex tests. The AI wrote the flow as metadata XML instead of building it in Flow Builder. |
 | **Verification**         | Validation-only deploy to the shared org before saving anything, then the tests: `StaffConsoleConfigurationTest` and the API team's `DonationBackendTest` together (33/33 pass), to confirm the new flow does not break donation recording. |
 | **Error found**          | The first validation failed: "Element getRecords invalid at this location in type Flow". The AI used the Flow Builder label ("Get Records") as the XML element name; in flow metadata that element is called `recordLookups`, and elements must follow a fixed order. |
