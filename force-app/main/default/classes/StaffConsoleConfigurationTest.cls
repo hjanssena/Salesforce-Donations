@@ -285,6 +285,30 @@ private class StaffConsoleConfigurationTest {
         }
     }
 
+    // ---------- RF-S4: rejected payment notices ----------
+
+    @IsTest
+    static void adminSeesWhenAndWhyANoticeWasRejected() {
+        Datetime received = Datetime.now().addMinutes(-5);
+        insert new Stripe_Event__c(
+            Stripe_Event_Id__c = 'evt_test_rejected_1',
+            Status__c = 'Rejected',
+            Reason__c = 'Invalid signature',
+            Received_At__c = received
+        );
+
+        System.runAs(userByAlias(ALIAS_ADMIN)) {
+            List<Stripe_Event__c> rejected = [
+                SELECT Received_At__c, Reason__c, Opportunity__c FROM Stripe_Event__c
+                WHERE Status__c = 'Rejected' WITH USER_MODE
+            ];
+            Assert.areEqual(1, rejected.size(), 'CA1: the admin sees the rejected notice');
+            Assert.areEqual(received, rejected[0].Received_At__c, 'CA1: when it arrived');
+            Assert.areEqual('Invalid signature', rejected[0].Reason__c, 'CA1: why it was rejected');
+            Assert.isNull(rejected[0].Opportunity__c, 'CA2: no donation is linked to it');
+        }
+    }
+
     // ---------- Helpers ----------
 
     /**
