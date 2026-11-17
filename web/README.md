@@ -33,7 +33,8 @@ With the mock, the page shows a "Vista previa" strip so nobody mistakes the samp
 | To get | Do |
 | :--- | :--- |
 | Several open campaigns (the list) | Open the site with `?mock=many-open`. |
-| Campaign photos of different shapes | `?mock=many-open` has four open campaigns: 16:9, portrait, a tiny 240×135 file, and no photo. The completed list has a square and a 3000×600 panorama. Each placeholder shows its size and corner marks, so the crop is visible. |
+| Campaign photos of different shapes | `?mock=many-open` has seven open campaigns with 16:9, portrait, square, a tiny 240×135 file, a 3000×600 panorama, and no photo. The completed list adds a square, a portrait, a panorama and one with no photo. Each placeholder shows its size and corner marks, so the crop is visible. |
+| Edge cases in the lists | `?mock=many-open` also has a campaign exactly at 100% (still open), one with 15 supporters (scrolling list) and one with a very long name and description. The completed list has one at 181% and one whose donors were all anonymous (no supporters). |
 | No open campaign | Open the site with `?mock=no-open`. |
 | `400 VALIDATION_FAILED` | Break any rule, for example an amount under 50 or the public name `spam` (banned word). |
 | `404 CAMPAIGN_NOT_FOUND` | Ask for an unknown campaign ID. |

@@ -18,7 +18,7 @@ describe('Waiting', () => {
     expect(container.querySelector('.waiting__brush')).toBeNull()
   })
 
-  it('says what it prepares, then admits a slow connection', () => {
+  it('says what it prepares, then says the wait is longer than usual', () => {
     const { container } = render(<Waiting text="Preparando la campaña…" />)
     act(() => {
       vi.advanceTimersByTime(300)
@@ -28,7 +28,7 @@ describe('Waiting', () => {
     act(() => {
       vi.advanceTimersByTime(4700)
     })
-    expect(screen.getByRole('status')).toHaveTextContent('Sigue cargando… la conexión está lenta.')
+    expect(screen.getByRole('status')).toHaveTextContent('Esto está tardando un poco más de lo habitual. Gracias por tu paciencia.')
   })
 
   it('paints the coat the page will have', () => {
