@@ -68,6 +68,8 @@ Why this is safe and where it stops:
 - Stripe allows 50 metadata keys, 500 characters per value; these fields fit.
 - The details stay in Stripe's test account, so only fictitious data is allowed.
 - If creating the records fails, the endpoint answers with an error so Stripe retries. The unique PaymentIntent ID on the Opportunity makes the retry safe.
+- The shared class sandbox has a pre-existing legacy Opportunity trigger. Its org-admin-authorized compatibility guard skips its fund rollup when `FONDOS SDU` is absent, allowing this portal's recording transaction to complete. When that legacy campaign exists its previous calculations remain unchanged; cross-project fund attribution still requires coordination (security risk R9). This compatibility metadata is specific to the teaching sandbox and is not a new portal data model requirement.
+- Returning donors can also reach the existing `PreApproveStudent` trigger through NPSP updates to CampaignMember totals. Its `CampaignMemberTriggerHandler` now ignores updates that do not change scholarship approval and skips the optional fund when absent. Approval/reversal calculations remain unchanged when the fund exists. This second teaching-sandbox compatibility guard grants no guest permissions and does not change the portal's payment or invoice contract.
 
 ### Decisions taken
 - **Web app hosting:** outside Salesforce, on the team's server. The org allows only that origin through CORS.

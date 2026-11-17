@@ -154,6 +154,14 @@ If a secret leaks: rotate it in Stripe the same day, purge it from the repositor
 
 ## 5. Residual risks
 
+### Signed webhook implementation (RF-V3a, RF-V3b, RF-S4)
+
+The webhook verifies the unmodified UTF-8 body with HMAC-SHA256 before parsing any payload data. It accepts timestamp skew up to 300 seconds, handles case-insensitive HTTP headers and multiple signature versions, and rejects live-mode events. Only verified successful notices reach the transactional donation recorder. The existing unique PaymentIntent ID and event ID prevent duplicate donations; competing transactions fail for retry rather than retaining partial records.
+
+The guest has class access only to the REST entry point, without Opportunity or event-log CRUD. A narrowly scoped system-mode service writes arrival times and fixed rejection reasons for admins. Unauthenticated event IDs are never used as deduplication keys, preventing forged notices from blocking genuine events. Raw payloads, signatures, secrets, emails and fiscal data are absent from diagnostic logs and responses.
+
+The webhook signing secret is entered manually in the organization-level `Stripe_Settings__c` record. The repository contains only its schema. Protected custom-setting visibility is not encryption or managed-package isolation in this unpackaged org; trusted admins and existing Apex remain in scope. Real Stripe reachability and matching signature configuration were confirmed on 2026-11-17 with correlated failed/successful notices. After an authorized guard for the missing legacy campaign, the successful notice created one anonymous 50 MXN donation; replay left the donation count and campaign total unchanged. The prior recording failure preserved zero partial records. Apex unit tests use a fictitious signing key and isolated records.
+
 | # | Risk | Impact | Current mitigation | What is left |
 | :--- | :--- | :--- | :--- | :--- |
 | R1 | **Public form spam or flooding** (bots asking for many payment sessions) | Noise in Stripe, governor limits, wasted emails | No donation exists until Stripe confirms a payment; the payment session validates every field; Stripe applies its own rate limits | No CAPTCHA or per-IP limit on the payment session endpoint. Consider one if abuse appears. |
@@ -164,10 +172,10 @@ If a secret leaks: rotate it in Stripe the same day, purge it from the repositor
 | R6 | RFC in Stripe metadata | Tax ID stored outside Salesforce | Fictitious RFCs only; metadata is not public | Revisit before any real use. |
 | R7 | The self-hosted web server goes down | Site unavailable during the demo | Docker restart policy, TLS with certbot | No second host. |
 | R8 | Daily email limit of the sandbox | Receipts or invoices not sent | Low volume in tests | Check before the demo (#47). |
-| R9 | Another team's `OpportunityTrigger` runs on every Opportunity insert in the shared sandbox and adds the amount to their campaign "FONDOS SDU" | This team's donations would also be counted in another team's fund; if that campaign is missing, donation inserts fail | Found by `StaffConsoleConfigurationTest` on 2026-11-10 | Raise with the professor and that team; the webhook recording service must be tested against it. |
+| R9 | Shared legacy Opportunity and CampaignMember automation uses "FONDOS SDU" | Cross-project attribution remains possible when the fund is present; returning-donor updates previously failed when it was absent | Missing-fund guards protect Opportunity writes and scholarship approval updates; the CampaignMember handler skips unrelated NPSP updates. Bulk and returning-donor invoice/replay regressions passed without granting guest permissions | Coordinate fund ownership/scoping with the professor and that team; existing fund calculations were deliberately preserved and no fund campaign was created. |
 
 ---
 
 ## 6. Webhook security (E2)
 
-To be completed in E2 with `RF-V3a` and `RF-V3b`: signature check of `Stripe-Signature` with the signing secret and a 5-minute tolerance, and deduplication through the unique `Stripe_Event__c.Stripe_Event_Id__c` and `Opportunity.Stripe_Payment_Intent_Id__c`.
+Implemented for `RF-V3a` and `RF-V3b`: exact-body signature verification, a 300-second tolerance in both directions, safe rejection logging and deduplication through the unique event and PaymentIntent IDs. Thirty-two selected Apex methods passed, including guest-context, forgery, malformed/live-mode notices, retries and eight legacy compatibility regressions; the final sharing declaration also passed the four member regressions. PMD Security/Performance found zero violations. Genuine failed-payment deliveries created no donations; replaying paid invoice events after the shared-automation guards created their records once. Browser-card checks covered credited and anonymous donations, declined cards, and individual/company invoice requests. Campaign progress reached 400 MXN; only four credited names and amounts were public, with no anonymous identity or fiscal data exposed. Receipt/invoice emails and the daily-email-limit check remain separate unfinished work assigned to `hjanssena` (#26, #30, #47).
