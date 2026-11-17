@@ -29,7 +29,7 @@ function setup() {
 }
 
 const type = (label: RegExp | string, value: string) => fireEvent.change(screen.getByLabelText(label), { target: { value } })
-const pay = () => fireEvent.click(screen.getByRole('button', { name: 'Pagar $250' }))
+const pay = () => fireEvent.click(screen.getByRole('button', { name: 'Donar $250' }))
 
 describe('DonationForm: recognition (RF-C1, RF-D2)', () => {
   it('asks a credited donor for a display name and email', () => {
