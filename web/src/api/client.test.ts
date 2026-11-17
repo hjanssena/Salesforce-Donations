@@ -111,11 +111,11 @@ describe('payment sessions against the mock', () => {
     ])
   })
 
-  it('answers 404, 409, 502 and 500', async () => {
+  it('answers 404, 409, 503 and 500', async () => {
     const cases: Array<[Partial<PaymentSessionRequest>, number, string]> = [
       [{ campaignId: 'nope' }, 404, 'CAMPAIGN_NOT_FOUND'],
       [{ campaignId: completedCampaign.id }, 409, 'CAMPAIGN_NOT_OPEN'],
-      [{ donorEmail: MOCK_TRIGGERS.providerError }, 502, 'PAYMENT_PROVIDER_ERROR'],
+      [{ donorEmail: MOCK_TRIGGERS.providerError }, 503, 'PAYMENT_PROVIDER_ERROR'],
       [{ donorEmail: MOCK_TRIGGERS.internalError }, 500, 'INTERNAL_ERROR'],
     ]
     for (const [changes, status, code] of cases) {

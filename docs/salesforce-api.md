@@ -1,6 +1,8 @@
 # Salesforce API — How It Is Served
 
-**E1 implementation:** the public campaign resources, validated placeholder payment sessions and internal transactional donation recorder are implemented. Real Stripe callouts, signature-verifying webhooks and emails remain E2 work.
+**E1 implementation:** the public campaign resources, validated payment sessions and internal transactional donation recorder are implemented. Test-mode Stripe callouts are now active as described below; signature-verifying webhooks and emails remain pending.
+
+**Stripe client activation (#45, 2026-11-17):** `PaymentSessionService` now selects `HttpStripeClient` by default. The public Guest User endpoint successfully created an unconfirmed test-mode PaymentIntent for 50 MXN after the user entered the credential directly in Salesforce and header formulas were enabled. Explicitly injected placeholders remain available only to isolated tests. A verified payment webhook is still required before any donation is recorded.
 
 How the Salesforce org serves the API in [contract.md](contract.md) and the Stripe webhook: the public site, the Guest User, the Apex REST classes, CORS, the Stripe callout, and the limits to watch. The contract says what the API looks like; this page says how Salesforce provides it. Context: [architecture.md](architecture.md).
 
@@ -112,7 +114,21 @@ The webhook needs no CORS: Stripe calls it server to server.
   - **External Credential Principal Access** to the `Stripe` principal;
   - **User External Credentials** object access, Read and Create, set by hand.
 - **Check:** some community reports say the User External Credentials permission could not be edited on certain guest-license profiles. Confirm on our org in E1 by saving those two settings on the site's guest profile; no Stripe call is needed. If it cannot be saved, the fallback is a custom setting holding the key in a field only Apex reads, with the callout to `https://api.stripe.com` allowed in Remote Site Settings. That is weaker than a Named Credential, so record it in `docs/seguridad.md` if used.
-- A timeout or a Stripe error becomes `502 PAYMENT_PROVIDER_ERROR`.
+- A timeout or a Stripe error becomes `503 PAYMENT_PROVIDER_ERROR`.
+
+### Test credential setup and activation
+
+1. In Setup > Named Credentials > External Credentials, open `Stripe`, then edit the named principal `StripePrincipal`. Add an authentication parameter named `SecretKey` and enter the team's **test-mode** secret directly in Salesforce. Never put the value in source, terminal commands, screenshots or chat.
+2. The external credential header is `Authorization`, with formula `{!'Bearer ' & $Credential.Stripe.SecretKey}`. `Stripe_API` points to `https://api.stripe.com`, uses `Stripe`, enables callouts and formulas in HTTP headers, and disables automatic Authorization-header generation.
+3. Confirm that `donations Perfil` retains access to `Stripe - StripePrincipal` and User External Credentials Read/Create; grant no business-object permissions. A successful administrator callout alone does not prove guest access.
+4. `HttpStripeClient` is now active in `PaymentSessionService`. Existing backend tests that require a simulated session explicitly inject `PlaceholderStripeClient`; production selection does not depend on `Test.isRunningTest()`.
+5. Verify a public session with fictitious data, return only its intent identifier/status during troubleshooting, and inspect the PaymentIntent in Stripe Test Mode. It must be MXN, card only, unconfirmed and contain the contract metadata. Verify the same idempotency key and body return the same intent; do not reuse the key with changed data.
+
+The optional `Idempotency-Key` request header is defined in [contract.md](contract.md). The caller must retain it for retries; requests without it receive independently generated keys. No automatic retries or payment confirmation are performed by the client. Provider failures, malformed replies and replies that are live-mode, wrong-currency, wrong-amount or non-card are sanitized to `503 PAYMENT_PROVIDER_ERROR`. Latin/non-ASCII metadata is form-encoded as UTF-8. The browser must not log client secrets.
+
+**Header-case correction (2026-11-17):** public HTTP verification reproduced duplicate intents when the same retry key arrived under lowercase `idempotency-key`. Apex's request-header map lookup was case-sensitive. The resource now matches header names without case sensitivity; regression tests cover canonical, lowercase and uppercase names. Session creation remains separate from payment confirmation and donation recording.
+
+**Platform correction:** Apex REST does not accept response status 502; it substitutes an uncontrolled 500 response. The contract, Apex client, web mock and its tests now use 503 for `PAYMENT_PROVIDER_ERROR`. See [RestResponse supported status codes](https://developer.salesforce.com/docs/platform/apex-ref/references/apex-ref/apex-methods-system-restresponse.html). This limitation was discovered during the first public credential check; unit calls to the resource alone did not expose the HTTP serialization failure.
 
 ## 7. Limits to watch
 
