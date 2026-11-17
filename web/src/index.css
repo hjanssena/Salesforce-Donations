@@ -575,10 +575,13 @@ html:has(.sheet[open]) {
     grid-column: 1 / -1;
   }
 
-  /* Label, hint, input, error: the hint row stretches so both inputs line up. */
+  /* Label, hint, input, error: both half fields share these four rows (subgrid),
+     so the inputs stay in line when only one shows an error or a longer hint. */
   .sheet .group--invoice > [data-half] {
     grid-column: auto;
-    grid-template-rows: auto 1fr auto auto;
+    grid-row: span 4;
+    grid-template-rows: subgrid;
+    row-gap: 0.35rem;
   }
 }
 
