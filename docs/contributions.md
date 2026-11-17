@@ -18,3 +18,11 @@ This table records the team's three work areas and GitHub assignments for the fi
 - #27 and #28 include requirements extending beyond the first delivery, such as receipt email behavior and automatic supporter scrolling. Listing them here does not claim those later requirements are complete.
 - First-delivery payment work uses placeholder sessions and simulated test-mode events. Real Stripe PaymentIntent callouts, signature-verifying webhooks and receipt/invoice emails belong to the second delivery.
 - The scope allows the web app owner to help with declarative Salesforce work after the UI is ready. This table preserves the current GitHub assignments rather than assuming that a planned handoff already happened.
+
+# Delivery 2 Contributions
+
+Each member adds their own row for the second delivery. Issue states were checked on November 17, 2026.
+
+| Team member | Assigned delivery area | Activities assigned in the repository | Effort for the delivery |
+| :--- | :--- | :--- | :--- |
+| Esmeralda Collí ([EsmeraldaLv](https://github.com/EsmeraldaLv)) | **Salesforce staff application:** rejected payment notices log for admins, display name moderation with banned words, donor entries report for moderators, and Apex tests for each acceptance criterion (22 tests in `StaffConsoleConfigurationTest`). | [#13 rejected payment notices](https://github.com/hjanssena/Salesforce-Donations/issues/13) and [#18 name moderation](https://github.com/hjanssena/Salesforce-Donations/issues/18), delivered in [PR #98](https://github.com/hjanssena/Salesforce-Donations/pull/98). Still open: [#48 end-to-end test](https://github.com/hjanssena/Salesforce-Donations/issues/48), waiting for the webhook; [#49 stakeholder questions](https://github.com/hjanssena/Salesforce-Donations/issues/49), waiting for answers; [#50 defense preparation](https://github.com/hjanssena/Salesforce-Donations/issues/50). | **2 hours**, confirmed by the member. |
