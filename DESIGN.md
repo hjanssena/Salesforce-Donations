@@ -247,7 +247,7 @@ Opens over the page after "Donar $X", as a sheet: a cal board with the 2px ename
 - **Fields:** bold Lexend label, a weather-2 hint, then a white input with a 2px enamel outline, square, at least 3rem tall and 16px text so phones do not zoom. Codes (RFC, postal code) are letter-spaced with tabular figures.
 - **Errors:** the input's outline and a bold message under it turn almagre, and focus moves to the first one. A form-level message sits above the pay sign.
 - **Card field:** Stripe's Payment Element themed flat: square corners, the 2px enamel outline, Lexend.
-- **Pay sign:** the donate sign reads "PAGAR $X"; while it works it is weather-2 with cal lettering and reads "Procesando…".
+- **Pay sign:** the donate sign reads "DONAR $X"; while it works it is weather-2 with cal lettering and reads "Procesando…".
 
 ### Campaign Boards (lists)
 The open and completed lists (`/campanas`, `/campanas/finalizadas`) stack one board per campaign, full width, never a grid of cards. A board is a cal ground in the 2px enamel line that climbs onto the foot of the wall above it; the list is at most 64rem wide. Every part is as big as what it holds, so no board carries empty paint:

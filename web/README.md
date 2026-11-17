@@ -64,7 +64,7 @@ The donate board has two steps. The donor picks an amount, then fills in `src/do
 - optionally the invoice data;
 - the card.
 
-Recognition and invoice are independent (`details.ts` builds the request). The card field is Stripe's Payment Element in deferred intent mode (`PaymentStep.tsx`), so it shows before any PaymentIntent exists. On "Pagar" (`submit.ts`):
+Recognition and invoice are independent (`details.ts` builds the request). The card field is Stripe's Payment Element in deferred intent mode (`PaymentStep.tsx`), so it shows before any PaymentIntent exists. On "Donar" (`submit.ts`):
 1. Stripe checks the card field and `validation.ts` checks the form.
 2. `POST /payment-sessions` returns the `clientSecret`.
 3. The gateway (`src/payment/gateway.ts`) confirms the payment.

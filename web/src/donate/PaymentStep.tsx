@@ -57,7 +57,7 @@ function StripeForm({ campaignId, amount, onChangeAmount, api, gateway }: Omit<P
       return {
         message:
           cardState === 'failed'
-            ? 'No se puede pagar sin el campo de la tarjeta. Recarga la página para intentarlo de nuevo.'
+            ? 'No se puede completar la operación sin el campo de la tarjeta. Recarga la página para intentarlo de nuevo.'
             : 'El campo de la tarjeta aún no está listo. Espera un momento e inténtalo de nuevo.',
       }
     }

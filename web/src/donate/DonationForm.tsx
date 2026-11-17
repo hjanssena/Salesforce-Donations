@@ -299,7 +299,7 @@ export default function DonationForm({ campaignId, amount, onChangeAmount, cardF
       </p>
 
       <button type="submit" className="sign-button" disabled={busy}>
-        {busy ? 'Procesando…' : `Pagar ${formatMoney(amount)}`}
+        {busy ? 'Procesando…' : `Donar ${formatMoney(amount)}`}
       </button>
     </form>
   )
