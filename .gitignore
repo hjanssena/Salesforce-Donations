@@ -30,6 +30,7 @@ debug.log
 *.crt
 *.cert
 *secret*
+!force-app/main/default/objects/Stripe_Settings__c/fields/Webhook_Secret__c.field-meta.xml
 !docs/requirements/architecture/security-privacy.md
 !docs/seguridad.md
 

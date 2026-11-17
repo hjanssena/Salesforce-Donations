@@ -3,4 +3,5 @@
     <classAccesses><apexClass>HealthResource</apexClass><enabled>true</enabled></classAccesses>
     <classAccesses><apexClass>CampaignsResource</apexClass><enabled>true</enabled></classAccesses>
     <classAccesses><apexClass>PaymentSessionsResource</apexClass><enabled>true</enabled></classAccesses>
+    <classAccesses><apexClass>StripeWebhookResource</apexClass><enabled>true</enabled></classAccesses>
 </Profile>

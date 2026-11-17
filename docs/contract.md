@@ -205,3 +205,13 @@ Stripe events Salesforce handles at its webhook: `payment_intent.succeeded` crea
 - **Salesforce, E1:** `POST /payment-sessions` validates exactly as in section 3 and returns a placeholder `clientSecret` and `paymentIntentId`. The real Stripe callout is added in E2 without changing the contract.
 - **Salesforce:** write tests with the same examples. For the webhook, use a sample `payment_intent.succeeded` event whose metadata follows section 4, so the recording logic is tested without Stripe.
 - **Changes:** edit this page and the mock or tests in the same pull request, and have one person from each side approve it.
+
+## 6. Stripe webhook (provider only)
+
+`POST /webhooks/stripe` receives snapshot events directly from Stripe, not from the web app. Verify `Stripe-Signature` against the exact UTF-8 body before parsing or trusting identifiers. Accept only test-mode events, with a signature timestamp within 300 seconds of server time (past or future). HTTP header names are case-insensitive.
+
+- A valid `payment_intent.succeeded` records the donation atomically through the existing recorder. Repeated event IDs or PaymentIntent IDs do not create another donation.
+- `payment_intent.payment_failed`, cancelled payments and unsupported event types are acknowledged and logged without creating a donation. Unsupported types use a safe reason code in the existing event log.
+- `200 {"received":true}` acknowledges a processed, ignored or duplicate event, without exposing Salesforce IDs or donor details.
+- `400 VALIDATION_FAILED` rejects invalid signatures, stale timestamps, live-mode events and malformed envelopes. `500 INTERNAL_ERROR` means recording or logging failed and Stripe should retry. `503 INTERNAL_ERROR` means the signing secret is not configured. Errors use the existing sanitized error shape.
+- Rejections store only a server-generated diagnostic reference, arrival time and fixed reason code. Unverified payload IDs cannot reserve a genuine Stripe event ID. Full bodies, signatures, secrets, email addresses and invoice data are not logged.
