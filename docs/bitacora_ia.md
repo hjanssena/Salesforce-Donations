@@ -17,6 +17,7 @@ All three team members add their own entries. Never paste secrets, tokens or rea
 | 7   | 2026-11-10 | Jesus Estrella | RF-V1, RF-V2, RF-D1a, RF-D1c, RF-D2, RF-C1, RF-F1  | Yes: substring banned-word match vs whole-word contract rule (#31 / PR #89)         |
 | 8   | 2026-11-10 | Jesus Estrella | RF-D3, S11, S12                                    | Yes: shared sandbox record type & `Display_Status__c` broke recording until adapted |
 | 9   | 2026-11-10 | Jesus Estrella | RF-V2, RF-D3, S12, S14                             | Yes: AI generated standalone scripts and demo records that had to be stripped       |
+| 10  | 2026-11-16 | Esmeralda      | RF-C2, RF-S4                                       | Yes: flow file used an element name that does not exist; caught by deploy validation |
 
 ---
 
@@ -205,3 +206,22 @@ Across the team we used **Claude in Claude Code** (Janssen and Esmeralda) and **
 | **Corrections applied**  | Removed all standalone acceptance scripts, generated guides, demo utilities, and static fixtures from the codebase and `manifest/donation-backend.xml` so only production classes, `DonationBackendTest`, and required metadata were committed in PR #89; documented the three remaining sandbox records in [AI/log.md](../AI/log.md). |
 | **Lesson**               | Always audit the deployment manifest and working tree before committing so temporary AI verification harnesses and scratch utilities do not ship as production metadata.                                                                                                                                                               |
 | **Estimated time saved** | About 3 hours writing the 12 Apex test methods and guest isolation assertions; about 30 minutes cleaning up temporary files and manifests.                                                                                                                                                                                             |
+
+## 10. Name moderation flow with a wrong element name (AI error)
+
+| Field                    | Detail |
+|:------------------------ |:------ |
+| **Date**                 | 2026-11-16 |
+| **Author**               | Esmeralda |
+| **AI tool / model**      | Claude Code (Claude Opus 5.5) |
+| **Requirement**          | RF-C2 (moderate public names), RF-S4 (rejected payment notices) |
+| **Prompt**               | "I want to continue with my part of E2: the rejected payment notices log (RF-S4) and name moderation (RF-C2). Use a flow where it fits, add tests for each acceptance criterion, and check nothing breaks the other team's code before deploying." |
+| **Output obtained**      | A "Rejected Notices" list view for admins (RF-S4); for RF-C2, a before-save flow `Public_Name_Banned_Words` that blocks a new or changed display name with a banned word, a "Donor Entries by Campaign" report, and four new Apex tests. The AI wrote the flow as metadata XML instead of building it in Flow Builder. |
+| **Verification**         | Validation-only deploy to the shared org before saving anything, then the tests: `StaffConsoleConfigurationTest` and the API team's `DonationBackendTest` together (33/33 pass), to confirm the new flow does not break donation recording. |
+| **Error found**          | The first validation failed: "Element getRecords invalid at this location in type Flow". The AI used the Flow Builder label ("Get Records") as the XML element name; in flow metadata that element is called `recordLookups`, and elements must follow a fixed order. |
+| **Corrections applied**  | Renamed the element to `recordLookups` and moved it to its place in the file; the validation then passed and the flow was deployed active. |
+| **Other finding**        | The story says moderators maintain the banned words, but `Banned_Word__mdt` can only be edited with the "Customize Application" permission, which is far too broad for a moderator. Admins keep the list for now, following least privilege; the team will decide whether to move the list to a custom object. |
+| **Lesson**               | Names shown in the Salesforce UI are not always the metadata names. Validate generated metadata with a dry-run deploy before saving it, and run the other team's tests too when adding automation to a shared object. |
+| **Estimated time saved** | Building the flow, report and tests by hand would take about 2.5 hours; with the AI, including the fix, it took about 50 minutes. |
+
+---

@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Flow xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>64.0</apiVersion>
+    <customErrors>
+        <name>Reject_Banned_Word</name>
+        <label>Reject Banned Word</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <customErrorMessages>
+            <errorMessage>The display name contains a banned word. Enter another name.</errorMessage>
+            <fieldSelection>Public_Name__c</fieldSelection>
+            <isFieldError>true</isFieldError>
+        </customErrorMessages>
+    </customErrors>
+    <decisions>
+        <name>Is_Word_In_Name</name>
+        <label>Is Word In Name</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <defaultConnector>
+            <targetReference>Loop_Banned_Words</targetReference>
+        </defaultConnector>
+        <defaultConnectorLabel>No</defaultConnectorLabel>
+        <rules>
+            <name>Word_Found</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>fxNameContainsWord</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <booleanValue>true</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Reject_Banned_Word</targetReference>
+            </connector>
+            <label>Word Found</label>
+        </rules>
+    </decisions>
+    <description>RF-C2: blocks a display name that contains a banned word when a donation is saved with a new or changed public name, for example when a moderator corrects it. Words are matched whole, split on spaces, ignoring case, as in docs/contract.md.</description>
+    <environments>Default</environments>
+    <formulas>
+        <name>fxNameContainsWord</name>
+        <dataType>Boolean</dataType>
+        <expression>CONTAINS(&quot; &quot; &amp; LOWER({!$Record.Public_Name__c}) &amp; &quot; &quot;, &quot; &quot; &amp; LOWER(TRIM({!Loop_Banned_Words.Word__c})) &amp; &quot; &quot;)</expression>
+    </formulas>
+    <interviewLabel>Public Name Banned Words {!$Flow.CurrentDateTime}</interviewLabel>
+    <label>Public Name Banned Words</label>
+    <loops>
+        <name>Loop_Banned_Words</name>
+        <label>Loop Banned Words</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <collectionReference>Get_Banned_Words</collectionReference>
+        <iterationOrder>Asc</iterationOrder>
+        <nextValueConnector>
+            <targetReference>Is_Word_In_Name</targetReference>
+        </nextValueConnector>
+    </loops>
+    <processMetadataValues>
+        <name>BuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>CanvasMode</name>
+        <value>
+            <stringValue>AUTO_LAYOUT_CANVAS</stringValue>
+        </value>
+    </processMetadataValues>
+    <processType>AutoLaunchedFlow</processType>
+    <recordLookups>
+        <name>Get_Banned_Words</name>
+        <label>Get Banned Words</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
+        <connector>
+            <targetReference>Loop_Banned_Words</targetReference>
+        </connector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>Word__c</field>
+            <operator>IsNull</operator>
+            <value>
+                <booleanValue>false</booleanValue>
+            </value>
+        </filters>
+        <getFirstRecordOnly>false</getFirstRecordOnly>
+        <object>Banned_Word__mdt</object>
+        <queriedFields>Id</queriedFields>
+        <queriedFields>Word__c</queriedFields>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </recordLookups>
+    <start>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <connector>
+            <targetReference>Get_Banned_Words</targetReference>
+        </connector>
+        <filterFormula>NOT(ISBLANK({!$Record.Public_Name__c})) &amp;&amp; (ISNEW() || ISCHANGED({!$Record.Public_Name__c}))</filterFormula>
+        <object>Opportunity</object>
+        <recordTriggerType>CreateAndUpdate</recordTriggerType>
+        <triggerType>RecordBeforeSave</triggerType>
+    </start>
+    <status>Active</status>
+</Flow>
