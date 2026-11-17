@@ -60,7 +60,7 @@ describe('thanksWording', () => {
       await act(async () => {
         vi.advanceTimersByTime(5000)
       })
-      expect(screen.getByText(/la conexión está lenta/)).toBeInTheDocument()
+      expect(screen.getByText(/puede tardar unos momentos más/)).toBeInTheDocument()
       await act(async () => {
         vi.advanceTimersByTime(10000)
       })
@@ -81,7 +81,7 @@ describe('thanksWording', () => {
         vi.advanceTimersByTime(20000)
       })
       expect(screen.getByRole('heading', { name: '¡Gracias!' })).toBeInTheDocument()
-      expect(screen.queryByText(/la conexión está lenta/)).not.toBeInTheDocument()
+      expect(screen.queryByText(/puede tardar unos momentos más/)).not.toBeInTheDocument()
     } finally {
       vi.useRealTimers()
     }

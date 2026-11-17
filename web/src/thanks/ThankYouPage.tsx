@@ -72,7 +72,7 @@ export default function ThankYouPage({ gateway, publishableKey, search = window.
           {wording
             ? wording.text
             : slow
-              ? 'Sigue revisando tu pago… la conexión está lenta. No cierres esta página.'
+              ? 'Estamos confirmando tu pago; puede tardar unos momentos más. No cierres esta página.'
               : 'Revisando tu pago. No cierres esta página.'}
         </p>
         {checking && <span className="waiting__brush" aria-hidden="true" />}

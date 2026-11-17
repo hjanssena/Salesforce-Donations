@@ -12,10 +12,10 @@ const TONE_CLASS: Record<WaitingTone, string> = {
 
 /** Before this, a fast answer replaces the wall without a word flashing on it. */
 const WAITING_QUIET_MS = 300
-/** After this, the line admits the connection is slow. */
+/** After this, the line says the wait is longer than usual. */
 const WAITING_SLOW_MS = 5000
 
-const SLOW_TEXT = 'Sigue cargando… la conexión está lenta.'
+const SLOW_TEXT = 'Esto está tardando un poco más de lo habitual. Gracias por tu paciencia.'
 
 interface Props {
   /** What is being prepared, e.g. "Preparando la campaña…". */
