@@ -6,7 +6,15 @@ global with sharing class PaymentSessionsResource {
             try {
                 input = (Map<String, Object>)JSON.deserializeUntyped(RestContext.request.requestBody.toString());
             } catch (Exception malformed) { throw ApiException.create(400, 'VALIDATION_FAILED'); }
-            ApiResponse.send(200, PaymentSessionService.createSession(input));
+            String idempotencyKey;
+            // HTTP header names are case-insensitive; browsers can send lowercase names.
+            for (String name : RestContext.request.headers.keySet()) {
+                if (name.equalsIgnoreCase('Idempotency-Key')) {
+                    idempotencyKey = RestContext.request.headers.get(name);
+                    break;
+                }
+            }
+            ApiResponse.send(200, PaymentSessionService.createSession(input, idempotencyKey));
         } catch (Exception problem) { ApiResponse.fail(problem); }
     }
 }
