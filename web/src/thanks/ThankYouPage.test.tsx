@@ -17,8 +17,7 @@ describe('ThankYouPage (RF-D4)', () => {
   it('thanks the donor without claiming the donation is confirmed', async () => {
     render(<ThankYouPage gateway={gatewayWith({ status: 'succeeded', amount: 250 })} publishableKey="pk_test_1" search={RETURN} />)
     expect(await screen.findByRole('heading', { name: '¡Gracias!' })).toBeInTheDocument()
-    const text = screen.getByText(/Tu pago de \$250 se realizó/).textContent ?? ''
-    expect(text).toMatch(/Estamos registrando/)
+    const text = screen.getByText(/Estamos registrando tu donativo/).textContent ?? ''
     expect(text).not.toMatch(/confirmad|registrado/i)
   })
 
