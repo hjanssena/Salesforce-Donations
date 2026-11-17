@@ -1162,14 +1162,20 @@ html:has(.sheet[open]) {
   margin-bottom: 1rem;
 }
 
-/* About eight rows; a longer list scrolls inside and moves on its own (RF-C1 CA6).
-   The enamel rule sits on the box, so it stays put while the rows pass under it. */
+/* About eight rows (26rem here, 22rem from 960px where rows are tighter); a longer
+   list scrolls inside and moves on its own (RF-C1 CA6). The enamel rule sits on the
+   box, so it stays put while the rows pass under it. */
 .thanks__box {
   max-width: 40rem;
   max-height: 26rem;
   overflow-y: auto;
   overscroll-behavior: contain;
   border-top: var(--line) solid var(--enamel);
+}
+
+/* Room for the scrollbar, overlay or classic, so it never covers the amounts. */
+.thanks__box--scrolls .thanks__list {
+  padding-right: 1rem;
 }
 
 .thanks__list {

@@ -310,7 +310,7 @@ function Supporters({ supporters }: { supporters: CampaignDetail['supporters'] }
       ) : (
         <div
           ref={boxRef}
-          className="thanks__box"
+          className={scroll.overflows ? 'thanks__box thanks__box--scrolls' : 'thanks__box'}
           // Only a box that scrolls needs to take focus, so keyboards can scroll it.
           tabIndex={scroll.overflows ? 0 : undefined}
           role={scroll.overflows ? 'region' : undefined}
