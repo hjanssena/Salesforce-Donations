@@ -288,9 +288,17 @@ function DonatePanel({ renderPayment }: Pick<Props, 'renderPayment'>) {
 
 function Supporters({ supporters }: { supporters: CampaignDetail['supporters'] }) {
   const boxRef = useRef<HTMLDivElement>(null)
-  // A list taller than its box moves on its own, so every name gets read (RF-C1 CA6).
-  const scroll = useAutoScroll(boxRef, supporters)
-  const canMove = scroll.overflows && !scroll.reducedMotion
+  const listRef = useRef<HTMLOListElement>(null)
+  // A list taller than its box rises on its own, so every name gets read (RF-C1 CA6).
+  const scroll = useAutoScroll(boxRef, listRef, supporters)
+  const rows = (copy: string) =>
+    supporters.map((s, i) => (
+      // Newest first, painted darkest; older names weather.
+      <li key={`${copy}-${s.displayName}-${i}`} className="thanks__row" data-age={Math.min(i, 3)}>
+        <span className="thanks__name">{s.displayName}</span>
+        <span className="thanks__amount">{formatMoney(s.amount)}</span>
+      </li>
+    ))
 
   return (
     <section className="thanks" aria-labelledby="thanks-title">
@@ -298,7 +306,7 @@ function Supporters({ supporters }: { supporters: CampaignDetail['supporters'] }
         <h2 id="thanks-title" className="sign-small">
           Gracias
         </h2>
-        {canMove && (
+        {scroll.loops && (
           // Moving content needs a way to stop it (WCAG 2.2.2).
           <button type="button" className="text-button" onClick={() => scroll.setPaused(!scroll.paused)}>
             {scroll.paused ? 'Reanudar lista' : 'Pausar lista'}
@@ -308,23 +316,26 @@ function Supporters({ supporters }: { supporters: CampaignDetail['supporters'] }
       {supporters.length === 0 ? (
         <p className="thanks__empty">Aún no hay nombres en la pared. El tuyo puede ser el primero.</p>
       ) : (
-        <div
-          ref={boxRef}
-          className={scroll.overflows ? 'thanks__box thanks__box--scrolls' : 'thanks__box'}
-          // Only a box that scrolls needs to take focus, so keyboards can scroll it.
-          tabIndex={scroll.overflows ? 0 : undefined}
-          role={scroll.overflows ? 'region' : undefined}
-          aria-label={scroll.overflows ? `Lista de ${supporters.length} donantes` : undefined}
-        >
-          <ol className="thanks__list">
-            {supporters.map((s, i) => (
-              // Newest first, painted darkest; older names weather.
-              <li key={`${s.displayName}-${i}`} className="thanks__row" data-age={Math.min(i, 3)}>
-                <span className="thanks__name">{s.displayName}</span>
-                <span className="thanks__amount">{formatMoney(s.amount)}</span>
-              </li>
-            ))}
-          </ol>
+        // The frame carries the enamel rule, so the edge fades inside never fade it.
+        <div className="thanks__frame">
+          <div
+            ref={boxRef}
+            className={scroll.overflows ? 'thanks__box thanks__box--scrolls' : 'thanks__box'}
+            // Only a box that scrolls needs to take focus, so keyboards can scroll it.
+            tabIndex={scroll.overflows ? 0 : undefined}
+            role={scroll.overflows ? 'region' : undefined}
+            aria-label={scroll.overflows ? `Lista de ${supporters.length} donantes` : undefined}
+          >
+            <ol ref={listRef} className="thanks__list">
+              {rows('a')}
+            </ol>
+            {scroll.loops && (
+              // The same rows again, so the loop has no seam. Screen readers read each name once.
+              <ol className="thanks__list" aria-hidden="true">
+                {rows('b')}
+              </ol>
+            )}
+          </div>
         </div>
       )}
     </section>

@@ -1163,14 +1163,39 @@ html:has(.sheet[open]) {
 }
 
 /* About eight rows (26rem here, 22rem from 960px where rows are tighter); a longer
-   list scrolls inside and moves on its own (RF-C1 CA6). The enamel rule sits on the
-   box, so it stays put while the rows pass under it. */
-.thanks__box {
+   list scrolls inside and rises on its own (RF-C1 CA6). The enamel rule sits on the
+   frame, outside the fades, so it stays put while the rows pass under it. */
+.thanks__frame {
   max-width: 40rem;
+  border-top: var(--line) solid var(--enamel);
+}
+
+.thanks__box {
   max-height: 26rem;
   overflow-y: auto;
   overscroll-behavior: contain;
-  border-top: var(--line) solid var(--enamel);
+}
+
+/* Names fade in at the bottom edge and out at the top. The script sets each fade
+   from the scroll position: none at the very top or bottom, so the newest name is
+   never faded at rest. The one gradient on the site, and only as a mask. */
+.thanks__box--scrolls {
+  --fade-top: 0px;
+  --fade-bottom: 2.5rem;
+  -webkit-mask-image: linear-gradient(
+    to bottom,
+    transparent 0,
+    #000 var(--fade-top),
+    #000 calc(100% - var(--fade-bottom)),
+    transparent 100%
+  );
+  mask-image: linear-gradient(
+    to bottom,
+    transparent 0,
+    #000 var(--fade-top),
+    #000 calc(100% - var(--fade-bottom)),
+    transparent 100%
+  );
 }
 
 /* Room for the scrollbar, overlay or classic, so it never covers the amounts. */
