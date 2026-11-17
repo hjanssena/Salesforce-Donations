@@ -289,9 +289,6 @@ export default function DonationForm({ campaignId, amount, onChangeAmount, cardF
       <div className="donation__card">
         <p className="field__label">Tarjeta</p>
         {cardField}
-        <p className="field__hint">
-          Pago de prueba: usa la tarjeta 4242 4242 4242 4242, cualquier fecha futura y cualquier CVC.
-        </p>
       </div>
 
       <p className="donation__problem" role="alert">
@@ -299,7 +296,7 @@ export default function DonationForm({ campaignId, amount, onChangeAmount, cardF
       </p>
 
       <button type="submit" className="sign-button" disabled={busy}>
-        {busy ? 'Procesando…' : `Pagar ${formatMoney(amount)}`}
+        {busy ? 'Procesando…' : `Donar ${formatMoney(amount)}`}
       </button>
     </form>
   )
