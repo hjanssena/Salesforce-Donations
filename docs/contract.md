@@ -74,6 +74,8 @@ Same fields as one list item, plus the supporters list:
 ### `POST /payment-sessions`
 Validates the donor's data and creates a Stripe PaymentIntent. No donation record is created.
 
+Optional request header: `Idempotency-Key`, 8–128 ASCII letters, digits, hyphens or underscores. Generate a new random key for each donation attempt and reuse it only when retrying the exact same request. Never use personal data as the key. Salesforce forwards a namespaced version to Stripe. If omitted, Salesforce generates a fresh key, so separate HTTP requests are separate attempts. Invalid keys return `400 VALIDATION_FAILED`, field `idempotencyKey`, code `INVALID_FORMAT`. Stripe conflicts or failures use the existing `503 PAYMENT_PROVIDER_ERROR` response. The web client may adopt this optional header separately; existing requests remain supported.
+
 Request:
 ```json
 {
@@ -157,7 +159,7 @@ Every error has the same shape. Salesforce never returns stack traces or interna
 | 400 | `VALIDATION_FAILED` | Any field breaks a rule. `fields` lists each one. |
 | 404 | `CAMPAIGN_NOT_FOUND` | The campaign does not exist or has not started. |
 | 409 | `CAMPAIGN_NOT_OPEN` | The campaign has ended. |
-| 502 | `PAYMENT_PROVIDER_ERROR` | Salesforce could not create the PaymentIntent. Safe to retry. |
+| 503 | `PAYMENT_PROVIDER_ERROR` | Salesforce could not create the PaymentIntent. Safe to retry. |
 | 500 | `INTERNAL_ERROR` | Anything else. No details. |
 
 Field codes: `REQUIRED`, `INVALID_FORMAT`, `TOO_LONG`, `AMOUNT_BELOW_MINIMUM`, `BANNED_WORD`, `NOT_ALLOWED` (for example `publicName` sent by an anonymous donor).

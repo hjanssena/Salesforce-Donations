@@ -240,7 +240,7 @@ export const MOCK_BANNED_WORDS = ['groseria', 'spam'] as const
 
 /**
  * Donor emails that make the mock fail on purpose, to exercise the error
- * paths: POST /payment-sessions answers 502 or 500 for them.
+ * paths: POST /payment-sessions answers 503 or 500 for them.
  */
 export const MOCK_TRIGGERS = {
   providerError: 'provider-error@example.com',

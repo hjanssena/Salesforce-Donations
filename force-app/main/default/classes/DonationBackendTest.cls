@@ -44,6 +44,7 @@ private class DonationBackendTest {
                 'status'=>'succeeded', 'amount_received'=>25000, 'metadata'=>PaymentSessionService.buildMetadata(input)}}});
     }
     private static void rest(String uri, String body) {
+        PaymentSessionService.client = new PlaceholderStripeClient();
         RestContext.request = new RestRequest(); RestContext.response = new RestResponse();
         RestContext.request.requestURI = '/services/apexrest/donations/v1/' + uri;
         if (body != null) { RestContext.request.requestBody=Blob.valueOf(body); }

@@ -106,7 +106,7 @@ export function createMockFetch({ scenario = 'default', delayMs = 0, today = mer
     if (!found) return error(404, 'CAMPAIGN_NOT_FOUND', 'Campaign not found.')
     if (found.status !== 'open') return error(409, 'CAMPAIGN_NOT_OPEN', 'The campaign has ended.')
     if (body.donorEmail === MOCK_TRIGGERS.providerError) {
-      return error(502, 'PAYMENT_PROVIDER_ERROR', 'The payment provider could not create the payment.')
+      return error(503, 'PAYMENT_PROVIDER_ERROR', 'The payment provider could not create the payment.')
     }
     if (body.donorEmail === MOCK_TRIGGERS.internalError) return error(500, 'INTERNAL_ERROR', 'Internal error.')
 
