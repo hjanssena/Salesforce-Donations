@@ -289,8 +289,8 @@ function DonatePanel({ renderPayment }: Pick<Props, 'renderPayment'>) {
 function Supporters({ supporters }: { supporters: CampaignDetail['supporters'] }) {
   const boxRef = useRef<HTMLDivElement>(null)
   const listRef = useRef<HTMLOListElement>(null)
-  // A list taller than its box rises on its own, so every name gets read (RF-C1 CA6).
-  const scroll = useAutoScroll(boxRef, listRef, supporters)
+  // A list taller than its box rises on its own, so every name gets seen (RF-C1 CA6).
+  const loops = useAutoScroll(boxRef, listRef, supporters)
   const rows = (copy: string) =>
     supporters.map((s, i) => (
       // Newest first, painted darkest; older names weather.
@@ -302,34 +302,19 @@ function Supporters({ supporters }: { supporters: CampaignDetail['supporters'] }
 
   return (
     <section className="thanks" aria-labelledby="thanks-title">
-      <div className="thanks__head">
-        <h2 id="thanks-title" className="sign-small">
-          Gracias
-        </h2>
-        {scroll.loops && (
-          // Moving content needs a way to stop it (WCAG 2.2.2).
-          <button type="button" className="text-button" onClick={() => scroll.setPaused(!scroll.paused)}>
-            {scroll.paused ? 'Reanudar lista' : 'Pausar lista'}
-          </button>
-        )}
-      </div>
+      <h2 id="thanks-title" className="sign-small">
+        Gracias
+      </h2>
       {supporters.length === 0 ? (
         <p className="thanks__empty">Aún no hay nombres en la pared. El tuyo puede ser el primero.</p>
       ) : (
         // The frame carries the enamel rule, so the edge fades inside never fade it.
         <div className="thanks__frame">
-          <div
-            ref={boxRef}
-            className={scroll.overflows ? 'thanks__box thanks__box--scrolls' : 'thanks__box'}
-            // Only a box that scrolls needs to take focus, so keyboards can scroll it.
-            tabIndex={scroll.overflows ? 0 : undefined}
-            role={scroll.overflows ? 'region' : undefined}
-            aria-label={scroll.overflows ? `Lista de ${supporters.length} donantes` : undefined}
-          >
+          <div ref={boxRef} className={loops ? 'thanks__box thanks__box--loops' : 'thanks__box'}>
             <ol ref={listRef} className="thanks__list">
               {rows('a')}
             </ol>
-            {scroll.loops && (
+            {loops && (
               // The same rows again, so the loop has no seam. Screen readers read each name once.
               <ol className="thanks__list" aria-hidden="true">
                 {rows('b')}

@@ -1153,18 +1153,14 @@ html:has(.sheet[open]) {
   padding: 2.5rem var(--gutter) 3rem;
 }
 
-.thanks__head {
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: 1rem;
-  max-width: 40rem;
+.thanks h2 {
   margin-bottom: 1rem;
 }
 
 /* About eight rows (26rem here, 22rem from 960px where rows are tighter); a longer
-   list scrolls inside and rises on its own (RF-C1 CA6). The enamel rule sits on the
-   frame, outside the fades, so it stays put while the rows pass under it. */
+   list rises on its own (RF-C1 CA6). Donors cannot scroll it: only the script moves
+   it. The enamel rule sits on the frame, outside the fades, so it stays put while
+   the rows pass under it. */
 .thanks__frame {
   max-width: 40rem;
   border-top: var(--line) solid var(--enamel);
@@ -1172,14 +1168,13 @@ html:has(.sheet[open]) {
 
 .thanks__box {
   max-height: 26rem;
-  overflow-y: auto;
-  overscroll-behavior: contain;
+  overflow: hidden;
 }
 
 /* Names fade in at the bottom edge and out at the top. The script sets each fade
-   from the scroll position: none at the very top or bottom, so the newest name is
-   never faded at rest. The one gradient on the site, and only as a mask. */
-.thanks__box--scrolls {
+   from the scroll position: none at the very top, so the newest name is whole at
+   rest. The one gradient on the site, and only as a mask. */
+.thanks__box--loops {
   --fade-top: 0px;
   --fade-bottom: 2.5rem;
   -webkit-mask-image: linear-gradient(
@@ -1198,9 +1193,12 @@ html:has(.sheet[open]) {
   );
 }
 
-/* Room for the scrollbar, overlay or classic, so it never covers the amounts. */
-.thanks__box--scrolls .thanks__list {
-  padding-right: 1rem;
+/* Without motion the list cannot move and cannot be scrolled, so it shows whole. */
+@media (prefers-reduced-motion: reduce) {
+  .thanks__box,
+  .thanks__frame .thanks__box {
+    max-height: none;
+  }
 }
 
 .thanks__list {

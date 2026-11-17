@@ -4,18 +4,16 @@ import { useEffect, useRef, useState, type RefObject } from 'react'
  * The thanks wall moves on its own when it does not fit (RF-C1 CA6): after a
  * short wait the names rise without end, fading in at the bottom edge and out
  * at the top. A second, hidden copy of the list follows the first, so the loop
- * never jumps back. It stays a normal scrollable box, so a donor can always
- * read it by hand, and it holds still while hovered, focused, just scrolled by
- * hand, off screen, or paused with its button. With reduced motion it never
- * moves on its own and there is no copy.
+ * never jumps back. Donors cannot scroll it; it only holds still while the
+ * pointer is over it (to read a name) or while it is off screen. With reduced
+ * motion it never moves, and the stylesheet shows the whole list instead, so
+ * every name can still be read.
  */
 
 /** Pixels per second: slow enough to read each name as it passes. */
 export const SPEED = 24
-/** The wait before the first move, and after the donor lets go of the list. */
+/** The wait before the first move, and after the pointer leaves the list. */
 export const HOLD_START_MS = 2000
-/** After the donor scrolls the list by hand, it waits this long before moving again. */
-export const IDLE_AFTER_TOUCH_MS = 5000
 /** How tall each edge fade is, in pixels. */
 export const FADE_PX = 40
 /** A frame gap above this (a slow device, a background tab) counts as this. */
@@ -37,36 +35,29 @@ export function fades(scrollTop: number, scrollHeight: number, clientHeight: num
   return { top: clamp(scrollTop), bottom: clamp(scrollHeight - clientHeight - scrollTop) }
 }
 
-/** Moves a hand scroll past the end of the first copy back by one copy, as `advance` does. */
-function wrapScroll(el: HTMLElement, period: number) {
-  if (period > 0 && el.scrollTop >= period + FADE_PX) el.scrollTop -= period
-}
-
 function reducedMotionQuery(): MediaQueryList | null {
   return typeof window.matchMedia === 'function' ? window.matchMedia('(prefers-reduced-motion: reduce)') : null
 }
 
-export interface AutoScroll {
-  /** One copy of the list is taller than its box. */
-  overflows: boolean
-  /** The list loops on its own: it overflows and the donor did not ask for less motion. */
-  loops: boolean
-  paused: boolean
-  setPaused: (paused: boolean) => void
+function paintFades(el: HTMLElement) {
+  const fade = fades(el.scrollTop, el.scrollHeight, el.clientHeight)
+  el.style.setProperty('--fade-top', `${fade.top}px`)
+  el.style.setProperty('--fade-bottom', `${fade.bottom}px`)
 }
 
 /**
- * `box` is the scrolling element, `list` the first copy of the rows inside it.
+ * `box` is the clipping element, `list` the first copy of the rows inside it.
  * `contentKey` changes when the rows change, so the list is measured again.
+ * Returns whether the list loops: one copy is taller than its box and the
+ * donor did not ask for less motion.
  */
 export function useAutoScroll(
   box: RefObject<HTMLElement | null>,
   list: RefObject<HTMLElement | null>,
   contentKey: unknown,
-): AutoScroll {
+): boolean {
   const [overflows, setOverflows] = useState(false)
   const [reducedMotion, setReducedMotion] = useState(() => reducedMotionQuery()?.matches ?? false)
-  const [paused, setPaused] = useState(false)
   const loops = overflows && !reducedMotion
 
   useEffect(() => {
@@ -94,45 +85,19 @@ export function useAutoScroll(
     return () => query.removeEventListener?.('change', sync)
   }, [])
 
-  // Paint the edge fades, and wrap a hand scroll the same way the loop wraps.
-  useEffect(() => {
-    const el = box.current
-    const rows = list.current
-    if (!el || !rows || !overflows) return
-    const onScroll = () => {
-      if (loops) wrapScroll(el, rows.offsetHeight)
-      const fade = fades(el.scrollTop, el.scrollHeight, el.clientHeight)
-      el.style.setProperty('--fade-top', `${fade.top}px`)
-      el.style.setProperty('--fade-bottom', `${fade.bottom}px`)
-    }
-    onScroll()
-    el.addEventListener('scroll', onScroll, { passive: true })
-    return () => el.removeEventListener('scroll', onScroll)
-  }, [box, list, overflows, loops])
-
   // Why the list is holding still, kept in refs so the frame loop reads them without restarting.
   const hovered = useRef(false)
-  const focused = useRef(false)
   const visible = useRef(true)
-  const touchedAt = useRef(-Infinity)
-  const moving = loops && !paused
 
   useEffect(() => {
     const el = box.current
     const rows = list.current
-    if (!el || !rows || !moving) return
+    if (!el || !rows || !loops) return
 
     const onEnter = () => (hovered.current = true)
     const onLeave = () => (hovered.current = false)
-    const onFocusIn = () => (focused.current = true)
-    const onFocusOut = (event: FocusEvent) => (focused.current = el.contains(event.relatedTarget as Node | null))
-    const onTouch = () => (touchedAt.current = performance.now())
-    const touchEvents = ['wheel', 'touchstart', 'pointerdown', 'keydown'] as const
     el.addEventListener('pointerenter', onEnter)
     el.addEventListener('pointerleave', onLeave)
-    el.addEventListener('focusin', onFocusIn)
-    el.addEventListener('focusout', onFocusOut)
-    touchEvents.forEach((name) => el.addEventListener(name, onTouch, { passive: true }))
 
     let observer: IntersectionObserver | undefined
     if (typeof IntersectionObserver !== 'undefined') {
@@ -140,6 +105,7 @@ export function useAutoScroll(
       observer.observe(el)
     }
 
+    paintFades(el)
     // The loop's own clock and position, mutated frame by frame inside this effect.
     // The position is kept unrounded so slow speeds still advance.
     const started = performance.now()
@@ -147,15 +113,12 @@ export function useAutoScroll(
     const tick = (now: number) => {
       const elapsed = now - loop.last
       loop.last = now
-      const resting =
-        hovered.current || focused.current || !visible.current || now - touchedAt.current < IDLE_AFTER_TOUCH_MS
-      if (resting) {
-        // Start again from wherever the donor left it, after the usual wait.
+      if (hovered.current || !visible.current) {
+        // Hold where it is, and wait again before moving on.
         loop.since = now
-        loop.pos = el.scrollTop
       } else if (now - loop.since >= HOLD_START_MS) {
         loop.pos = advance(loop.pos, elapsed, rows.offsetHeight)
-        el.scrollTop = loop.pos
+        scrollTo(el, loop.pos)
       }
       loop.frame = requestAnimationFrame(tick)
     }
@@ -166,11 +129,13 @@ export function useAutoScroll(
       observer?.disconnect()
       el.removeEventListener('pointerenter', onEnter)
       el.removeEventListener('pointerleave', onLeave)
-      el.removeEventListener('focusin', onFocusIn)
-      el.removeEventListener('focusout', onFocusOut)
-      touchEvents.forEach((name) => el.removeEventListener(name, onTouch))
     }
-  }, [box, list, moving])
+  }, [box, list, loops])
 
-  return { overflows, loops, paused, setPaused }
+  return loops
+}
+
+function scrollTo(el: HTMLElement, top: number) {
+  el.scrollTop = top
+  paintFades(el)
 }

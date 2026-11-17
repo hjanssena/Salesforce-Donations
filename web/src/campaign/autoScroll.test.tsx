@@ -1,7 +1,7 @@
 import { act, fireEvent, render, screen } from '@testing-library/react'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import CampaignPage from './CampaignPage'
-import { FADE_PX, HOLD_START_MS, IDLE_AFTER_TOUCH_MS, SPEED, advance, fades } from './autoScroll'
+import { FADE_PX, HOLD_START_MS, SPEED, advance, fades } from './autoScroll'
 import { openCampaign } from '../api/mock/fixtures'
 
 describe('advance', () => {
@@ -65,7 +65,7 @@ describe('thanks wall', () => {
     vi.unstubAllGlobals()
   })
 
-  const box = () => screen.getByRole('region', { name: 'Lista de 15 donantes' })
+  const box = () => document.querySelector<HTMLElement>('.thanks__box')!
   const advanceTime = (ms: number) => act(() => vi.advanceTimersByTime(ms))
 
   it('rises on its own after a wait, with a hidden second copy for the loop', () => {
@@ -73,46 +73,42 @@ describe('thanks wall', () => {
     // Screen readers get each name once; the copy is hidden from them.
     expect(screen.getAllByRole('listitem')).toHaveLength(15)
     expect(box().querySelectorAll('li')).toHaveLength(30)
-    expect(box()).toHaveAttribute('tabindex', '0')
     advanceTime(HOLD_START_MS - 100)
     expect(box().scrollTop).toBe(0)
     advanceTime(1100)
     expect(box().scrollTop).toBeGreaterThan(0)
   })
 
-  it('starts with no top fade and a bottom fade', () => {
+  it('cannot be scrolled or stopped by the donor: no focus stop, no pause button', () => {
+    render(<CampaignPage campaign={many} renderPayment={payment} />)
+    expect(box()).not.toHaveAttribute('tabindex')
+    expect(screen.queryByRole('button', { name: /lista/i })).not.toBeInTheDocument()
+    expect(box()).toHaveClass('thanks__box--loops')
+  })
+
+  it('starts with no top fade and a bottom fade, and grows the top fade as it rises', () => {
     render(<CampaignPage campaign={many} renderPayment={payment} />)
     expect(box().style.getPropertyValue('--fade-top')).toBe('0px')
     expect(box().style.getPropertyValue('--fade-bottom')).toBe(`${FADE_PX}px`)
+    advanceTime(HOLD_START_MS + 3000)
+    expect(box().style.getPropertyValue('--fade-top')).toBe(`${FADE_PX}px`)
   })
 
-  it('holds still while the pointer is over it, and after a hand scroll', () => {
+  it('holds still while the pointer is over it, then moves on', () => {
     render(<CampaignPage campaign={many} renderPayment={payment} />)
     fireEvent.pointerEnter(box())
     advanceTime(HOLD_START_MS + 1000)
     expect(box().scrollTop).toBe(0)
     fireEvent.pointerLeave(box())
-    fireEvent.wheel(box())
-    advanceTime(IDLE_AFTER_TOUCH_MS - 100)
-    expect(box().scrollTop).toBe(0)
-  })
-
-  it('pauses and resumes with its button', () => {
-    render(<CampaignPage campaign={many} renderPayment={payment} />)
-    fireEvent.click(screen.getByRole('button', { name: 'Pausar lista' }))
-    advanceTime(HOLD_START_MS + 1000)
-    expect(box().scrollTop).toBe(0)
-    fireEvent.click(screen.getByRole('button', { name: 'Reanudar lista' }))
     advanceTime(HOLD_START_MS + 1000)
     expect(box().scrollTop).toBeGreaterThan(0)
   })
 
-  it('never moves on its own with reduced motion, but still scrolls by hand', () => {
+  it('never moves with reduced motion, and has no copy', () => {
     reduced = true
     render(<CampaignPage campaign={many} renderPayment={payment} />)
-    expect(screen.queryByRole('button', { name: 'Pausar lista' })).not.toBeInTheDocument()
     expect(box().querySelectorAll('li')).toHaveLength(15)
-    expect(box()).toHaveAttribute('tabindex', '0')
+    expect(box()).not.toHaveClass('thanks__box--loops')
     advanceTime(HOLD_START_MS + 1000)
     expect(box().scrollTop).toBe(0)
   })
@@ -120,8 +116,7 @@ describe('thanks wall', () => {
   it('stays a plain list when every name fits', () => {
     tall = false
     render(<CampaignPage campaign={many} renderPayment={payment} />)
-    expect(screen.queryByRole('region', { name: /donantes/ })).not.toBeInTheDocument()
-    expect(screen.queryByRole('button', { name: 'Pausar lista' })).not.toBeInTheDocument()
-    expect(screen.getAllByRole('listitem')).toHaveLength(15)
+    expect(box()).not.toHaveClass('thanks__box--loops')
+    expect(box().querySelectorAll('li')).toHaveLength(15)
   })
 })
