@@ -26,7 +26,7 @@ export function thanksWording(payment: PaymentRecord | null): Wording {
     case 'succeeded':
       return {
         title: '¡Gracias!',
-        text: `Tu pago de ${amount} se realizó. Estamos registrando tu donativo y te enviaremos el recibo por correo.`,
+        text: 'Estamos registrando tu donativo y te enviaremos el recibo por correo.',
         retry: false,
       }
     case 'processing':
