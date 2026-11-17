@@ -6,6 +6,7 @@ import SiteFooter, { SampleStrip } from '../site/SiteFooter'
 import Bill from './Bill'
 import { formatDay, formatFullDay, formatMoney, formatPlain, progressOf } from './format'
 import { parseCustomAmount, SUGGESTED_AMOUNTS } from './amounts'
+import { useAutoScroll } from './autoScroll'
 
 interface Props {
   campaign: CampaignDetail
@@ -286,6 +287,19 @@ function DonatePanel({ renderPayment }: Pick<Props, 'renderPayment'>) {
 }
 
 function Supporters({ supporters }: { supporters: CampaignDetail['supporters'] }) {
+  const boxRef = useRef<HTMLDivElement>(null)
+  const listRef = useRef<HTMLOListElement>(null)
+  // A list taller than its box rises on its own, so every name gets seen (RF-C1 CA6).
+  const loops = useAutoScroll(boxRef, listRef, supporters)
+  const rows = (copy: string) =>
+    supporters.map((s, i) => (
+      // Newest first, painted darkest; older names weather.
+      <li key={`${copy}-${s.displayName}-${i}`} className="thanks__row" data-age={Math.min(i, 3)}>
+        <span className="thanks__name">{s.displayName}</span>
+        <span className="thanks__amount">{formatMoney(s.amount)}</span>
+      </li>
+    ))
+
   return (
     <section className="thanks" aria-labelledby="thanks-title">
       <h2 id="thanks-title" className="sign-small">
@@ -294,15 +308,20 @@ function Supporters({ supporters }: { supporters: CampaignDetail['supporters'] }
       {supporters.length === 0 ? (
         <p className="thanks__empty">Aún no hay nombres en la pared. El tuyo puede ser el primero.</p>
       ) : (
-        <ol className="thanks__list">
-          {supporters.map((s, i) => (
-            // Newest first, painted darkest; older names weather.
-            <li key={`${s.displayName}-${i}`} className="thanks__row" data-age={Math.min(i, 3)}>
-              <span className="thanks__name">{s.displayName}</span>
-              <span className="thanks__amount">{formatMoney(s.amount)}</span>
-            </li>
-          ))}
-        </ol>
+        // The frame carries the enamel rule, so the edge fades inside never fade it.
+        <div className="thanks__frame">
+          <div ref={boxRef} className={loops ? 'thanks__box thanks__box--loops' : 'thanks__box'}>
+            <ol ref={listRef} className="thanks__list">
+              {rows('a')}
+            </ol>
+            {loops && (
+              // The same rows again, so the loop has no seam. Screen readers read each name once.
+              <ol className="thanks__list" aria-hidden="true">
+                {rows('b')}
+              </ol>
+            )}
+          </div>
+        </div>
       )}
     </section>
   )

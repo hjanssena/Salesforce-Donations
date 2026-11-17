@@ -102,6 +102,109 @@ export const noImageOpenCampaign: CampaignDetail = {
   supporters: [],
 }
 
+/** An open campaign that sits exactly at 100% and ends soonest: it stays open until its end date (`?mock=many-open`). */
+export const fullGoalOpenCampaign: CampaignDetail = {
+  id: '701Hs00000TrAnSpOR',
+  name: 'Autobús Mérida–Ciudad de México',
+  description: 'Un autobús rentado para que todo el grupo viaje junto a la sede del evento.',
+  purpose: 'Rentar un autobús de ida y vuelta para 25 personas.',
+  imageUrl: wideImage,
+  goalAmount: 18000,
+  raisedAmount: 18000,
+  startDate: '2026-11-01',
+  endDate: '2026-11-20',
+  status: 'open',
+  supporters: [
+    { displayName: 'Empresa Ejemplo', amount: 10000 },
+    { displayName: 'Ana López', amount: 3000 },
+    { displayName: 'Familia Canul', amount: 2000 },
+  ],
+}
+
+/** An open campaign close to its goal with a long supporters list, for the scrolling list (`?mock=many-open`). */
+export const manySupportersOpenCampaign: CampaignDetail = {
+  id: '701Hs00000CoMiDaSX',
+  name: 'Comidas durante el evento',
+  description: 'Desayuno y comida para el grupo en los dos días de la conferencia.',
+  purpose: 'Cubrir 100 comidas para estudiantes y mentores.',
+  imageUrl: squareImage,
+  goalAmount: 12000,
+  raisedAmount: 11040,
+  startDate: '2026-11-02',
+  endDate: '2026-12-10',
+  status: 'open',
+  supporters: [
+    { displayName: 'Sofía Ek', amount: 100 },
+    { displayName: 'Jorge May', amount: 250 },
+    { displayName: 'Café La Ceiba', amount: 2000 },
+    { displayName: 'Valeria R.', amount: 100 },
+    { displayName: 'Daniel Chan', amount: 500 },
+    { displayName: 'Lucía Pool', amount: 250 },
+    { displayName: 'Grupo de Estudio Apex', amount: 1000 },
+    { displayName: 'Ricardo Tun', amount: 150 },
+    { displayName: 'Fernanda Uc', amount: 500 },
+    { displayName: 'Andrés Cimé', amount: 100 },
+    { displayName: 'Paola Dzib', amount: 250 },
+    { displayName: 'Miguel Ángel Koh', amount: 1000 },
+    { displayName: 'Carmen Euán', amount: 500 },
+    { displayName: 'Tienda El Faro', amount: 2000 },
+    { displayName: 'Iván Balam', amount: 100 },
+  ],
+}
+
+/** An open campaign with long text and a far end date, to stress the layout (`?mock=many-open`). */
+export const longTextOpenCampaign: CampaignDetail = {
+  id: '701Hs00000CeRtIfIC',
+  name: 'Certificaciones Salesforce para la generación 2026 del SF Vibe Lab de la Facultad de Matemáticas',
+  description:
+    'Los estudiantes que terminan sus módulos de Trailhead y aprueban los exámenes de práctica pueden presentar la certificación de Administrador o de Desarrollador de Plataforma. Cada examen tiene un costo que la mayoría no puede cubrir por su cuenta, y una certificación abre la puerta a su primera práctica profesional.',
+  purpose: 'Pagar 10 exámenes de certificación y 10 reintentos para quien no apruebe a la primera.',
+  imageUrl: panoramaImage,
+  goalAmount: 75000,
+  raisedAmount: 2350,
+  startDate: '2026-11-05',
+  endDate: '2027-01-31',
+  status: 'open',
+  supporters: [
+    { displayName: 'Comunidad Trailblazer Mérida', amount: 2000 },
+    { displayName: 'Luis Pech', amount: 350 },
+  ],
+}
+
+/** A completed campaign far past its goal. */
+export const overGoalCompletedCampaign: CampaignDetail = {
+  id: '701Hs00000LaPtOpSA',
+  name: 'Laptops para el laboratorio',
+  description: 'Equipos para que los estudiantes sin computadora propia practiquen en la facultad.',
+  purpose: 'Comprar 5 laptops para el laboratorio del SF Vibe Lab.',
+  imageUrl: portraitImage,
+  goalAmount: 40000,
+  raisedAmount: 72500,
+  startDate: '2025-01-15',
+  endDate: '2025-03-31',
+  status: 'completed',
+  supporters: [
+    { displayName: 'Empresa Ejemplo', amount: 25000 },
+    { displayName: 'Familia Canul', amount: 5000 },
+    { displayName: 'Ana López', amount: 1000 },
+  ],
+}
+
+/** A completed campaign whose donors were all anonymous: an empty supporters list. */
+export const anonymousCompletedCampaign: CampaignDetail = {
+  id: '701Hs00000RiFaNaVI',
+  name: 'Rifa navideña 2024',
+  description: 'Una rifa entre la comunidad para arrancar el programa.',
+  purpose: 'Reunir el fondo inicial del SF Vibe Lab.',
+  imageUrl: null,
+  goalAmount: 5000,
+  raisedAmount: 5300,
+  startDate: '2024-12-01',
+  endDate: '2024-12-24',
+  status: 'completed',
+  supporters: [],
+}
+
 /** A completed campaign that ended short of its goal. */
 export const shortCompletedCampaign: CampaignDetail = {
   id: '701Hs00000TaLLeRAB',

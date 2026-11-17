@@ -2,9 +2,14 @@ import { describe, expect, it } from 'vitest'
 import { ApiError, createApiClient } from './client'
 import {
   MOCK_TRIGGERS,
+  anonymousCompletedCampaign,
   completedCampaign,
+  fullGoalOpenCampaign,
+  longTextOpenCampaign,
+  manySupportersOpenCampaign,
   noImageOpenCampaign,
   openCampaign,
+  overGoalCompletedCampaign,
   secondOpenCampaign,
   shortCompletedCampaign,
   tinyImageOpenCampaign,
@@ -45,17 +50,26 @@ describe('campaigns against the mock', () => {
 
   it('lists completed campaigns, latest end first', async () => {
     const campaigns = await client().listCampaigns('completed')
-    expect(campaigns.map((c) => c.id)).toEqual([completedCampaign.id, shortCompletedCampaign.id])
+    // Latest end first: Nov 20 2025, Jun 15 2025, Mar 31 2025, Dec 24 2024.
+    expect(campaigns.map((c) => c.id)).toEqual([
+      completedCampaign.id,
+      shortCompletedCampaign.id,
+      overGoalCompletedCampaign.id,
+      anonymousCompletedCampaign.id,
+    ])
   })
 
   it('lists several open campaigns, soonest end first', async () => {
     const campaigns = await client('many-open').listCampaigns()
-    // Soonest end first: Nov 28, Dec 5, Dec 15, Dec 20.
+    // Soonest end first: Nov 20, Nov 28, Dec 5, Dec 10, Dec 15, Dec 20, Jan 31.
     expect(campaigns.map((c) => c.id)).toEqual([
+      fullGoalOpenCampaign.id,
       secondOpenCampaign.id,
       tinyImageOpenCampaign.id,
+      manySupportersOpenCampaign.id,
       openCampaign.id,
       noImageOpenCampaign.id,
+      longTextOpenCampaign.id,
     ])
   })
 

@@ -87,6 +87,24 @@ private class DonationBackendTest {
         input=request(campaign(0).Id); input.put('publicName','x'.repeat(81));
         try { PaymentSessionValidator.validate(input); System.assert(false); } catch(ApiException problem) { System.assert(!problem.fields.isEmpty()); }
     }
+    @IsTest static void bannedWordsFollowContract() {
+        Set<String> banned = new Set<String>{'spam', 'grosería'};
+        for (String name : new List<String>{'spam', 'Mucho SPAM aquí', 'spám', 'spa\u0301m',
+            '  Nombre   spam  ', 'Nombre\tSPAM\nApellido', 'Nombre\u00A0spam',
+            'Nombre\u2003spam', 'Nombre\uFEFFspam', 'GROSERIA'}) {
+            System.assertEquals(true, PaymentSessionValidator.containsBannedWord(name, banned), name);
+        }
+        for (String name : new List<String>{'Spamalot', 'spam!', '(spam)', 'spam-spam',
+            'Nombre de Prueba', 'groserías', ''}) {
+            System.assertEquals(false, PaymentSessionValidator.containsBannedWord(name, banned), name);
+        }
+        System.assertEquals(true, PaymentSessionValidator.containsBannedWord('spam', new Set<String>{'SPÁM'}));
+        System.assertEquals(false, PaymentSessionValidator.containsBannedWord('spam', new Set<String>()));
+        Map<String, Object> input = request(campaign(0).Id);
+        input.put('publicName', '  Spamalot Álvarez!  ');
+        PaymentSessionValidator.validate(input);
+        System.assertEquals('  Spamalot Álvarez!  ', input.get('publicName'), 'Keep the submitted name unchanged.');
+    }
     @IsTest static void recordsOnceAndProtectsPublicData() {
         Map<String,Object> input=request(campaign(0).Id); input.put('invoice',invoice(false));
         String sample=event(input,'evt_backend_1','pi_backend_1');

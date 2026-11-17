@@ -19,10 +19,8 @@ public with sharing class PaymentSessionValidator {
             add(problem, 'publicName', 'NOT_ALLOWED');
         } else if (input.get('isAnonymous') == false) {
             String name = text(input, 'publicName', 80, true, problem);
-            if (name != null) {
-                for (String word : PublicCampaignSelector.bannedWords()) {
-                    if (name.toLowerCase().contains(word)) { add(problem, 'publicName', 'BANNED_WORD'); break; }
-                }
+            if (name != null && containsBannedWord(name, PublicCampaignSelector.bannedWords())) {
+                add(problem, 'publicName', 'BANNED_WORD');
             }
         }
         if (input.get('invoice') != null) {
@@ -31,6 +29,37 @@ public with sharing class PaymentSessionValidator {
         }
         if (!problem.fields.isEmpty()) { throw problem; }
         return input;
+    }
+    // Match whitespace-delimited tokens only; punctuation and the original name stay unchanged.
+    @TestVisible private static Boolean containsBannedWord(String name, Set<String> bannedWords) {
+        Set<String> tokens = new Set<String>(foldAccents(name).split('[\\s\\u00A0\\u1680\\u2000-\\u200A\\u2028\\u2029\\u202F\\u205F\\u3000\\uFEFF]+'));
+        tokens.remove('');
+        for (String word : bannedWords) {
+            if (tokens.contains(foldAccents(word))) { return true; }
+        }
+        return false;
+    }
+    private static String foldAccents(String value) {
+        // Apex has no NFD normalization API: fold Latin accents and decomposed marks explicitly.
+        return value.toLowerCase()
+            .replaceAll('[àáâãäåāăą]', 'a')
+            .replaceAll('[èéêëēĕėęě]', 'e')
+            .replaceAll('[ìíîïĩīĭį]', 'i')
+            .replaceAll('[òóôõöōŏő]', 'o')
+            .replaceAll('[ùúûüũūŭůűų]', 'u')
+            .replaceAll('[ñńņň]', 'n')
+            .replaceAll('[çćĉċč]', 'c')
+            .replaceAll('[ýÿŷ]', 'y')
+            .replaceAll('[śŝşš]', 's')
+            .replaceAll('[źżž]', 'z')
+            .replaceAll('[řŕŗ]', 'r')
+            .replaceAll('[ğĝġģ]', 'g')
+            .replaceAll('[ťţ]', 't')
+            .replaceAll('[ĺļľ]', 'l')
+            .replaceAll('ĥ', 'h')
+            .replaceAll('ĵ', 'j')
+            .replaceAll('ŵ', 'w')
+            .replaceAll('\\p{M}', '');
     }
     private static void validateInvoice(Map<String, Object> invoice, ApiException parent) {
         ApiException problem = ApiException.create(400, 'VALIDATION_FAILED');
