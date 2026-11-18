@@ -10,14 +10,15 @@ Run on 2026-11-17 (times in Mérida, UTC−6) by Esmeralda Collí on the deploye
 | 2 | Anonymous, individual invoice, 250 MXN (21:49) | `4242 4242 4242 4242` | Thank-you page shown; donation not on the supporters list | Donation created (anonymous, no public name, 1 invoice request, taxpayer type Individual); event `EVT-00035` Processed | Receipt job Completed with no errors; email with invoice PDF not received; invoice request stays `Requested` | ✅ Recording · ❌ Email |
 | 3 | Declined card, 100 MXN (22:15) | `4000 0000 0000 0002` | Error message shown | No donation created; event `EVT-00037` `payment_intent.payment_failed` logged only | None expected | ✅ |
 | 4 | Abandoned: form filled, tab closed before paying | — | — | No donation and no event created | None expected | ✅ |
+| 5 | Retest after the email fix: credited, individual invoice, 50 MXN (23:20) | `4242 4242 4242 4242` | Thank-you page shown | Donation created (1 invoice request); event `EVT-00040` Processed; receipt job Completed | Receipt with the invoice PDF received in Gmail | ✅ |
 
 ## Findings
 
-1. **Receipts do not reach Gmail.** Salesforce accepts the email (the `DonationEmailJob` finishes as Completed), but nothing arrives. The likely cause is the open setup item in #47: no verified org-wide sender address. Reported in #47.
+1. **Receipts did not reach Gmail (resolved).** In cases 1 and 2 Salesforce accepted the email (the `DonationEmailJob` finished as Completed), but nothing arrived. Reported in #47. Janssen found that Gmail was blocking email sent from Salesforce and fixed it the same night; case 5 confirmed the receipt and invoice PDF now arrive.
 2. **Invoice requests stay `Requested`.** After the receipt job, the invoice request should change to `Sent` or `Failed`. Reported in #47.
 3. **Test data.** Case 1 used the tester's own name as the public name, with her consent, and it stays visible. Later cases used fictitious names only.
 4. **Shared record form.** Editing the donation from its record page is blocked by other teams' fields that the shared Opportunity layout marks as required (`serial`, `Cantidad Comidas`). Editing from the All Donations list view works. A Mexico Dreamin record page would remove this.
 
 ## Conclusion
 
-Automatic payment confirmation (`RF-V3a`) works end to end: successful payments create exactly one donation each, anonymity and invoice choices are stored correctly, failed and abandoned payments create no donation, and the supporters list shows only credited names. Receipt and invoice delivery (`RF-D5`, `RF-F3`) remain open in #47.
+Automatic payment confirmation (`RF-V3a`) works end to end: successful payments create exactly one donation each, anonymity and invoice choices are stored correctly, failed and abandoned payments create no donation, and the supporters list shows only credited names. Receipt and invoice emails (`RF-D5`, `RF-F3`) were confirmed in case 5. Still open: invoice requests stay `Requested` after the email is sent (finding 2).
