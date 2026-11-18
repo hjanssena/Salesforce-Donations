@@ -59,11 +59,11 @@ Any combination is allowed. Requesting an invoice does not put a donation on the
 - **Milestone:** Deliverable 2 (E2)
 - **Actor:** Donor Requesting an Invoice
 - **User Story:** As a donor who requested an invoice, I want to receive it by email, so that I can claim my donation as a tax deduction.
-- **Open point:** Whether the invoice needs a tax breakdown ("cuando proceda") for a donation. No CFDI is included.
+- **Open point:** Whether the invoice needs a tax breakdown ("cuando proceda") for a donation. Until the stakeholder answers (#49), the simulated invoice shows none and states "Donativo no objeto de IVA". No CFDI is included.
 
 ### Acceptance Criteria
-- **CA1 (Invoice Email):** **Given** I donated and requested an invoice, **when** my payment succeeds, **then** I receive an invoice at the email address I gave.
-- **CA2 (Invoice Content):** **Given** I receive my invoice, **when** I read it, **then** it shows my full name, RFC, postal code, fiscal regime and fiscal use, plus what the program fills in from the donation: a donation description, quantity 1, the amount as unit value and total, payment in a single payment, and payment by card.
-- **CA3 (Negative: No Request):** **Given** I donated without requesting an invoice, **when** my payment succeeds, **then** I receive no invoice email.
-- **CA4 (Negative: Unsuccessful Payment):** **Given** I requested an invoice, **when** my payment is declined, cancelled, or left unfinished, **then** I receive no invoice email.
-- **CA5 (Spanish):** **Given** I receive an invoice email, **when** I read it, **then** it is written in Spanish.
+- **CA1 (Invoice Attached to the Receipt):** **Given** I donated and requested an invoice, **when** my payment succeeds, **then** my receipt email carries my invoice as a PDF attachment, and it also reaches the invoice email address I gave when that address differs from my donor email.
+- **CA2 (Invoice Content):** **Given** I receive my invoice, **when** I read it, **then** it shows my full name, RFC, postal code, fiscal regime and fiscal use, plus what the program fills in from the donation: a donation description, quantity 1, the amount as unit value and total, payment in a single payment, and payment by card. It states that it is a simulated document without fiscal validity.
+- **CA3 (Negative: No Request):** **Given** I donated without requesting an invoice, **when** my payment succeeds, **then** my receipt carries no invoice and no one else is copied.
+- **CA4 (Negative: Unsuccessful Payment):** **Given** I requested an invoice, **when** my payment is declined, cancelled, or left unfinished, **then** I receive neither a receipt nor an invoice.
+- **CA5 (Spanish):** **Given** I receive my invoice, **when** I read it, **then** the email and the invoice are written in Spanish.

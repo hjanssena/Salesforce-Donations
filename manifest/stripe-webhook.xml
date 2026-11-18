@@ -3,6 +3,8 @@
     <types>
         <members>DonationEmailJob</members>
         <members>DonationEmailJobTest</members>
+        <members>DonationInvoicePdf</members>
+        <members>DonationInvoicePdfTest</members>
         <members>DonationReceiptEmail</members>
         <members>StripeSignatureVerifier</members>
         <members>StripeWebhookService</members>
