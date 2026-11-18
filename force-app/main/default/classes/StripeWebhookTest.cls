@@ -38,7 +38,12 @@ private class StripeWebhookTest {
         return 't=' + timestamp + ',v1=' + EncodingUtil.convertToHex(Crypto.generateMac('hmacSHA256',
             Blob.valueOf(timestamp + '.' + body), Blob.valueOf(TEST_SECRET)));
     }
+    // Receipts are covered by DonationEmailJobTest; keep these tests independent of the org's deliverability.
+    private class SilentSender implements DonationEmailJob.Sender {
+        public void send(List<Messaging.SingleEmailMessage> messages) { return; }
+    }
     private static void deliver(String body, String headerName, String header) {
+        DonationEmailJob.sender = new SilentSender();
         RestContext.request=new RestRequest(); RestContext.response=new RestResponse();
         RestContext.request.requestURI='/services/apexrest/donations/v1/webhooks/stripe';
         RestContext.request.httpMethod='POST'; RestContext.request.requestBody=Blob.valueOf(body);

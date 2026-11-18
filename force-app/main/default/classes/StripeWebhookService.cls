@@ -39,7 +39,12 @@ public without sharing class StripeWebhookService {
         if (!prior.isEmpty()) { return; }
         if (type == 'payment_intent.succeeded') {
             DonationRecorder.Result result = DonationRecorder.recordVerifiedEvent(rawBody.toString());
-            if (result.duplicate) { logHandled(eventId, type, paymentId, 'Duplicate', 'PAYMENT_ALREADY_RECORDED', result.opportunityId); }
+            if (result.duplicate) {
+                logHandled(eventId, type, paymentId, 'Duplicate', 'PAYMENT_ALREADY_RECORDED', result.opportunityId);
+            } else {
+                // Runs after commit: an email failure never undoes the donation. Duplicates send nothing (RF-D5).
+                System.enqueueJob(new DonationEmailJob(new Set<Id>{result.opportunityId}));
+            }
         } else {
             String reason = type == 'payment_intent.payment_failed' ? 'PAYMENT_FAILED' :
                 (type == 'payment_intent.canceled' ? 'PAYMENT_CANCELED' : 'IGNORED_EVENT_TYPE');

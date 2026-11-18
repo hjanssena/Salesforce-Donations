@@ -16,26 +16,27 @@ All three team members add their own entries. Never paste secrets, tokens or rea
 | 6   | 2026-11-06 | Janssen        | RF-V1, M1, M3                                      | Yes: arm64 QEMU crash during Docker `npm ci` in CI deploy (PR #80)                  |
 | 7 | 2026-11-10 | Jesus Estrella | RF-V1; issues #20 and #39; M2 and S11 guardrails | Yes: unsupported guest-profile metadata assumptions |
 | 8 | 2026-11-10 | Jesus Estrella | RF-D1a, RF-D1c and RF-S1b; issues #21, #23 and #10 | No separate AI error documented for this function |
-| 9 | 2026-11-10 | Jesus Estrella | RF-D3 and RF-D1b; issues #40 and #22; S11 and S14 | No separate AI error; provider-status correction is in entry 16 |
+| 9 | 2026-11-10 | Jesus Estrella | RF-D3 and RF-D1b; issues #40 and #22; S11 and S14 | No separate AI error; provider-status correction is in entry 17 |
 | 10  | 2026-11-16 | Esmeralda      | RF-C2, RF-S4                                       | Yes: flow file used an element name that does not exist; caught by deploy validation |
 | 11  | 2026-11-17 | Janssen        | RF-D5, RF-F3                                       | Yes: email plan assumed a Developer Edition org; the project runs on an Enterprise sandbox |
-| 12 | 2026-11-10 | Jesus Estrella | RF-D3; issue #24; S11, S12 and S14 | Yes: shared-org assumptions and unwanted verification artifacts |
-| 13 | 2026-11-17 | Jesus Estrella | RF-D2; issue #27; integration with RF-F1 | No new AI error documented for this function |
-| 14 | 2026-11-16 | Jesus Estrella | RF-C1; issues #28 and #31; merged PR #99 | Yes: substring matching diverged from the whole-token contract |
-| 15 | 2026-11-17 | Jesus Estrella | RF-F1; issue #29; recorder integration with issue #24 | Inherited automation failure; diagnosis corrected in entry 21 |
-| 16 | 2026-11-17 | Jesus Estrella | RF-D3; issue #45; merged PR #103 | Yes: unsupported assertion/status and missing credential enablement |
-| 17 | 2026-11-17 | Jesus Estrella | RF-D3; issue #45; merged PR #103 | Yes: lowercase retry header lost through case-sensitive lookup |
-| 18 | 2026-11-17 | Jesus Estrella | RF-V3a; issues #11 and #46; merged PR #104 | CLI authorization limitation; user completed interactive login |
-| 19 | 2026-11-17 | Jesus Estrella | RF-V3b; issue #12; RF-V3a rejection integration for issue #11 | Yes: unavailable Crypto API and incorrect permission assertion |
-| 20 | 2026-11-17 | Jesus Estrella | RF-D3 and RF-V3a; issues #24 and #11; shared-org risk R9 | Inherited trigger dependency; new assertion context corrected |
-| 21 | 2026-11-17 | Jesus Estrella | RF-D3 and RF-F1; issues #24 and #29; RF-V3a integration | Yes: initial invoice diagnosis and handler sharing declaration |
-| 22 | 2026-11-17 | Jesus Estrella | RF-D3, RF-D2, RF-C1 and RF-F1; shared issue #44 and issues #24, #27, #28, #29 | Yes: email readiness and ownership assumptions corrected |
+| 12  | 2026-11-17 | Janssen        | RF-D5                                              | Yes: receipt addressed to a Contact the site guest cannot read; every live send failed |
+| 13 | 2026-11-10 | Jesus Estrella | RF-D3; issue #24; S11, S12 and S14 | Yes: shared-org assumptions and unwanted verification artifacts |
+| 14 | 2026-11-17 | Jesus Estrella | RF-D2; issue #27; integration with RF-F1 | No new AI error documented for this function |
+| 15 | 2026-11-16 | Jesus Estrella | RF-C1; issues #28 and #31; merged PR #99 | Yes: substring matching diverged from the whole-token contract |
+| 16 | 2026-11-17 | Jesus Estrella | RF-F1; issue #29; recorder integration with issue #24 | Inherited automation failure; diagnosis corrected in entry 22 |
+| 17 | 2026-11-17 | Jesus Estrella | RF-D3; issue #45; merged PR #103 | Yes: unsupported assertion/status and missing credential enablement |
+| 18 | 2026-11-17 | Jesus Estrella | RF-D3; issue #45; merged PR #103 | Yes: lowercase retry header lost through case-sensitive lookup |
+| 19 | 2026-11-17 | Jesus Estrella | RF-V3a; issues #11 and #46; merged PR #104 | CLI authorization limitation; user completed interactive login |
+| 20 | 2026-11-17 | Jesus Estrella | RF-V3b; issue #12; RF-V3a rejection integration for issue #11 | Yes: unavailable Crypto API and incorrect permission assertion |
+| 21 | 2026-11-17 | Jesus Estrella | RF-D3 and RF-V3a; issues #24 and #11; shared-org risk R9 | Inherited trigger dependency; new assertion context corrected |
+| 22 | 2026-11-17 | Jesus Estrella | RF-D3 and RF-F1; issues #24 and #29; RF-V3a integration | Yes: initial invoice diagnosis and handler sharing declaration |
+| 23 | 2026-11-17 | Jesus Estrella | RF-D3, RF-D2, RF-C1 and RF-F1; shared issue #44 and issues #24, #27, #28, #29 | Yes: email readiness and ownership assumptions corrected |
 
 ---
 
 ## How We Used AI (`OA3`, `C3`)
 
-We used AI across the full lifecycle of the project under strict governance. Every session loads [AGENTS.md](../AGENTS.md) via [CLAUDE.md](../CLAUDE.md), which requires the assistant to read [scope.md](scope.md), [architecture.md](architecture.md), and [contract.md](contract.md) first, enforces course guardrails (no "how" in user stories, bulkified Apex, no hard-coded IDs, Guest User least privilege, zero secrets, English-only code/docs), and logs every change in [AI/log.md](../AI/log.md) (123 functional change entries across the team).
+We used AI across the full lifecycle of the project under strict governance. Every session loads [AGENTS.md](../AGENTS.md) via [CLAUDE.md](../CLAUDE.md), which requires the assistant to read [scope.md](scope.md), [architecture.md](architecture.md), and [contract.md](contract.md) first, enforces course guardrails (no "how" in user stories, bulkified Apex, no hard-coded IDs, Guest User least privilege, zero secrets, English-only code/docs), and logs every change in [AI/log.md](../AI/log.md) (125 functional change entries across the team).
 
 Across the team we used **Claude in Claude Code** (Janssen and Esmeralda) and **Codex (GPT-6.1)** (Jesus Estrella) in four areas:
 
@@ -196,7 +197,7 @@ Across the team we used **Claude in Claude Code** (Janssen and Esmeralda) and **
 | **Prompt / summary** | Implement campaign list and detail endpoints with open/completed filtering, date-based availability, recorded donation progress and public supporter data only. |
 | **Output obtained** | CampaignsResource, CampaignService and PublicCampaignSelector; inclusive America/Merida date rules, ordering, controlled missing/future-campaign errors, and supporters limited to visible credited names and amounts. |
 | **Verification** | DonationBackendTest route and date cases, direct campaign API requests, and later deployed-browser checks showing progress changes only after successful recorded payments. |
-| **Error found** | No separate AI implementation error is documented for this function. The initial banned-word defect is recorded under entry 14 rather than attributed to campaign filtering. |
+| **Error found** | No separate AI implementation error is documented for this function. The initial banned-word defect is recorded under entry 15 rather than attributed to campaign filtering. |
 | **Corrections applied** | Kept campaigns open above their goal until their end date and retained successful late-settlement recording as specified by the contract. |
 | **Lesson** | Keep campaign availability, payment validation and settlement handling distinct; a fundraising goal is not a closing condition. |
 | **Estimated acceleration** | Not measured; no function-specific hour saving is claimed. |
@@ -214,7 +215,7 @@ Across the team we used **Claude in Claude Code** (Janssen and Esmeralda) and **
 | **Prompt / summary** | Validate payment-session requests against the API contract, reject malformed or invalid input with field-specific errors, and create no donation during session preparation. |
 | **Output obtained** | PaymentSessionValidator, PaymentSessionsResource, ApiResponse and ApiException; minimum 50 MXN, centavo precision, request-type/email/required-field checks and campaign availability errors. PaymentSessionService initially used StripeClient with PlaceholderStripeClient for independent development. |
 | **Verification** | The initial 12-method DonationBackendTest suite, direct positive/negative API requests and later user-driven minimum-amount, missing-email and missing-display-name checks. |
-| **Error found** | No additional error is attributed to these core validation rules. The unsupported real-provider HTTP 502 response and its correction are recorded under entry 16. |
+| **Error found** | No additional error is attributed to these core validation rules. The unsupported real-provider HTTP 502 response and its correction are recorded under entry 17. |
 | **Corrections applied** | Retained one contract-compatible error shape and sanitized unexpected failures; placeholder injection remains explicit in tests after activating the HTTP provider. |
 | **Lesson** | A valid session request is not a recorded donation, and validation must remain authoritative on the Salesforce side. |
 | **Estimated acceleration** | Not measured per function; no new estimate is assigned to the earlier combined API work. |
@@ -257,7 +258,25 @@ Across the team we used **Claude in Claude Code** (Janssen and Esmeralda) and **
 | **Estimated time saved** | Researching the email options and checking the org by hand would take about 1.5 hours; with the AI it took about 25 minutes. |
 
 ---
-## 12. Transactional donation recording and backend compatibility (AI error)
+
+## 12. Receipt addressed to a record the guest cannot read (AI error)
+
+| Field                    | Detail |
+|:------------------------ |:------ |
+| **Date**                 | 2026-11-17 |
+| **Author**               | Janssen |
+| **AI tool / model**      | Claude Code (Claude Opus 5.5) |
+| **Requirement**          | RF-D5 (receipt email), issue #26 |
+| **Prompt**               | "Go ahead" (build the receipt email after the email research), then "Tried the new address and my personal address, mail has not reached." |
+| **Output obtained**      | A queued job that builds a Spanish receipt and sends it after each new donation, addressed to the donor Contact with `setTargetObjectId`. |
+| **Verification**         | 39 Apex tests passed and the deploy succeeded, then two real test-card payments on the live site. A read-only script in the org showed both donations recorded and both receipt jobs failed with "1 of 1 donation emails failed." A test email from the same org-wide sender, sent as admin, was accepted. |
+| **Error found**          | The job runs as the site guest user, which has no Contact access, so naming the Contact as the recipient fails. The tests ran as an admin and could not show it. The job's error message also hid Salesforce's status code, which slowed the diagnosis. Earlier, the first test run had broken four existing webhook tests because they reached the real sender while the org could not send email. |
+| **Corrections applied**  | The receipt is now addressed to the donor's email with `setToAddresses`. Job failures name the Salesforce status codes (no donor data). A new test builds the receipt while running as the site guest. The webhook tests use a silent sender. 40/40 tests pass. |
+| **Lesson**               | Code that runs for the public site must be tested as the site guest, not only as an admin. Keep platform error codes in failure messages. |
+| **Estimated time saved** | Building and diagnosing the email job by hand would take about 3 hours; with the AI, including the fix, about 1 hour. |
+
+---
+## 13. Transactional donation recording and backend compatibility (AI error)
 
 | Field | Detail |
 | :--- | :--- |
@@ -275,7 +294,7 @@ Across the team we used **Claude in Claude Code** (Janssen and Esmeralda) and **
 
 ---
 
-## 13. Anonymous donations with independent invoice choice
+## 14. Anonymous donations with independent invoice choice
 
 | Field | Detail |
 | :--- | :--- |
@@ -293,7 +312,7 @@ Across the team we used **Claude in Claude Code** (Janssen and Esmeralda) and **
 
 ---
 
-## 14. Credited recognition and whole-token banned-word validation (AI error)
+## 15. Credited recognition and whole-token banned-word validation (AI error)
 
 | Field | Detail |
 | :--- | :--- |
@@ -311,7 +330,7 @@ Across the team we used **Claude in Claude Code** (Janssen and Esmeralda) and **
 
 ---
 
-## 15. Individual and company invoice validation and recording
+## 16. Individual and company invoice validation and recording
 
 | Field | Detail |
 | :--- | :--- |
@@ -322,14 +341,14 @@ Across the team we used **Claude in Claude Code** (Janssen and Esmeralda) and **
 | **Prompt / summary** | Validate invoice-only fiscal fields, distinguish individual and company RFC lengths, and record a simulated invoice request independently of public recognition. |
 | **Output obtained** | Legal name, RFC, taxpayer type, postal code, fiscal regime, fiscal use and invoice-email validation; Invoice_Request__c creation after successful payment, with company Account association when applicable. |
 | **Verification** | Backend invoice cases and browser field-error checks confirmed by the user. Genuine individual and company payments produced Requested / Simulation invoice requests with the matching taxpayer type; the company donation linked to its business Account. No CFDI or live SAT call was performed. |
-| **Error found** | Two paid invoice attempts initially appeared to indicate an invoice defect. A rollback diagnostic showed that the failure occurred earlier in inherited NPSP/CampaignMember automation, not in fiscal validation; entry 21 documents that correction. |
+| **Error found** | Two paid invoice attempts initially appeared to indicate an invoice defect. A rollback diagnostic showed that the failure occurred earlier in inherited NPSP/CampaignMember automation, not in fiscal validation; entry 22 documents that correction. |
 | **Corrections applied** | Preserved invoice validation and recovered existing paid events after fixing the actual automation dependency. Did not create another payment to recover the records. |
 | **Lesson** | Trace the transaction failure before changing fiscal rules; a payment with an invoice can fail in unrelated shared-org automation. |
 | **Estimated acceleration** | Qualitative estimate only: AI assisted test-data preparation and record correlation; no measured hour saving is claimed. |
 
 ---
 
-## 16. Real Stripe test PaymentIntent creation (AI error)
+## 17. Real Stripe test PaymentIntent creation (AI error)
 
 | Field | Detail |
 | :--- | :--- |
@@ -347,7 +366,7 @@ Across the team we used **Claude in Claude Code** (Janssen and Esmeralda) and **
 
 ---
 
-## 17. Case-insensitive payment-session retry handling (AI error)
+## 18. Case-insensitive payment-session retry handling (AI error)
 
 | Field | Detail |
 | :--- | :--- |
@@ -365,7 +384,7 @@ Across the team we used **Claude in Claude Code** (Janssen and Esmeralda) and **
 
 ---
 
-## 18. Public Stripe webhook activation and secret configuration
+## 19. Public Stripe webhook activation and secret configuration
 
 | Field | Detail |
 | :--- | :--- |
@@ -383,7 +402,7 @@ Across the team we used **Claude in Claude Code** (Janssen and Esmeralda) and **
 
 ---
 
-## 19. Authentic, repeat-safe notices and safe rejection evidence (AI error)
+## 20. Authentic, repeat-safe notices and safe rejection evidence (AI error)
 
 | Field | Detail |
 | :--- | :--- |
@@ -401,7 +420,7 @@ Across the team we used **Claude in Claude Code** (Janssen and Esmeralda) and **
 
 ---
 
-## 20. Legacy Opportunity automation compatibility (AI error)
+## 21. Legacy Opportunity automation compatibility (AI error)
 
 | Field | Detail |
 | :--- | :--- |
@@ -419,7 +438,7 @@ Across the team we used **Claude in Claude Code** (Janssen and Esmeralda) and **
 
 ---
 
-## 21. Returning-donor CampaignMember compatibility and payment recovery (AI error)
+## 22. Returning-donor CampaignMember compatibility and payment recovery (AI error)
 
 | Field | Detail |
 | :--- | :--- |
@@ -437,7 +456,7 @@ Across the team we used **Claude in Claude Code** (Janssen and Esmeralda) and **
 
 ---
 
-## 22. Deployed donor acceptance checks across web, Stripe and Salesforce (AI error)
+## 23. Deployed donor acceptance checks across web, Stripe and Salesforce (AI error)
 
 | Field | Detail |
 | :--- | :--- |
