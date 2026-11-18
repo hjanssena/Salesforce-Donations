@@ -160,7 +160,7 @@ The optional `Idempotency-Key` request header is defined in [contract.md](contra
 | Site usage (bandwidth and request time per period) | Every web app call goes through the site. | Setup → Sites → the site's usage history |
 | Apex governor limits per request | Selector queries and the recording service must stay bulk-safe. | Debug logs, Apex tests |
 | Callout timeout | Stripe calls from the payment session endpoint. | Set an explicit timeout on the request |
-| Daily single-email limit | Receipt and invoice emails (#47). | **Check** on the Developer Edition org before the demo |
+| Daily single-email limit | Receipt and invoice emails (#47). | `sf org list limits` (`SingleEmail`). The class sandbox allows 5,000 a day (checked 2026-11-17). |
 
 ## 8. Testing
 

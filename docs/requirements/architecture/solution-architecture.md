@@ -9,7 +9,7 @@ This document describes how the services connect and how the project's models ma
 | Service | Role | Hosting |
 | :--- | :--- | :--- |
 | **React web app** | Donor-facing site. Shows campaigns and supporters, collects donor details, and shows the Stripe card field. | Docker on a team-owned server, own domain, TLS certificate from certbot. Approved by the professor. |
-| **Salesforce Developer Edition org** | Backend and database. Public API for the web app, payment sessions, webhook endpoint, emails, and the staff Lightning app. | Salesforce |
+| **Salesforce org (class Enterprise Edition sandbox)** | Backend and database. Public API for the web app, payment sessions, webhook endpoint, emails, and the staff Lightning app. | Salesforce |
 | **Stripe (Test Mode)** | Takes the card, confirms the payment, and notifies Salesforce by webhook. | Stripe |
 
 ```mermaid
@@ -74,7 +74,7 @@ Why this is safe and where it stops:
 ### Decisions taken
 - **Web app hosting:** outside Salesforce, on the team's server. The org allows only that origin through CORS.
 - **No Pending record:** a donation is created only after a successful payment. Donor details, including the RFC, travel in the PaymentIntent metadata. This differs from `RF-D3` in `lineamientos.md`; the professor confirmed it is acceptable and that the guideline's wording was wrong.
-- **Receipt by Salesforce:** Stripe sends no receipt emails in test mode, so Salesforce sends the receipt and the invoice. The Developer Edition daily email limit must be checked.
+- **Receipt by Salesforce:** Stripe sends no receipt emails in test mode, so Salesforce sends the receipt and the invoice. The org allows 5,000 single emails a day (Enterprise Edition sandbox, checked 2026-11-17).
 - **Site language and currency:** the site and emails are in Spanish; amounts are in MXN, with a 50 MXN minimum and no maximum.
 - **Campaigns stay open past 100%:** a campaign closes only on its end date.
 - **Donation object:** the standard Opportunity, not a custom `Donation` object.
@@ -85,7 +85,7 @@ Why this is safe and where it stops:
 How each is set up and tested, with fallbacks: [salesforce-api.md](file:///Users/janssen/Documents/UADY/Semestre7/Salesforce/Proyecto/docs/salesforce-api.md).
 - ~~The Guest User can call the Apex REST API from the team's origin (CORS on a public site).~~ Confirmed on 2026-11-06 ([salesforce-api.md](../../salesforce-api.md), section 4).
 - The webhook endpoint is reachable by Stripe through the public site.
-- The Developer Edition daily email limit covers the demo.
+- The daily single-email limit covers the demo: the project org (`uady--class2026h`) is an Enterprise Edition sandbox with 5,000 single emails a day, checked on 2026-11-17 with `sf org list limits`. Still open: the org's deliverability must be **All email** and an org-wide sender address must exist (none yet) (#47).
 - Resolved by the delivery plan: E1 records donations from a sample event, E2 connects the real webhook. Earlier open question: whether the E1 deliverable confirms the payment without the webhook (for example, Salesforce asks Stripe for the payment status when the donor returns). Recording must be idempotent on the Stripe payment ID so both paths can coexist.
 
 ---
