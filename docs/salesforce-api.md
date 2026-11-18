@@ -1,6 +1,6 @@
 # Salesforce API — How It Is Served
 
-**Implementation status:** the public campaign API, donation recorder and signed webhook are implemented. Stripe test PaymentIntent creation is reviewed separately in PR #103. Genuine sandbox events and browser-card submissions verified successful, declined, credited and anonymous payments plus individual/company invoice requests. Event replays did not duplicate records; teaching-sandbox compatibility guards prevent missing legacy funds from blocking recording. Campaign progress reached 400 MXN. Receipt/invoice email delivery remains separate work.
+**Implementation status:** the public campaign API, donation recorder and signed webhook are implemented. Stripe test PaymentIntent creation is reviewed separately in PR #103. Genuine sandbox events and browser-card submissions verified successful, declined, credited and anonymous payments plus individual/company invoice requests. Event replays did not duplicate records; teaching-sandbox compatibility guards prevent missing legacy funds from blocking recording. Campaign progress reached 400 MXN. The receipt email (`RF-D5`) is implemented and queued after each new donation; delivery is blocked until the org can send email (setup step 7). The invoice email (`RF-F3`) remains separate work.
 
 How the Salesforce org serves the API in [contract.md](contract.md) and the Stripe webhook: the public site, the Guest User, the Apex REST classes, CORS, the Stripe callout, and the limits to watch. The contract says what the API looks like; this page says how Salesforce provides it. Context: [architecture.md](architecture.md).
 
@@ -178,3 +178,4 @@ The optional `Idempotency-Key` request header is defined in [contract.md](contra
 4. Deploy the campaign and payment session resources.
 5. E2: create the External Credential and Named Credential; grant the guest principal access; switch `StripeClient` to `HttpStripeClient`.
 6. E2: fill in the webhook secret custom setting; register the webhook in Stripe; send a test event from the Stripe dashboard.
+7. E2 emails (org admin): set **Setup → Deliverability → Access level** to **All email** (on 2026-11-17 the org answered `The organization is not permitted to send email`); create an org-wide email address, verify it and allow all profiles to use it; put that address in the Stripe Settings field `Sender_Email__c`. Without it, receipts go out from the site guest user with the display name "Mexico Dreamin". A failed send marks the `DonationEmailJob` as failed in **Setup → Apex Jobs**, with no donor data in the message.

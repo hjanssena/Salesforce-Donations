@@ -61,7 +61,7 @@ On `payment_intent.succeeded`, Salesforce verifies the signature, then in one tr
 1. Finds or creates the Contact by email, and the Account when the invoice's taxpayer type is a company. The Contact is named from the invoice legal name, else the display name, else "Anonymous donor".
 2. Creates the Opportunity (Closed Won) with the campaign, the amount from the event, the anonymity flag and the PaymentIntent ID.
 3. Creates the `Invoice_Request__c` when the metadata carries invoice data.
-4. Logs the event in `Stripe_Event__c`, then sends the receipt and, if requested, the invoice.
+4. Logs the event in `Stripe_Event__c`, then queues the donor emails: the receipt now, and the invoice when requested once `RF-F3` is built. The queued job (`DonationEmailJob`) runs after the transaction commits, so an email failure never undoes the donation or makes Stripe retry, and a repeated notice queues nothing.
 
 Why this is safe and where it stops:
 - The browser holds only the client secret. It can confirm the payment but cannot change the metadata or the amount, so Salesforce trusts what it validated itself.
