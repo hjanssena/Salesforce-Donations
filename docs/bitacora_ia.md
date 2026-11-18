@@ -18,6 +18,7 @@ All three team members add their own entries. Never paste secrets, tokens or rea
 | 8   | 2026-11-10 | Jesus Estrella | RF-D3, S11, S12                                    | Yes: shared sandbox record type & `Display_Status__c` broke recording until adapted |
 | 9   | 2026-11-10 | Jesus Estrella | RF-V2, RF-D3, S12, S14                             | Yes: AI generated standalone scripts and demo records that had to be stripped       |
 | 10  | 2026-11-16 | Esmeralda      | RF-C2, RF-S4                                       | Yes: flow file used an element name that does not exist; caught by deploy validation |
+| 11  | 2026-11-17 | Janssen        | RF-D5, RF-F3                                       | Yes: email plan assumed a Developer Edition org; the project runs on an Enterprise sandbox |
 
 ---
 
@@ -223,5 +224,23 @@ Across the team we used **Claude in Claude Code** (Janssen and Esmeralda) and **
 | **Other finding**        | The story says moderators maintain the banned words, but `Banned_Word__mdt` can only be edited with the "Customize Application" permission, which is far too broad for a moderator. Admins keep the list for now, following least privilege; the team will decide whether to move the list to a custom object. |
 | **Lesson**               | Names shown in the Salesforce UI are not always the metadata names. Validate generated metadata with a dry-run deploy before saving it, and run the other team's tests too when adding automation to a shared object. |
 | **Estimated time saved** | Building the flow, report and tests by hand would take about 2.5 hours; with the AI, including the fix, it took about 50 minutes. |
+
+---
+
+## 11. Email plan built on the wrong org edition (AI error)
+
+| Field                    | Detail |
+|:------------------------ |:------ |
+| **Date**                 | 2026-11-17 |
+| **Author**               | Janssen |
+| **AI tool / model**      | Claude Code (Claude Opus 5.5) |
+| **Requirement**          | RF-D5 (receipt email), RF-F3 (invoice email), issue #47 (email limit) |
+| **Prompt**               | "What is the best way to set up email sending in Salesforce? Use Salesforce skills and investigate." |
+| **Output obtained**      | A design for the receipt and invoice emails: an Apex job queued after the webhook records a new donation, Spanish HTML email templates, an org-wide sender address, no activity saved, and email capacity reserved before sending. |
+| **Verification**         | Logged in to the project org with the Salesforce CLI and checked it read-only: `sf org list limits` (`SingleEmail`) and queries on `Organization` and `OrgWideEmailAddress`. |
+| **Error found**          | The AI, following the docs, assumed a Developer Edition org with a very low daily email limit. The org is an Enterprise Edition sandbox (`uady--class2026h`) that allows 5,000 single emails a day. The saved CLI login was also for a different class sandbox (`class2026b`). The check also showed no org-wide sender address exists, and that new sandboxes start with deliverability set to "System email only", which blocks donor emails. |
+| **Corrections applied**  | Corrected the org edition and the limit in `docs/architecture.md`, `docs/scope.md`, `docs/salesforce-api.md` and `docs/requirements/architecture/solution-architecture.md`. Recorded deliverability and the sender address as open setup items for the org admin. |
+| **Lesson**               | Check limits against the real org before planning around them; the docs described the course's default environment, not the org the team actually uses. |
+| **Estimated time saved** | Researching the email options and checking the org by hand would take about 1.5 hours; with the AI it took about 25 minutes. |
 
 ---
