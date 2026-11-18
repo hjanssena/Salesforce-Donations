@@ -34,7 +34,8 @@ This document covers how the team views donations, finds invoice requests, recor
 - **Milestone:** Deliverable 1 (E1)
 - **Actor:** Admin
 - **User Story:** As an admin, I want to enter a donation received outside the website, so that the campaign's progress includes it.
-- **Open points:** Whether a donation can be recorded for a completed campaign, and whether a credited donation entered this way appears on the supporters list.
+- **Open points (#49, asked to the stakeholder, no answer yet):** Whether a donation can be recorded for a completed campaign, and whether a credited donation entered this way appears on the supporters list.
+- **Working assumption until the stakeholder answers:** both are allowed, which is how the system behaves today. No rule blocks a manual donation for a completed campaign, so late offline gifts still count toward its final total, and a credited manual donation appears on the supporters list like a website one, subject to the same moderation. If the stakeholder answers otherwise, a validation rule or a filter on the supporters list is added.
 
 ### Acceptance Criteria
 - **CA1 (Record a Donation):** **Given** I am a signed-in admin, **when** I enter a donation with its campaign, amount, and whether the donor is anonymous or credited (with a name), **then** it is saved and the campaign's progress includes the amount.

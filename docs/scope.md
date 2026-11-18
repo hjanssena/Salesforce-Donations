@@ -74,6 +74,6 @@ If E1 slips, cut in this order: invoice form polish, manual donations (`RF-S3`),
 | Point | Needed from |
 | :--- | :--- |
 | Whether the invoice needs a tax breakdown (`RF-F3`). | Stakeholder |
-| Whether manual donations are allowed for completed campaigns, and whether credited manual entries appear on the supporters list (`RF-S3`). | Stakeholder |
+| Whether manual donations are allowed for completed campaigns, and whether credited manual entries appear on the supporters list (`RF-S3`). Working assumption: both allowed, as built (#49). | Stakeholder |
 | Whether the org can deliver donor emails (deliverability set to All email, an org-wide sender address). The daily limit of 5,000 covers the demo. | Team and org admin |
 | Whether Stripe sends no receipt emails in test mode (assumed). | Team, by testing |
