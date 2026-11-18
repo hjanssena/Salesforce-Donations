@@ -1,7 +1,7 @@
 # Mexico Dreamin Donation Portal
 
 **Program:** SF Vibe Lab (UADY × Salesforce, Mérida)  
-**Deliverable 1 (E1):** November 10, 2026
+**Deliverable 2 (E2):** November 17, 2026
 
 **Team**
 - Hugo Janssen
@@ -9,6 +9,10 @@
 - Jesus Estrella
 
 **First Delivery Video**: [Click here!](https://alumnosuady-my.sharepoint.com/:v:/g/personal/a14016364_alumnos_uady_mx/IQDELK-u5yLkQ6jNwpEBz8pqAcQ2D30jNBe2KdstUjd_42A?nav=eyJyZWZlcnJhbEluZm8iOnsicmVmZXJyYWxBcHAiOiJPbmVEcml2ZUZvckJ1c2luZXNzIiwicmVmZXJyYWxBcHBQbGF0Zm9ybSI6IldlYiIsInJlZmVycmFsTW9kZSI6InZpZXciLCJyZWZlcnJhbFZpZXciOiJNeUZpbGVzTGlua0NvcHkifX0&e=PAzjkW)
+
+**Second Delivery Video**: [Click here!](https://drive.google.com/file/d/1beSFRwNc0NfY5xr6WgmZrz8aYl-y0Clx/view?usp=sharing)
+
+**Link to web demo**: [Click here!](https://dietpi.tail6cb6c6.ts.net:8443/)
 
 ---
 
