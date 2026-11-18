@@ -85,7 +85,6 @@ private class DonationEmailJobTest {
     @IsTest
     static void shouldBuildSpanishReceiptWithNameWhenCredited() {
         Id donationId = recordDonation('credited', false);
-        Id donorId = [SELECT ContactId FROM OpportunityContactRole WHERE OpportunityId = :donationId WITH SYSTEM_MODE LIMIT 1].ContactId;
 
         Test.startTest();
         List<Messaging.SingleEmailMessage> receipts = DonationReceiptEmail.build(new Set<Id>{donationId});
@@ -93,7 +92,8 @@ private class DonationEmailJobTest {
 
         Assert.areEqual(1, receipts.size(), 'A credited donation gets one receipt');
         Messaging.SingleEmailMessage receipt = receipts[0];
-        Assert.areEqual(donorId, receipt.getTargetObjectId(), 'The receipt goes to the donor contact');
+        Assert.areEqual(new List<String>{DONOR_EMAIL}, receipt.getToAddresses(), 'The receipt goes to the donor address');
+        Assert.isNull(receipt.getTargetObjectId(), 'No target object: the guest cannot access Contacts');
         Assert.areEqual('Recibo de tu donativo a ' + CAMPAIGN_NAME, receipt.getSubject(), 'Spanish subject with the campaign');
         Assert.isFalse(receipt.getSaveAsActivity(), 'The guest cannot create activities');
         Assert.isTrue(receipt.getHtmlBody().contains('¡Gracias por tu donativo!'), 'Spanish greeting');
@@ -101,6 +101,23 @@ private class DonationEmailJobTest {
         Assert.isTrue(receipt.getHtmlBody().contains('$1,250.50 MXN'), 'Shows the amount');
         Assert.isTrue(receipt.getHtmlBody().contains(PUBLIC_NAME.escapeHtml4()), 'Credited donors see their display name');
         Assert.isTrue(receipt.getPlainTextBody().contains('Nombre público: ' + PUBLIC_NAME), 'Plain text has the name too');
+    }
+
+    @IsTest
+    static void shouldBuildReceiptToAddressWhenRunningAsSiteGuest() {
+        Id donationId = recordDonation('guest', true);
+        User guest = [SELECT Id FROM User WHERE UserType = 'Guest' AND Profile.Name = 'donations Perfil' WITH SYSTEM_MODE LIMIT 1];
+        RecordingSender fake = useRecordingSender();
+
+        Test.startTest();
+        System.runAs(guest) {
+            new DonationEmailJob(new Set<Id>{donationId}).execute(null);
+        }
+        Test.stopTest();
+
+        Assert.areEqual(1, fake.sent.size(), 'The guest context still builds the receipt');
+        Assert.areEqual(new List<String>{DONOR_EMAIL}, fake.sent[0].getToAddresses(), 'Sent to the donor address');
+        Assert.isNull(fake.sent[0].getTargetObjectId(), 'No Contact target, which the guest cannot access');
     }
 
     @IsTest
@@ -270,7 +287,7 @@ private class DonationEmailJobTest {
     @IsTest
     static void shouldAcceptOutcomesWhenAllSent() {
         Test.startTest();
-        DonationEmailJob.requireAllSent(new List<Boolean>{true, true});
+        DonationEmailJob.requireAllSent(new List<String>(), 2);
         Test.stopTest();
         Assert.isTrue(true, 'All accepted outcomes raise no error');
     }
@@ -279,10 +296,11 @@ private class DonationEmailJobTest {
     static void shouldCountFailuresWhenSomeNotSent() {
         Test.startTest();
         try {
-            DonationEmailJob.requireAllSent(new List<Boolean>{true, false, false});
+            DonationEmailJob.requireAllSent(new List<String>{'INVALID_EMAIL_ADDRESS', 'INVALID_EMAIL_ADDRESS'}, 3);
             Assert.fail('Expected DonationEmailException');
         } catch (DonationEmailJob.DonationEmailException problem) {
-            Assert.areEqual('2 of 3 donation emails failed.', problem.getMessage(), 'Counts failures without personal data');
+            Assert.areEqual('2 of 3 donation emails failed: INVALID_EMAIL_ADDRESS.', problem.getMessage(),
+                'Counts failures and names the status code, without personal data');
         }
         Test.stopTest();
     }

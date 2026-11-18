@@ -32,25 +32,28 @@ public with sharing class DonationEmailJob implements Queueable {
          */
         public void send(List<Messaging.SingleEmailMessage> messages) {
             Messaging.reserveSingleEmailCapacity(messages.size());
-            List<Boolean> outcomes = new List<Boolean>();
-            for (Messaging.SendEmailResult result : Messaging.sendEmail(messages, false)) { outcomes.add(result.isSuccess()); }
-            requireAllSent(outcomes);
+            List<String> failureCodes = new List<String>();
+            for (Messaging.SendEmailResult result : Messaging.sendEmail(messages, false)) {
+                if (result.isSuccess()) { continue; }
+                failureCodes.add(result.getErrors().isEmpty() ? 'UNKNOWN' : String.valueOf(result.getErrors()[0].getStatusCode()));
+            }
+            requireAllSent(failureCodes, messages.size());
         }
     }
 
     /**
-     * @param outcomes whether each message was accepted for delivery
+     * Fails with the Salesforce status codes only, so admins see why without any donor data.
+     * @param failureCodes the status code of each message that was not accepted
+     * @param total how many messages were sent
      * @throws DonationEmailException when any message was not accepted
      */
     @TestVisible
-    private static void requireAllSent(List<Boolean> outcomes) {
-        Integer failures = 0;
-        for (Boolean accepted : outcomes) {
-            if (accepted != true) { failures++; }
-        }
-        if (failures > 0) {
-            throw new DonationEmailException(failures + ' of ' + outcomes.size() + ' donation emails failed.');
-        }
+    private static void requireAllSent(List<String> failureCodes, Integer total) {
+        if (failureCodes == null || failureCodes.isEmpty()) { return; }
+        List<String> distinctCodes = new List<String>(new Set<String>(failureCodes));
+        distinctCodes.sort();
+        throw new DonationEmailException(failureCodes.size() + ' of ' + total + ' donation emails failed: ' +
+            String.join(distinctCodes, ', ') + '.');
     }
 
     /**

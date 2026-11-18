@@ -28,12 +28,12 @@ public without sharing class DonationReceiptEmail {
         for (Opportunity donation : donations) {
             if (donation.OpportunityContactRoles.isEmpty() ||
                 String.isBlank(donation.OpportunityContactRoles[0].Contact?.Email)) { continue; }
-            receipts.add(buildReceipt(donation, donation.OpportunityContactRoles[0].ContactId, senderAddressId));
+            receipts.add(buildReceipt(donation, donation.OpportunityContactRoles[0].Contact.Email, senderAddressId));
         }
         return receipts;
     }
 
-    private static Messaging.SingleEmailMessage buildReceipt(Opportunity donation, Id donorId, Id senderAddressId) {
+    private static Messaging.SingleEmailMessage buildReceipt(Opportunity donation, String donorEmail, Id senderAddressId) {
         String campaignName = donation.Campaign?.Name ?? '';
         Boolean credited = donation.Is_Anonymous__c != true && String.isNotBlank(donation.Public_Name__c);
         List<List<String>> rows = new List<List<String>>{
@@ -45,7 +45,8 @@ public without sharing class DonationReceiptEmail {
         if (credited) { rows.add(new List<String>{'Nombre público', donation.Public_Name__c}); }
 
         Messaging.SingleEmailMessage receipt = new Messaging.SingleEmailMessage();
-        receipt.setTargetObjectId(donorId);
+        // An address, not the Contact ID: the site guest has no Contact access, and a target object would fail.
+        receipt.setToAddresses(new List<String>{donorEmail});
         receipt.setSaveAsActivity(false);
         receipt.setCharset('UTF-8');
         receipt.setSubject(('Recibo de tu donativo a ' + campaignName).left(200));
