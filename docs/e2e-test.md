@@ -15,7 +15,8 @@ Run on 2026-11-17 (times in Mérida, UTC−6) by Esmeralda Collí on the deploye
 
 1. **Receipts do not reach Gmail.** Salesforce accepts the email (the `DonationEmailJob` finishes as Completed), but nothing arrives. The likely cause is the open setup item in #47: no verified org-wide sender address. Reported in #47.
 2. **Invoice requests stay `Requested`.** After the receipt job, the invoice request should change to `Sent` or `Failed`. Reported in #47.
-3. **Test data.** Case 1 used a team member's real name as the public name. It must be hidden by a moderator (`Display_Status__c` = Hidden) and later tests use fictitious names only.
+3. **Test data.** Case 1 used the tester's own name as the public name, with her consent, and it stays visible. Later cases used fictitious names only.
+4. **Shared record form.** Editing the donation from its record page is blocked by other teams' fields that the shared Opportunity layout marks as required (`serial`, `Cantidad Comidas`). Editing from the All Donations list view works. A Mexico Dreamin record page would remove this.
 
 ## Conclusion
 
