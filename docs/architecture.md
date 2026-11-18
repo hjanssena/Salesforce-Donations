@@ -25,8 +25,8 @@ A React web app on the team's server shows the site. Salesforce is the backend a
 4. Salesforce returns the client secret.
 5. The card field sends the card to Stripe. Salesforce never sees card data.
 6. Stripe posts `payment_intent.succeeded` to the webhook endpoint. Salesforce checks the signature, ignores events it already logged, and creates the donation, plus an invoice request when one was made.
-7. Salesforce emails the receipt, because Stripe sends none in test mode.
-8. Salesforce emails the invoice, only when the donor requested one.
+7. Salesforce emails the receipt, because Stripe sends none in test mode. It goes out in a queued job after the donation is saved, so an email failure never undoes the donation.
+8. When the donor requested an invoice, the same email carries a simulated invoice PDF (rendered with `Blob.toPdf`) and is copied to the invoice address when it differs. The invoice request is then marked Sent or Failed.
 
 ## 2. Data model
 
@@ -56,7 +56,7 @@ These are settled. Do not reverse them without the team.
 - **The Guest User has no object permissions.** It only calls the public API, which returns campaign progress and credited donor names with amounts. Never an email or an RFC.
 - **Recognition and invoice are independent choices.** Neither implies the other.
 - **A campaign closes only on its end date.** Reaching 100% does not close it.
-- **Salesforce sends the receipt and the invoice emails**, in Spanish.
+- **Salesforce sends one Spanish email per donation:** the receipt, with the simulated invoice PDF attached when one was requested. The invoice has no fiscal validity, is not a CFDI and shows no tax breakdown ("Donativo no objeto de IVA") until the stakeholder answers the open point.
 - **No Payment object for now.** Revisit it if refunds, stored failed attempts or more Stripe data come into scope.
 - **Secrets stay out of the repository.** Stripe keys and the webhook secret live in Named Credentials and protected settings.
 

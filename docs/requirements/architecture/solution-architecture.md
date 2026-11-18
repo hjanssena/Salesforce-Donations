@@ -24,7 +24,7 @@ flowchart LR
     Hook["Webhook endpoint (Apex REST)"]
     Records[("Campaign, Opportunity, Contact, Account, Invoice_Request__c, Stripe_Event__c")]
     Staff["Lightning app for staff"]
-    Mail["Receipt and invoice emails"]
+    Mail["Receipt email, invoice PDF attached"]
   end
   Stripe["Stripe (test mode)"]
   Inbox["Donor's inbox"]
@@ -38,7 +38,7 @@ flowchart LR
   Stripe -->|"6 webhook event"| Hook
   Hook -->|"records donation"| Records
   Hook --> Mail
-  Mail -.->|"7 receipt, 8 invoice if requested"| Inbox
+  Mail -.->|"7 receipt, 8 invoice PDF attached if requested"| Inbox
   Staff --- Records
 ```
 
@@ -50,7 +50,7 @@ flowchart LR
 5. The card field sends the card to Stripe. Salesforce never sees card data.
 6. Stripe posts `payment_intent.succeeded` to the webhook endpoint. Salesforce checks the signature, ignores events it already logged, and creates the donation. Failed payments and bad notices go to the event log only.
 7. Salesforce emails the receipt.
-8. Salesforce emails the invoice, only when the donor requested one.
+8. When the donor requested an invoice, the same email carries the simulated invoice PDF and is copied to the invoice address when it differs.
 
 ### How Salesforce knows who a donation belongs to
 The display name and the invoice data are separate: the first exists only for credited donors, the second only when an invoice is requested. The donor details are validated in step 2 and attached to the PaymentIntent as metadata in step 3. The `payment_intent.succeeded` event in step 6 carries the full PaymentIntent, so the webhook has everything it needs without a stored draft.
@@ -61,7 +61,7 @@ On `payment_intent.succeeded`, Salesforce verifies the signature, then in one tr
 1. Finds or creates the Contact by email, and the Account when the invoice's taxpayer type is a company. The Contact is named from the invoice legal name, else the display name, else "Anonymous donor".
 2. Creates the Opportunity (Closed Won) with the campaign, the amount from the event, the anonymity flag and the PaymentIntent ID.
 3. Creates the `Invoice_Request__c` when the metadata carries invoice data.
-4. Logs the event in `Stripe_Event__c`, then queues the donor emails: the receipt now, and the invoice when requested once `RF-F3` is built. The queued job (`DonationEmailJob`) runs after the transaction commits, so an email failure never undoes the donation or makes Stripe retry, and a repeated notice queues nothing.
+4. Logs the event in `Stripe_Event__c`, then queues the donor email: the receipt, with the simulated invoice PDF attached when requested (`RF-F3`). A finalizer marks the invoice request Sent or Failed after the job ends. The queued job (`DonationEmailJob`) runs after the transaction commits, so an email failure never undoes the donation or makes Stripe retry, and a repeated notice queues nothing.
 
 Why this is safe and where it stops:
 - The browser holds only the client secret. It can confirm the payment but cannot change the metadata or the amount, so Salesforce trusts what it validated itself.
@@ -74,7 +74,7 @@ Why this is safe and where it stops:
 ### Decisions taken
 - **Web app hosting:** outside Salesforce, on the team's server. The org allows only that origin through CORS.
 - **No Pending record:** a donation is created only after a successful payment. Donor details, including the RFC, travel in the PaymentIntent metadata. This differs from `RF-D3` in `lineamientos.md`; the professor confirmed it is acceptable and that the guideline's wording was wrong.
-- **Receipt by Salesforce:** Stripe sends no receipt emails in test mode, so Salesforce sends the receipt and the invoice. The org allows 5,000 single emails a day (Enterprise Edition sandbox, checked 2026-11-17).
+- **Receipt by Salesforce:** Stripe sends no receipt emails in test mode, so Salesforce sends the receipt, with the invoice attached when requested. The org allows 5,000 single emails a day (Enterprise Edition sandbox, checked 2026-11-17).
 - **Site language and currency:** the site and emails are in Spanish; amounts are in MXN, with a 50 MXN minimum and no maximum.
 - **Campaigns stay open past 100%:** a campaign closes only on its end date.
 - **Donation object:** the standard Opportunity, not a custom `Donation` object.
