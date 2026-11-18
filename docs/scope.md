@@ -18,9 +18,9 @@ A donation portal for Mexico Dreamin. Visitors browse fundraising campaigns and 
 | Browse campaigns | Open campaigns show name, description, image, purpose, deadline, goal and progress. One open campaign opens directly; none shows a message. Completed campaigns are in a separate view. | `RF-V1`, `RF-D1a`, `RF-D1c` |
 | Donate | Suggested amounts 100, 250, 500, 1,000, 2,000, 5,000, 10,000, 20,000 MXN, or any custom amount. Minimum 50 MXN, no maximum. | `RF-D1a`, `RF-D1b` |
 | Choose recognition | Anonymous (email only) or credited (display name and email). Credited names appear on the campaign's supporters list with their amount. | `RF-D2`, `RF-C1` |
-| Request an invoice | Independent of recognition. The donor gives full name, RFC, postal code, fiscal regime, fiscal use, and whether they donate as an individual or a company. Salesforce emails the invoice. | `RF-F1`, `RF-F3` |
+| Request an invoice | Independent of recognition. The donor gives full name, RFC, postal code, fiscal regime, fiscal use, and whether they donate as an individual or a company. The invoice is a simulated PDF (no fiscal validity, no tax breakdown) attached to the receipt email, which is copied to the invoice address when it differs. | `RF-F1`, `RF-F3` |
 | Pay by card | Stripe Test Mode. The card goes straight to Stripe. | `RF-D3` |
-| Thank-you page and receipt | The page does not claim confirmation before the donation is recorded. Salesforce emails the receipt. | `RF-D4`, `RF-D5` |
+| Thank-you page and receipt | The page does not claim confirmation before the donation is recorded. Salesforce emails one receipt per donation, carrying the invoice PDF when one was requested. | `RF-D4`, `RF-D5` |
 
 ### Team tools (Salesforce)
 

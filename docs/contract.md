@@ -123,7 +123,7 @@ Salesforce is the authority; the web app applies the same rules first so the don
 | `invoice.postalCode` | With invoice | Exactly 5 digits. |
 | `invoice.taxRegime` | With invoice | SAT fiscal regime code from the catalog below. |
 | `invoice.cfdiUse` | With invoice | SAT fiscal use code from the catalog below. |
-| `invoice.email` | With invoice | Valid email. Where the invoice is sent. |
+| `invoice.email` | With invoice | Valid email. Copied on the receipt email that carries the invoice, when it differs from `donorEmail`. |
 
 Banned words: the name is split on whitespace only, and each piece is compared with each banned word as a whole word, ignoring case and accents. Punctuation stays part of the piece. With `spam` banned, `Mucho SPAM aquí` is rejected, while `Spamalot` and `spam!` are accepted.
 

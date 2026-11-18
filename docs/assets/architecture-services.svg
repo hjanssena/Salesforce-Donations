@@ -1,4 +1,4 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1070 710" width="1070" height="710" role="img" aria-label="Services diagram. The React app reads campaigns from a Salesforce public API and requests a payment session. Salesforce creates a Stripe PaymentIntent and returns a client secret. The card field sends card details straight to Stripe. Stripe sends a webhook to Salesforce, which records the donation, and Stripe emails the receipt. Salesforce emails an invoice only when requested.">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1070 710" width="1070" height="710" role="img" aria-label="Services diagram. The React app reads campaigns from a Salesforce public API and requests a payment session. Salesforce creates a Stripe PaymentIntent and returns a client secret. The card field sends card details straight to Stripe. Stripe sends a webhook to Salesforce, which records the donation, and Stripe emails the receipt. The receipt email carries a simulated invoice PDF only when requested.">
 <style>
 .box{fill:#fff;stroke:#8b979d;stroke-width:1.2}.org{fill:none;stroke:#0a62b8;stroke-width:1.8}.stripe{fill:none;stroke:#5a4fe0;stroke-width:1.8}
 .std{fill:#fff;stroke:#0a62b8;stroke-width:1.5}.cus{fill:#fff;stroke:#b4580a;stroke-width:1.5}
@@ -93,5 +93,5 @@
         <text class="t" x="36" y="545">Donor's inbox</text>
         <text class="s" x="36" y="565">receipt, optional invoice</text>
         <path class="ln dash" d="M905 650 V690 H140 V592"/>
-        <text class="l" x="520" y="683" text-anchor="middle">7  receipt email, 8  invoice email only if requested</text>
+        <text class="l" x="520" y="683" text-anchor="middle">7  receipt email, 8  invoice PDF attached only if requested</text>
       </svg>

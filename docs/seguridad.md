@@ -145,7 +145,7 @@ If a secret leaks: rotate it in Stripe the same day, purge it from the repositor
 | Email | `Contact.Email` | Personal, confidential | Staff (all three roles) | **Never** | Only for the receipt. Only team-owned addresses in tests. |
 | Legal name, postal code, tax regime, CFDI use | `Invoice_Request__c` | Fiscal | Admin and Campaign Manager | **Never** | Asked only when an invoice is requested. |
 | RFC | `Invoice_Request__c.RFC__c` | Sensitive (tax ID) | Admin and Campaign Manager | **Never** | Format checked by a validation rule. Travels in the PaymentIntent metadata until the donation is recorded, so only fictitious RFCs are used (`M1`). |
-| Invoice email | `Invoice_Request__c.Invoice_Email__c` | Personal, confidential | Admin and Campaign Manager | **Never** | |
+| Invoice email | `Invoice_Request__c.Invoice_Email__c` | Personal, confidential | Admin and Campaign Manager | **Never** | Copied on the receipt that carries the invoice PDF. The PDF holds the fiscal data and goes only to the donor and invoice addresses the donor gave. |
 | Stripe PaymentIntent ID, event ID | `Opportunity`, `Stripe_Event__c` | Operational | Staff | No | References only. |
 | Card number, CVV, expiry | Not stored | Payment | Stripe only | — | The card field sends it straight to Stripe; Salesforce never sees it. |
 | Full webhook payload | Not stored | — | — | — | Only the event ID, type, status and reason are kept. |
