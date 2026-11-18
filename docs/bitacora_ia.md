@@ -19,6 +19,7 @@ All three team members add their own entries. Never paste secrets, tokens or rea
 | 9   | 2026-11-10 | Jesus Estrella | RF-V2, RF-D3, S12, S14                             | Yes: AI generated standalone scripts and demo records that had to be stripped       |
 | 10  | 2026-11-16 | Esmeralda      | RF-C2, RF-S4                                       | Yes: flow file used an element name that does not exist; caught by deploy validation |
 | 11  | 2026-11-17 | Janssen        | RF-D5, RF-F3                                       | Yes: email plan assumed a Developer Edition org; the project runs on an Enterprise sandbox |
+| 12  | 2026-11-17 | Janssen        | RF-D5                                              | Yes: receipt addressed to a Contact the site guest cannot read; every live send failed |
 
 ---
 
@@ -242,5 +243,23 @@ Across the team we used **Claude in Claude Code** (Janssen and Esmeralda) and **
 | **Corrections applied**  | Corrected the org edition and the limit in `docs/architecture.md`, `docs/scope.md`, `docs/salesforce-api.md` and `docs/requirements/architecture/solution-architecture.md`. Recorded deliverability and the sender address as open setup items for the org admin. |
 | **Lesson**               | Check limits against the real org before planning around them; the docs described the course's default environment, not the org the team actually uses. |
 | **Estimated time saved** | Researching the email options and checking the org by hand would take about 1.5 hours; with the AI it took about 25 minutes. |
+
+---
+
+## 12. Receipt addressed to a record the guest cannot read (AI error)
+
+| Field                    | Detail |
+|:------------------------ |:------ |
+| **Date**                 | 2026-11-17 |
+| **Author**               | Janssen |
+| **AI tool / model**      | Claude Code (Claude Opus 5.5) |
+| **Requirement**          | RF-D5 (receipt email), issue #26 |
+| **Prompt**               | "Go ahead" (build the receipt email after the email research), then "Tried the new address and my personal address, mail has not reached." |
+| **Output obtained**      | A queued job that builds a Spanish receipt and sends it after each new donation, addressed to the donor Contact with `setTargetObjectId`. |
+| **Verification**         | 39 Apex tests passed and the deploy succeeded, then two real test-card payments on the live site. A read-only script in the org showed both donations recorded and both receipt jobs failed with "1 of 1 donation emails failed." A test email from the same org-wide sender, sent as admin, was accepted. |
+| **Error found**          | The job runs as the site guest user, which has no Contact access, so naming the Contact as the recipient fails. The tests ran as an admin and could not show it. The job's error message also hid Salesforce's status code, which slowed the diagnosis. Earlier, the first test run had broken four existing webhook tests because they reached the real sender while the org could not send email. |
+| **Corrections applied**  | The receipt is now addressed to the donor's email with `setToAddresses`. Job failures name the Salesforce status codes (no donor data). A new test builds the receipt while running as the site guest. The webhook tests use a silent sender. 40/40 tests pass. |
+| **Lesson**               | Code that runs for the public site must be tested as the site guest, not only as an admin. Keep platform error codes in failure messages. |
+| **Estimated time saved** | Building and diagnosing the email job by hand would take about 3 hours; with the AI, including the fix, about 1 hour. |
 
 ---
