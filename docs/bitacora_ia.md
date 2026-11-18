@@ -14,18 +14,29 @@ All three team members add their own entries. Never paste secrets, tokens or rea
 | 4   | 2026-11-05 | Janssen        | RF-D1a, RF-D2, RF-D3, RF-C1, RF-F1                 | Yes: anonymous `publicName: null` and banned-word matching ambiguity caught in #31  |
 | 5   | 2026-11-06 | Janssen        | RF-D1a, RF-D1b, RF-D1c, RF-D2, RF-D4, RF-C1, RF-F1 | Yes: 15s load timeout fired after data loaded (PR #88)                              |
 | 6   | 2026-11-06 | Janssen        | RF-V1, M1, M3                                      | Yes: arm64 QEMU crash during Docker `npm ci` in CI deploy (PR #80)                  |
-| 7   | 2026-11-10 | Jesus Estrella | RF-V1, RF-V2, RF-D1a, RF-D1c, RF-D2, RF-C1, RF-F1  | Yes: substring banned-word match vs whole-word contract rule (#31 / PR #89)         |
-| 8   | 2026-11-10 | Jesus Estrella | RF-D3, S11, S12                                    | Yes: shared sandbox record type & `Display_Status__c` broke recording until adapted |
-| 9   | 2026-11-10 | Jesus Estrella | RF-V2, RF-D3, S12, S14                             | Yes: AI generated standalone scripts and demo records that had to be stripped       |
+| 7 | 2026-11-10 | Jesus Estrella | RF-V1; issues #20 and #39; M2 and S11 guardrails | Yes: unsupported guest-profile metadata assumptions |
+| 8 | 2026-11-10 | Jesus Estrella | RF-D1a, RF-D1c and RF-S1b; issues #21, #23 and #10 | No separate AI error documented for this function |
+| 9 | 2026-11-10 | Jesus Estrella | RF-D3 and RF-D1b; issues #40 and #22; S11 and S14 | No separate AI error; provider-status correction is in entry 17 |
 | 10  | 2026-11-16 | Esmeralda      | RF-C2, RF-S4                                       | Yes: flow file used an element name that does not exist; caught by deploy validation |
 | 11  | 2026-11-17 | Janssen        | RF-D5, RF-F3                                       | Yes: email plan assumed a Developer Edition org; the project runs on an Enterprise sandbox |
 | 12  | 2026-11-17 | Janssen        | RF-D5                                              | Yes: receipt addressed to a Contact the site guest cannot read; every live send failed |
+| 13 | 2026-11-10 | Jesus Estrella | RF-D3; issue #24; S11, S12 and S14 | Yes: shared-org assumptions and unwanted verification artifacts |
+| 14 | 2026-11-17 | Jesus Estrella | RF-D2; issue #27; integration with RF-F1 | No new AI error documented for this function |
+| 15 | 2026-11-16 | Jesus Estrella | RF-C1; issues #28 and #31; merged PR #99 | Yes: substring matching diverged from the whole-token contract |
+| 16 | 2026-11-17 | Jesus Estrella | RF-F1; issue #29; recorder integration with issue #24 | Inherited automation failure; diagnosis corrected in entry 22 |
+| 17 | 2026-11-17 | Jesus Estrella | RF-D3; issue #45; merged PR #103 | Yes: unsupported assertion/status and missing credential enablement |
+| 18 | 2026-11-17 | Jesus Estrella | RF-D3; issue #45; merged PR #103 | Yes: lowercase retry header lost through case-sensitive lookup |
+| 19 | 2026-11-17 | Jesus Estrella | RF-V3a; issues #11 and #46; merged PR #104 | CLI authorization limitation; user completed interactive login |
+| 20 | 2026-11-17 | Jesus Estrella | RF-V3b; issue #12; RF-V3a rejection integration for issue #11 | Yes: unavailable Crypto API and incorrect permission assertion |
+| 21 | 2026-11-17 | Jesus Estrella | RF-D3 and RF-V3a; issues #24 and #11; shared-org risk R9 | Inherited trigger dependency; new assertion context corrected |
+| 22 | 2026-11-17 | Jesus Estrella | RF-D3 and RF-F1; issues #24 and #29; RF-V3a integration | Yes: initial invoice diagnosis and handler sharing declaration |
+| 23 | 2026-11-17 | Jesus Estrella | RF-D3, RF-D2, RF-C1 and RF-F1; shared issue #44 and issues #24, #27, #28, #29 | Yes: email readiness and ownership assumptions corrected |
 
 ---
 
 ## How We Used AI (`OA3`, `C3`)
 
-We used AI across the full lifecycle of the project under strict governance. Every session loads [AGENTS.md](../AGENTS.md) via [CLAUDE.md](../CLAUDE.md), which requires the assistant to read [scope.md](scope.md), [architecture.md](architecture.md), and [contract.md](contract.md) first, enforces course guardrails (no "how" in user stories, bulkified Apex, no hard-coded IDs, Guest User least privilege, zero secrets, English-only code/docs), and logs every change in [AI/log.md](../AI/log.md) (91 atomic entries across the team).
+We used AI across the full lifecycle of the project under strict governance. Every session loads [AGENTS.md](../AGENTS.md) via [CLAUDE.md](../CLAUDE.md), which requires the assistant to read [scope.md](scope.md), [architecture.md](architecture.md), and [contract.md](contract.md) first, enforces course guardrails (no "how" in user stories, bulkified Apex, no hard-coded IDs, Guest User least privilege, zero secrets, English-only code/docs), and logs every change in [AI/log.md](../AI/log.md) (125 functional change entries across the team).
 
 Across the team we used **Claude in Claude Code** (Janssen and Esmeralda) and **Codex (GPT-6.1)** (Jesus Estrella) in four areas:
 
@@ -34,7 +45,7 @@ Across the team we used **Claude in Claude Code** (Janssen and Esmeralda) and **
 3. **Implementation & verification:**
    - **Web app & deployment (Janssen — Claude in Claude Code):** Built the Vite + React + TypeScript app (`PR #72`, `#75–#77`, `#79`, `#81`, `#85–#88`, `#90`), an in-browser contract mock (`#34`), the two-step donation modal with Stripe's deferred Payment Element (`#35`, `#36`), the *Rótulo de Mérida* visual system ([PRODUCT.md](../PRODUCT.md), [DESIGN.md](../DESIGN.md)), and automated Docker CI/CD to a Raspberry Pi over ephemeral Tailscale SSH and Tailscale Funnel (`PR #74`, `#80`).
    - **Salesforce staff console & security (Esmeralda — Claude Code):** Built the custom fields, objects (`Invoice_Request__c`, `Stripe_Event__c`, `Banned_Word__mdt`), validation rules, permission sets, list views, reports, `Sent_At__c` flow, `StaffConsoleConfigurationTest` (19 tests), and reproducible Guest User security tests in [seguridad.md](seguridad.md) (`PR #82–#84`).
-   - **Salesforce public API & recording (Jesus Estrella — Codex GPT-6.1):** Implemented `HealthResource`, `CampaignsResource`, `CampaignService`, `PublicCampaignSelector`, `PaymentSessionsResource`, `PaymentSessionValidator`, `PaymentSessionService`, `StripeClient`/`PlaceholderStripeClient`, `ApiResponse`/`ApiException` (`S11`), `DonationRecorder` (atomic transaction with `Database.setSavepoint()`, idempotency on `Stripe_Event_Id__c` and `Stripe_Payment_Intent_Id__c`), and `DonationBackendTest` with 98% coverage (`PR #89`).
+   - **Salesforce public API and payments (Jesus Estrella — Codex in VS Code):** Implemented the public REST API, validators, atomic DonationRecorder and isolated backend tests; aligned whole-token banned-word validation (PR #99), integrated real Stripe test PaymentIntents through Named Credentials (PR #103), and added signed, repeat-safe webhook recording and shared-sandbox compatibility guards (PR #104). The entries below separate functional outputs, actual verification and AI corrections; receipt/invoice email implementation is assigned to another contributor.
 4. **Workflow automation:** Configured Husky + Commitlint, PR squash-merge documentation, and a GitHub Action (`PR #51`) that automatically moves tickets in GitHub Project `#6` from `Blocked` to `Todo` when dependencies close.
 
 ### Verification Methods
@@ -157,57 +168,59 @@ Across the team we used **Claude in Claude Code** (Janssen and Esmeralda) and **
 
 ---
 
-## 7. Public Apex REST API, CORS, and contract validation (AI error)
+## 7. Public Salesforce Site, CORS and guest access (AI error)
 
-| Field                    | Detail                                                                                                                                                                                                                                                                                                                                                                                                      |
-|:------------------------ |:----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Date**                 | 2026-11-10                                                                                                                                                                                                                                                                                                                                                                                                  |
-| **Author**               | Jesus Estrella                                                                                                                                                                                                                                                                                                                                                                                              |
-| **AI tool / model**      | Codex (GPT-6.1)                                                                                                                                                                                                                                                                                                                                                                                             |
-| **Requirement**          | RF-V1, RF-V2, RF-D1a, RF-D1c, RF-D2, RF-C1, RF-F1, S11 (issues #39, #40, #21, #23, #27–#29; PR #89)                                                                                                                                                                                                                                                                                                         |
-| **Prompt**               | Implement the public Salesforce Site API following `docs/contract.md` and `docs/salesforce-api.md`: `HealthResource`, `CampaignsResource`, `CampaignService`, `PublicCampaignSelector`, `PaymentSessionsResource`, `PaymentSessionValidator`, `PaymentSessionService`, `StripeClient`/`PlaceholderStripeClient`, and `ApiResponse`/`ApiException`, plus Guest User profile access and CORS origin metadata. |
-| **Output obtained**      | Apex REST endpoints for `/health`, `/campaigns`, `/campaigns/{id}`, and `POST /payment-sessions`, America/Merida date filtering, SAT/RFC/postal-code validation, banned-word checks, placeholder client secret generation without creating Pending records, and sanitized JSON errors (`S11`).                                                                                                              |
-| **Verification**         | Tested live anonymous requests and CORS preflight headers against the Salesforce Site, ran PMD Security/Performance rules (0 findings), and cross-checked validation rules against the web app in issue #31.                                                                                                                                                                                                |
-| **Error found**          | In `PaymentSessionValidator`, the AI implemented the banned-word check as `name.toLowerCase().contains(word)` (a substring match without accent folding), which rejects valid names containing a banned substring (such as `Spamalot` for `spam`) and misses accented variants (`Grosería` vs `groseria`), diverging from the whole-word rule documented in [contract.md](contract.md) (#31 / PR #90).      |
-| **Corrections applied**  | Flagged in PR #89 review and aligned the specification in [contract.md](contract.md) (PR #90) so banned-word matching splits on whitespace and compares accent-folded whole tokens; verified `containsKey('publicName')` properly rejects `publicName: null` on anonymous donations.                                                                                                                        |
-| **Lesson**               | Review AI-generated string validation for linguistic edge cases (substrings, accents, case folding) against the API contract rather than relying on simple `.contains()` checks.                                                                                                                                                                                                                            |
-| **Estimated time saved** | About 4 hours implementing the REST resources, validators, and error handling; about 30 minutes reviewing contract edge cases.                                                                                                                                                                                                                                                                              |
-
----
-
-## 8. Transactional donation recording and duplicate protection (`DonationRecorder`) (AI error)
-
-| Field                    | Detail                                                                                                                                                                                                                                                                                                                                                                                                                                  |
-|:------------------------ |:--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Date**                 | 2026-11-10                                                                                                                                                                                                                                                                                                                                                                                                                              |
-| **Author**               | Jesus Estrella                                                                                                                                                                                                                                                                                                                                                                                                                          |
-| **AI tool / model**      | Codex (GPT-6.1)                                                                                                                                                                                                                                                                                                                                                                                                                         |
-| **Requirement**          | RF-D3, RF-C1, RF-F1, S11, S12 (issue #24; PR #89)                                                                                                                                                                                                                                                                                                                                                                                       |
-| **Prompt**               | Build `DonationRecorder` to process verified `payment_intent.succeeded` test events atomically: enforce idempotency on `Stripe_Event_Id__c` and `Stripe_Payment_Intent_Id__c`, match or create the donor `Contact` (and company `Account` when applicable), insert the `Closed Won` `Opportunity`, `OpportunityContactRole`, optional `Invoice_Request__c`, and `Stripe_Event__c`, and roll back the entire transaction on any failure. |
-| **Output obtained**      | `DonationRecorder.cls` (`without sharing` system-mode service with `Database.setSavepoint()` / `Database.rollback()`), validating metadata schema v1, minimum 5000 centavos MXN, and settling valid payments even if they arrive after the campaign end date.                                                                                                                                                                           |
-| **Verification**         | Executed `DonationBackendTest` covering first-time recording, duplicate event/payment replay, rollback on failure, company accounts, and supporter wall visibility in the shared class sandbox.                                                                                                                                                                                                                                         |
-| **Error found**          | Initial runs in the shared sandbox failed because the org had an active `Donation` Record Type on `Opportunity` where picklist values (`Manual`, `Hidden`) were not enabled and `Display_Status__c` had been saved as `Visible<br>Hidden`, and because another team's legacy `OpportunityTrigger` ran on insert.                                                                                                                        |
-| **Corrections applied**  | Updated `DonationRecorder` to dynamically look up and assign the `Donation` record type when active in the org (`SObjectDescribeOptions.DEFERRED`) while still working in orgs with only the master record type; repaired `Display_Status__c` (`Visible` / `Hidden`) and the `Donation` record type picklist values in the deployment manifest while preserving legacy sandbox triggers.                                                |
-| **Lesson**               | In a shared Salesforce org with existing Record Types and triggers, Apex services must resolve Record Types dynamically via Schema describe rather than assuming a clean scratch org.                                                                                                                                                                                                                                                   |
-| **Estimated time saved** | About 3.5 hours writing the atomic recorder and idempotency logic; about 45 minutes adapting to the shared sandbox metadata.                                                                                                                                                                                                                                                                                                            |
+| Field | Detail |
+| :--- | :--- |
+| **Date** | 2026-11-10 |
+| **Author** | Jesus Estrella |
+| **AI tool / model** | Codex in VS Code; the exact model identifier is not independently recorded for this consolidated entry. |
+| **Requirement** | RF-V1; issues #20 and #39; M2 and S11 guardrails |
+| **Prompt / summary** | Expose the donation API through a public Salesforce Site, allow the deployed web origin through CORS, and verify access without donor login or guest business-object permissions. |
+| **Output obtained** | HealthResource, minimal REST class access, exact CORS origin metadata and documented manual guest credential prerequisites. |
+| **Verification** | Anonymous health requests, allowed-origin and denied-origin preflights, guest user-mode denial checks, and the user's confirmation of the deployed-browser CSP configuration; genuine guest PaymentIntent requests later confirmed credential readiness. |
+| **Error found** | The generated profile metadata initially assumed that the external-principal and User External Credentials permissions could be represented through unsupported profile entries. |
+| **Corrections applied** | Removed those unsupported entries and configured the supported named-principal and credential permissions manually in the Site guest profile, without granting Campaign or Opportunity CRUD. |
+| **Lesson** | Verify license-specific Setup permissions in the actual org instead of assuming every permission is deployable through the same profile metadata shape. |
+| **Estimated acceleration** | Not measured. The earlier combined API estimate was not allocated to this function; no separate hour saving is claimed. |
 
 ---
 
-## 9. Backend unit tests, guest isolation verification, and repo cleanup (AI error)
+## 8. Campaign API, progress and date-based availability
 
-| Field                    | Detail                                                                                                                                                                                                                                                                                                                                 |
-|:------------------------ |:-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Date**                 | 2026-11-10                                                                                                                                                                                                                                                                                                                             |
-| **Author**               | Jesus Estrella                                                                                                                                                                                                                                                                                                                         |
-| **AI tool / model**      | Codex (GPT-6.1)                                                                                                                                                                                                                                                                                                                        |
-| **Requirement**          | RF-V2, RF-D3, S12, S14 (issues #19, #24, #39, #40; PR #89)                                                                                                                                                                                                                                                                             |
-| **Prompt**               | Create comprehensive isolated Apex unit tests (`SeeAllData=false`, no hard-coded IDs) verifying all public routes, validation failures, idempotent recording, full transaction rollback, public supporter data filtering, and Guest User read/write/create denial (`RF-V2`), and prepare a clean PR with only required metadata.       |
-| **Output obtained**      | `DonationBackendTest.cls` (12 test methods, 98% test-run coverage) testing both REST routes and `System.runAs(guest)` user-mode CRUD denials, plus temporary standalone acceptance scripts, generated guide files, a demo utility class, and 3 test campaigns inserted in the sandbox.                                                 |
-| **Verification**         | Ran Apex test suite in the sandbox (98% coverage, all passing), PMD Security/Performance scan, and `git status` / manifest inspection before opening PR #89.                                                                                                                                                                           |
-| **Error found**          | Alongside `DonationBackendTest`, the AI generated standalone acceptance scripts, extra markdown guides, an administrative demo utility class, and static sample fixtures in the working tree, and inserted three fictitious campaign records in the sandbox that the user profile lacked Delete permission to remove.                  |
-| **Corrections applied**  | Removed all standalone acceptance scripts, generated guides, demo utilities, and static fixtures from the codebase and `manifest/donation-backend.xml` so only production classes, `DonationBackendTest`, and required metadata were committed in PR #89; documented the three remaining sandbox records in [AI/log.md](../AI/log.md). |
-| **Lesson**               | Always audit the deployment manifest and working tree before committing so temporary AI verification harnesses and scratch utilities do not ship as production metadata.                                                                                                                                                               |
-| **Estimated time saved** | About 3 hours writing the 12 Apex test methods and guest isolation assertions; about 30 minutes cleaning up temporary files and manifests.                                                                                                                                                                                             |
+| Field | Detail |
+| :--- | :--- |
+| **Date** | 2026-11-10 |
+| **Author** | Jesus Estrella |
+| **AI tool / model** | Codex in VS Code; the exact model identifier is not independently recorded for this consolidated entry. |
+| **Requirement** | RF-D1a, RF-D1c and RF-S1b; issues #21, #23 and #10 |
+| **Prompt / summary** | Implement campaign list and detail endpoints with open/completed filtering, date-based availability, recorded donation progress and public supporter data only. |
+| **Output obtained** | CampaignsResource, CampaignService and PublicCampaignSelector; inclusive America/Merida date rules, ordering, controlled missing/future-campaign errors, and supporters limited to visible credited names and amounts. |
+| **Verification** | DonationBackendTest route and date cases, direct campaign API requests, and later deployed-browser checks showing progress changes only after successful recorded payments. |
+| **Error found** | No separate AI implementation error is documented for this function. The initial banned-word defect is recorded under entry 15 rather than attributed to campaign filtering. |
+| **Corrections applied** | Kept campaigns open above their goal until their end date and retained successful late-settlement recording as specified by the contract. |
+| **Lesson** | Keep campaign availability, payment validation and settlement handling distinct; a fundraising goal is not a closing condition. |
+| **Estimated acceleration** | Not measured; no function-specific hour saving is claimed. |
+
+---
+
+## 9. Payment-session validation and sanitized API errors
+
+| Field | Detail |
+| :--- | :--- |
+| **Date** | 2026-11-10 |
+| **Author** | Jesus Estrella |
+| **AI tool / model** | Codex in VS Code; the exact model identifier is not independently recorded for this consolidated entry. |
+| **Requirement** | RF-D3 and RF-D1b; issues #40 and #22; S11 and S14 |
+| **Prompt / summary** | Validate payment-session requests against the API contract, reject malformed or invalid input with field-specific errors, and create no donation during session preparation. |
+| **Output obtained** | PaymentSessionValidator, PaymentSessionsResource, ApiResponse and ApiException; minimum 50 MXN, centavo precision, request-type/email/required-field checks and campaign availability errors. PaymentSessionService initially used StripeClient with PlaceholderStripeClient for independent development. |
+| **Verification** | The initial 12-method DonationBackendTest suite, direct positive/negative API requests and later user-driven minimum-amount, missing-email and missing-display-name checks. |
+| **Error found** | No additional error is attributed to these core validation rules. The unsupported real-provider HTTP 502 response and its correction are recorded under entry 17. |
+| **Corrections applied** | Retained one contract-compatible error shape and sanitized unexpected failures; placeholder injection remains explicit in tests after activating the HTTP provider. |
+| **Lesson** | A valid session request is not a recorded donation, and validation must remain authoritative on the Salesforce side. |
+| **Estimated acceleration** | Not measured per function; no new estimate is assigned to the earlier combined API work. |
+
+---
 
 ## 10. Name moderation flow with a wrong element name (AI error)
 
@@ -261,5 +274,202 @@ Across the team we used **Claude in Claude Code** (Janssen and Esmeralda) and **
 | **Corrections applied**  | The receipt is now addressed to the donor's email with `setToAddresses`. Job failures name the Salesforce status codes (no donor data). A new test builds the receipt while running as the site guest. The webhook tests use a silent sender. 40/40 tests pass. |
 | **Lesson**               | Code that runs for the public site must be tested as the site guest, not only as an admin. Keep platform error codes in failure messages. |
 | **Estimated time saved** | Building and diagnosing the email job by hand would take about 3 hours; with the AI, including the fix, about 1 hour. |
+
+---
+## 13. Transactional donation recording and backend compatibility (AI error)
+
+| Field | Detail |
+| :--- | :--- |
+| **Date** | 2026-11-10 |
+| **Author** | Jesus Estrella |
+| **AI tool / model** | Codex in VS Code; the exact model identifier is not independently recorded for this consolidated entry. |
+| **Requirement** | RF-D3; issue #24; S11, S12 and S14 |
+| **Prompt / summary** | Record only successful test-mode payments, match or create donor records, create the donation and optional invoice atomically, and make event/payment retries safe. |
+| **Output obtained** | DonationRecorder creates a Closed Won Opportunity, primary contact role, optional Invoice_Request__c and Processed Stripe_Event__c; matches Contacts by email, associates company Accounts and rolls back partial writes. The active Donation record type is resolved dynamically. |
+| **Verification** | DonationBackendTest covers first recording, repeated event/payment identifiers, rollback, company invoices and late settlement. The initial backend run reported 98 percent test-run coverage; this is a historical run result, not a coverage claim for all later changes. |
+| **Error found** | The initial generated backend assumed a cleaner org than the teaching sandbox: existing Donation record-type assignments and a malformed Display_Status__c picklist caused compatibility failures. The AI also generated standalone verification utilities the user did not want retained. |
+| **Corrections applied** | Resolved record types through Schema describe, aligned required picklist metadata, and removed standalone acceptance scripts, guides, demo utilities and fixture dependencies from the implementation/manifest. Inherited trigger failures were later handled separately in entries 19 and 20. |
+| **Lesson** | Inspect existing record types and automation before deploying to a shared org, and keep temporary verification tooling out of the versioned implementation. |
+| **Estimated acceleration** | Previously recorded estimate: about 3.5 hours of drafting assistance and 45 minutes of compatibility work. This is provisional, not measured or a member-confirmed effort total. |
+
+---
+
+## 14. Anonymous donations with independent invoice choice
+
+| Field | Detail |
+| :--- | :--- |
+| **Date** | 2026-11-17 |
+| **Author** | Jesus Estrella |
+| **AI tool / model** | Codex in VS Code; the exact model identifier is not independently recorded for this consolidated entry. |
+| **Requirement** | RF-D2; issue #27; integration with RF-F1 |
+| **Prompt / summary** | Ensure anonymous donors supply only the necessary private data, may request an invoice independently, and never appear in the public supporters list. |
+| **Output obtained** | Anonymous requests reject the publicName key, including null; donations retain Is_Anonymous__c without a public name, and the public selector excludes them. |
+| **Verification** | Backend contract cases and genuine browser donations with and without an individual invoice request. The anonymous invoice donation was Closed Won with one Requested / Simulation / Individual invoice request and a Processed event; progress rose from 300 to 350 MXN without adding a supporter. |
+| **Error found** | No new AI error is documented for this function. The earlier frontend acceptance of anonymous publicName:null was identified during the shared contract review and is not claimed as a new backend change. |
+| **Corrections applied** | Kept private invoice data separate from recognition; did not infer receipt-email completion from the thank-you message. |
+| **Lesson** | Public anonymity must be tested independently from private staff visibility and invoice creation. |
+| **Estimated acceleration** | Qualitative estimate only: AI accelerated contract-case selection and record correlation; no measured hour saving is claimed. |
+
+---
+
+## 15. Credited recognition and whole-token banned-word validation (AI error)
+
+| Field | Detail |
+| :--- | :--- |
+| **Date** | 2026-11-16 |
+| **Author** | Jesus Estrella |
+| **AI tool / model** | Codex in VS Code; the exact model identifier is not independently recorded for this consolidated entry. |
+| **Requirement** | RF-C1; issues #28 and #31; merged PR #99 |
+| **Prompt / summary** | Accept credited display names as entered while rejecting configured banned words as whole whitespace-delimited tokens, ignoring case and Latin accents, and exposing only name and amount. |
+| **Output obtained** | Updated PaymentSessionValidator and DonationBackendTest; preserved punctuation and submitted display names. Supporter responses remain limited to visible credited donations. |
+| **Verification** | Twelve Apex methods, eight public API name cases and targeted PMD Security/Performance checks passed. Browser payments later confirmed credited names and amounts appear without donor emails or fiscal fields. |
+| **Error found** | The initial AI-generated substring check rejected valid names such as Spamalot when spam was banned and missed accented variants. This diverged from the agreed whole-token contract. |
+| **Corrections applied** | Replaced substring matching with accent-folded, case-insensitive whole-token comparison. Confirmed that spam! remains a different token under the agreed punctuation rule. |
+| **Lesson** | Specify and test linguistic boundary cases explicitly; a substring search does not implement whole-word moderation. |
+| **Estimated acceleration** | Not measured; no separate quantified acceleration is claimed for this correction. |
+
+---
+
+## 16. Individual and company invoice validation and recording
+
+| Field | Detail |
+| :--- | :--- |
+| **Date** | 2026-11-17 |
+| **Author** | Jesus Estrella |
+| **AI tool / model** | Codex in VS Code; the exact model identifier is not independently recorded for this consolidated entry. |
+| **Requirement** | RF-F1; issue #29; recorder integration with issue #24 |
+| **Prompt / summary** | Validate invoice-only fiscal fields, distinguish individual and company RFC lengths, and record a simulated invoice request independently of public recognition. |
+| **Output obtained** | Legal name, RFC, taxpayer type, postal code, fiscal regime, fiscal use and invoice-email validation; Invoice_Request__c creation after successful payment, with company Account association when applicable. |
+| **Verification** | Backend invoice cases and browser field-error checks confirmed by the user. Genuine individual and company payments produced Requested / Simulation invoice requests with the matching taxpayer type; the company donation linked to its business Account. No CFDI or live SAT call was performed. |
+| **Error found** | Two paid invoice attempts initially appeared to indicate an invoice defect. A rollback diagnostic showed that the failure occurred earlier in inherited NPSP/CampaignMember automation, not in fiscal validation; entry 22 documents that correction. |
+| **Corrections applied** | Preserved invoice validation and recovered existing paid events after fixing the actual automation dependency. Did not create another payment to recover the records. |
+| **Lesson** | Trace the transaction failure before changing fiscal rules; a payment with an invoice can fail in unrelated shared-org automation. |
+| **Estimated acceleration** | Qualitative estimate only: AI assisted test-data preparation and record correlation; no measured hour saving is claimed. |
+
+---
+
+## 17. Real Stripe test PaymentIntent creation (AI error)
+
+| Field | Detail |
+| :--- | :--- |
+| **Date** | 2026-11-17 |
+| **Author** | Jesus Estrella |
+| **AI tool / model** | Codex in VS Code; the exact model identifier is not independently recorded for this consolidated entry. |
+| **Requirement** | RF-D3; issue #45; merged PR #103 |
+| **Prompt / summary** | Replace the placeholder default with a real Stripe test provider through Salesforce Named Credentials, using MXN, card-only intents and contract metadata, without creating donations during session creation. |
+| **Output obtained** | HttpStripeClient and HttpStripeClientTest, Stripe External Credential / Stripe_API metadata, PaymentSessionService integration and updated deployment/contract documentation. Secrets were entered directly in Salesforce and were not included in source. |
+| **Verification** | Sixteen Apex methods passed after activation; guest API requests returned genuine test-mode intents and session creation left donation counts unchanged. Twelve web API tests, TypeScript checks and the web production build passed during provider integration. |
+| **Error found** | The AI suggested an unavailable HttpRequest.getTimeout assertion, omitted credential header-formula enablement, and selected HTTP 502 even though Apex REST rejected that response status. Additional test corrections addressed type-name shadowing and fixture access mode. |
+| **Corrections applied** | Removed the unsupported assertion, enabled the credential header formula, aligned provider failures to HTTP 503 across contract, Apex, web mock and client tests, and corrected isolated test setup. |
+| **Lesson** | Validate platform APIs and supported response codes in the actual Salesforce runtime; contract changes must be synchronized across both clients. |
+| **Estimated acceleration** | Qualitative estimate only: AI accelerated provider, metadata and regression drafting; no measured comparison or confirmed hour saving is available. |
+
+---
+
+## 18. Case-insensitive payment-session retry handling (AI error)
+
+| Field | Detail |
+| :--- | :--- |
+| **Date** | 2026-11-17 |
+| **Author** | Jesus Estrella |
+| **AI tool / model** | Codex in VS Code; the exact model identifier is not independently recorded for this consolidated entry. |
+| **Requirement** | RF-D3; issue #45; merged PR #103 |
+| **Prompt / summary** | Reproduce duplicate intents reported during retries and ensure Idempotency-Key is preserved regardless of HTTP header casing. |
+| **Output obtained** | Case-insensitive header lookup in PaymentSessionsResource, key validation and HttpStripeClientTest regression cases; the validated key is forwarded to Stripe. |
+| **Verification** | Reproduced distinct intents for lowercase headers before the correction. After deployment, canonical, lowercase and uppercase public requests returned the same test intent; invalid retry keys returned 400. Sixteen Apex methods passed and session requests created no donations. |
+| **Error found** | The initial AI implementation performed a case-sensitive request-header lookup and silently discarded a lowercase retry header. |
+| **Corrections applied** | Compared request header names without case sensitivity and added canonical/lowercase/uppercase regression coverage. |
+| **Lesson** | HTTP header names are case-insensitive even when the application's map lookup is not. This backend support does not by itself implement browser-side retry-key generation. |
+| **Estimated acceleration** | Qualitative estimate only: AI assisted reproduction and regression drafting; no measured hour saving is claimed. |
+
+---
+
+## 19. Public Stripe webhook activation and secret configuration
+
+| Field | Detail |
+| :--- | :--- |
+| **Date** | 2026-11-17 |
+| **Author** | Jesus Estrella |
+| **AI tool / model** | Codex in VS Code; the exact model identifier is not independently recorded for this consolidated entry. |
+| **Requirement** | RF-V3a; issues #11 and #46; merged PR #104 |
+| **Prompt / summary** | Expose the Stripe snapshot webhook through the Salesforce Site, configure the signing-secret boundary safely and verify genuine provider reachability. |
+| **Output obtained** | StripeWebhookResource, StripeWebhookService, Stripe_Settings__c schema, guest REST class access and the portable webhook manifest. The user configured the organization-level secret directly in Setup and authorized the official CLI for the existing sandbox. |
+| **Verification** | The unconfigured public handler returned sanitized 503. After manual configuration, unsigned requests returned 400; genuine signed failed/successful Stripe sandbox events reached Salesforce. No business-object guest permission was added. |
+| **Error found** | A CLI login completion response differed from the initial automated assumption; the supported interactive login flow was completed by the user. This was a tooling limitation, not a failed payment. |
+| **Corrections applied** | Used the user's interactive sandbox authorization and verified configuration through safe responses instead of retrieving or printing credentials. |
+| **Lesson** | Endpoint reachability, presence of configuration and matching provider signatures are distinct checks; a 400 for an unsigned request proves only the authentication boundary. |
+| **Estimated acceleration** | Qualitative estimate only: AI assisted metadata, activation guidance and safe checks; no measured hour saving is claimed. |
+
+---
+
+## 20. Authentic, repeat-safe notices and safe rejection evidence (AI error)
+
+| Field | Detail |
+| :--- | :--- |
+| **Date** | 2026-11-17 |
+| **Author** | Jesus Estrella |
+| **AI tool / model** | Codex in VS Code; the exact model identifier is not independently recorded for this consolidated entry. |
+| **Requirement** | RF-V3b; issue #12; RF-V3a rejection integration for issue #11 |
+| **Prompt / summary** | Verify signatures before parsing or trusting event identifiers, ignore repeated events/payments, and log rejected notices without exposing or retaining sensitive payload data. |
+| **Output obtained** | StripeSignatureVerifier and eight StripeWebhookTest methods; exact UTF-8 HMAC-SHA256 verification, 300-second skew tolerance, multiple v1 signatures, test-mode checks, deduplication and fixed rejection reasons with server-generated references. Staff list views and roles remain another contributor's work. |
+| **Verification** | Independent Node-generated HMAC vector, boundary/stale/tampered/live/malformed cases, case-insensitive headers, guest-context tests and real event resends. Rejected/failed notices created no donations; duplicate paid deliveries retained one donation and invoice request per payment. |
+| **Error found** | The initial AI suggestion used an unavailable Crypto.areEqualConstantTime call and treated custom-setting describe access as equivalent to business-object CRUD. A test expression also required explicit subtraction spacing. |
+| **Corrections applied** | Used supported Crypto.verifyHMac, checked Opportunity permissions and the sanitized public response boundary, and corrected the test expressions. Unsigned payload IDs are never used as genuine event deduplication keys. |
+| **Lesson** | Use supported cryptographic APIs and test the actual authorization boundary; unauthenticated identifiers must not reserve trusted uniqueness keys. |
+| **Estimated acceleration** | Qualitative estimate only: AI accelerated negative-case and cryptographic regression drafting; no measured hour saving is claimed. |
+
+---
+
+## 21. Legacy Opportunity automation compatibility (AI error)
+
+| Field | Detail |
+| :--- | :--- |
+| **Date** | 2026-11-17 |
+| **Author** | Jesus Estrella |
+| **AI tool / model** | Codex in VS Code; the exact model identifier is not independently recorded for this consolidated entry. |
+| **Requirement** | RF-D3 and RF-V3a; issues #24 and #11; shared-org risk R9 |
+| **Prompt / summary** | Diagnose successful Stripe payments that cannot be recorded and, with org-admin authorization, prevent an absent optional legacy fund from aborting donations. |
+| **Output obtained** | Retrieved OpportunityTrigger with a missing-fund guard and LegacyOpportunityTriggerTest; retained legacy insert/update/delete calculations when FONDOS SDU exists and explicit system operations without guest permission expansion. |
+| **Verification** | Rollback diagnostics traced the recording failure to the inherited trigger. Twenty-eight selected Apex methods passed, including four legacy regressions with 200-record cases; targeted PMD checks found no violations. Replaying the existing paid event recorded one anonymous 50 MXN donation and another replay left totals unchanged. |
+| **Error found** | The missing FONDOS SDU query was inherited platform automation, not code generated for this portal. A new regression assertion initially omitted WITH SYSTEM_MODE on a legacy field and required correction. |
+| **Corrections applied** | Guarded the missing record, corrected the assertion access context and preserved existing calculations. No legacy fund was created and the trigger was not disabled. |
+| **Lesson** | A valid payment can fail because of inherited automation. Preserve atomic rollback and recover by replaying the verified event rather than taking another payment; fund ownership remains a documented cross-team risk. |
+| **Estimated acceleration** | Qualitative estimate only: AI assisted stack analysis and bulk regression drafting; no measured hour saving is claimed. |
+
+---
+
+## 22. Returning-donor CampaignMember compatibility and payment recovery (AI error)
+
+| Field | Detail |
+| :--- | :--- |
+| **Date** | 2026-11-17 |
+| **Author** | Jesus Estrella |
+| **AI tool / model** | Codex in VS Code; the exact model identifier is not independently recorded for this consolidated entry. |
+| **Requirement** | RF-D3 and RF-F1; issues #24 and #29; RF-V3a integration |
+| **Prompt / summary** | Find why returning-donor invoice payments remain unrecorded, protect unrelated NPSP updates from scholarship automation, and recover the already-paid events safely. |
+| **Output obtained** | Retrieved CampaignMemberTriggerHandler with an early return for unchanged approval and a missing-fund guard; LegacyCampaignMemberTriggerTest covers unrelated 200-member updates, approval/reversal calculations and returning-donor invoice recording plus replay. |
+| **Verification** | Rollback diagnostics traced NPSP Opportunity processing to PreApproveStudent. Thirty-two selected Apex methods passed; the final explicit sharing declaration was redeployed with all four member regressions passing, and targeted PMD checks reported zero violations. Replayed two paid 50 MXN events, yielding two donations and invoice requests; another replay retained the same counts and both events reached zero pending webhooks. |
+| **Error found** | The initial diagnosis associated the symptom with invoicing, but the exception occurred before invoice insertion. An admin-context Named Credential diagnostic was unavailable, and the retrieved handler needed an explicit sharing declaration to pass analysis. |
+| **Corrections applied** | Used fictitious diagnostic data with runtime donor lookup under rollback, corrected the inherited handler without changing invoice rules, preserved its system-context calculation and replayed genuine signed events. |
+| **Lesson** | Reproduce the returning-donor path, including package-managed updates to related records; do not equate payment success with completed Salesforce persistence. |
+| **Estimated acceleration** | Qualitative estimate only: AI assisted transaction tracing and regressions; no measured hour saving is claimed. |
+
+---
+
+## 23. Deployed donor acceptance checks across web, Stripe and Salesforce (AI error)
+
+| Field | Detail |
+| :--- | :--- |
+| **Date** | 2026-11-17 |
+| **Author** | Jesus Estrella |
+| **AI tool / model** | Codex in VS Code; the exact model identifier is not independently recorded for this consolidated entry. |
+| **Requirement** | RF-D3, RF-D2, RF-C1 and RF-F1; shared issue #44 and issues #24, #27, #28, #29 |
+| **Prompt / summary** | Guide the user through donor-browser tests and correlate each result with Stripe events, Salesforce records and public campaign progress, without adding testing scripts to the repository. |
+| **Output obtained** | Verified credited, anonymous, declined, individual-invoice and company-invoice submissions. Recorded donations retained payment references; anonymous donations remained private, and company donations linked to a business Account. Public progress reached 400 MXN with four credited names and amounts. |
+| **Verification** | User-submitted test cards, screenshots, safe CLI/event queries, Processed webhook logs, Closed Won donation records, Requested / Simulation invoice requests and the public campaign API. The user confirmed required-field, minimum-amount, RFC and postal-code failures; event replay safety was checked separately. |
+| **Error found** | The thank-you page promised a receipt although Salesforce email delivery was unfinished. The AI also initially described email implementation as the user's next task before checking repository assignees. |
+| **Corrections applied** | Clarified that payment/recording tests do not prove email delivery; confirmed #26, #30 and #47 belong to hjanssena. Another contributor subsequently adjusted thank-you wording; no ownership of that UI change is claimed here. Abandoned-payment and email checks remain part of the team's final integration work. |
+| **Lesson** | Distinguish UI messages, provider status and persisted backend evidence, and verify task ownership before proposing the next implementation. |
+| **Estimated acceleration** | Qualitative estimate only: AI assisted guided checks and cross-system correlation; no measured hour saving is claimed. |
 
 ---
