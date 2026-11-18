@@ -63,3 +63,74 @@ The team prepared a 15-question discovery document (`Stakeholder Questions.pdf`,
 | **13** | *(Donations that do not go through 1)* How should we handle refunds or mistaken payments? Who approves them, and should a confirmed donation ever be undone? | `[1:07 PM]` *"13. Out of scope."* | Scope Non-Goal | Documented refunds and mistaken-payment reversal as explicit non-goals in [docs/scope.md](scope.md) and [docs/requirements/README.md](requirements/README.md). |
 | **14** | *(Donations that do not go through 2)* Today, how does your team check that a donation was actually paid, and what would you do if the payment processor showed one thing and your records another? | `[1:13 PM]` *"14. Haha there is no such thing as a team for the moment. If the payment gateway has authorized the transaction, it is successful.<br>14.1 a record should be created only AFTER a successful transaction"* | `RF-D3`, `RF-S3`, `RF-V3a` | Crucial architectural pivot: instead of creating `Pending` donations before payment, donor details are validated by Salesforce and attached to the Stripe `PaymentIntent` metadata. An `Opportunity` (`StageName = Closed Won`) is created **only after** Stripe confirms a successful payment (confirmed with the professor on issue `#32`). |
 | **15** | *(Your team 1)* Who should be able to see donors' email addresses, and who may change a donation after it is recorded? | `[1:16 PM]` *"15. One person can manually create donations if they come from outside, and another can change the name or the visibility. Email's are visible for both types of users."* | `RF-S5`, `RF-S2`, `RF-S3`, `RF-C2` | Added user story `RF-S5` and [docs/requirements/admin/roles.md](requirements/admin/roles.md), defining three Permission Sets (**Donations Admin**, **Campaign Manager**, **Moderator**): Admins record manual donations (`RF-S3`), Moderators edit `Public_Name__c` and `Display_Status__c` (`RF-C2`), all three roles view donations and emails (`RF-S2`), and only Admins and Campaign Managers can view `RFC__c` (`RF-F2`). |
+
+---
+
+## 2. Technical Reports — Esmeralda Collí
+
+Problems found while building the Salesforce data model, roles and staff application (part B). Each report follows the five parts in `lineamientos.md` (objective, actions, expected behavior, actual behavior, prior research) plus the follow-up. AI details for the same cases are in [bitacora_ia.md](bitacora_ia.md).
+
+### 2.1 Data model guide did not match the agreed architecture
+
+| Field | Detail |
+| :--- | :--- |
+| **Date** | 2026-11-07 |
+| **Requirement** | `RF-S5`, `RF-F2` |
+| **Objective** | Create the custom fields and objects for donations, invoice requests and Stripe notices in the shared org `class2026h`. |
+| **Actions** | Followed a step-by-step Setup guide and created `Modality__c` (Anonymous / Credited / Invoiced), a `Donor__c` lookup on Opportunity, `Source__c` with Stripe / Manual, and `Invoice_Request__c` without SAT fields. |
+| **Expected behavior** | A data model that matches [architecture.md](architecture.md) and the API contract, ready to retrieve into the repository. |
+| **Actual behavior** | When compared with the architecture docs, the model did not fit: one `Modality__c` value cannot represent a donor who is anonymous and also wants an invoice, the donor link must be the contact role, `Source__c` must be Website / Manual, and the invoice object was missing postal code, tax regime, CFDI use and a Failed status. |
+| **Prior research** | Prompt: *"Give me the steps for my part B."* The guide was based on an older version of the plan and was not checked against the repository's architecture docs before building. |
+| **Follow-up** | Deleted `Modality__c` and `Donor__c`, created `Is_Anonymous__c`, renamed Stripe to Website, added the SAT fields, the Failed status and `Stripe_Event__c.Opportunity__c`. Resolved on 2026-11-07. Rule adopted: read the architecture docs before creating anything in Setup. |
+
+### 2.2 Display Status picklist saved as one broken value
+
+| Field | Detail |
+| :--- | :--- |
+| **Date** | 2026-11-10 |
+| **Requirement** | `RF-C1`, `RF-C2` |
+| **Objective** | Create `Display_Status__c` on Opportunity with the values Visible and Hidden, so moderators can hide names on the supporters list. |
+| **Actions** | Copied the values from a table cell into the picklist values box in Setup. |
+| **Expected behavior** | Two values, `Visible` (default) and `Hidden`. |
+| **Actual behavior** | The field had a single value, `Visible<br>Hidden`. The public API filters on exactly `Visible`, so no donation could be shown or hidden correctly. Found when a new Donation form showed the wrong option. |
+| **Prior research** | Prompt: *"Done"*, to ask for the next step (Opportunity fields). The answer listed picklist values separated by an HTML line break, which pasted as text. The other picklists were checked and were correct. |
+| **Follow-up** | Renamed the value to `Visible`, added `Hidden`, kept Visible as default and retrieved the metadata again. Resolved on 2026-11-10. Since then every picklist is opened after saving to confirm its values. |
+
+### 2.3 Role users could not create campaigns or manual donations
+
+| Field | Detail |
+| :--- | :--- |
+| **Date** | 2026-11-10 |
+| **Requirement** | `RF-S3`, `RF-S5`, `RF-S1` |
+| **Objective** | Prove each acceptance criterion with Apex tests that run as a user holding only one team role. |
+| **Actions** | Wrote `StaffConsoleConfigurationTest` (18 tests at the time) that creates test users inside the test, assigns each permission set and tries each action in user mode. Ran it as a validation-only deploy so nothing was saved in the shared org. |
+| **Expected behavior** | All tests pass, because the configuration worked when checked as System Administrator. |
+| **Actual behavior** | 9 of 18 tests failed. Campaign and Opportunity have record types in this org (NPSP and other teams): the value Manual of `Source__c` was not enabled on the Donation record type, and the permission sets gave no record type access, so Admin and Campaign Manager users could not create campaigns or donations. |
+| **Prior research** | Prompt: *"I want to finish all the tests."* The earlier setup guide never mentioned record types, and checking as System Administrator hid the problem because that profile sees every record type. |
+| **Follow-up** | Enabled Manual and Visible / Hidden on the Donation record type and gave Donations Admin and Campaign Manager their record types, by hand in Setup because the record type is shared with other teams. All tests passed on 2026-11-10; the class now has 22 tests. |
+
+### 2.4 Another team's trigger adds our donations to its fund
+
+| Field | Detail |
+| :--- | :--- |
+| **Date** | 2026-11-10 |
+| **Requirement** | `RF-S3`, `RF-D3`, risk R9 |
+| **Objective** | Create test donations in the shared org to show manual entry (`RF-S3`) and the donation list in the demo. |
+| **Actions** | Investigated why the tests needed a campaign called "FONDOS SDU" before they could insert any Opportunity, and read the org's `OpportunityTrigger`. |
+| **Expected behavior** | A Mexico Dreamin donation changes only its own campaign's progress. |
+| **Actual behavior** | Another team's `OpportunityTrigger` runs on every Opportunity insert in the org and adds each Closed Won amount to their "FONDOS SDU" campaign. A demo donation would change that team's total, and inserts failed when the campaign did not exist. |
+| **Prior research** | The test failure message pointed to the missing campaign; reading the trigger code showed it is not scoped to one project. No setting can turn it off without changing another team's code. |
+| **Follow-up** | Decided not to create demo donations by hand, told the team, and recorded it as residual risk R9 in [seguridad.md](seguridad.md). Jesús later added missing-fund guards so our recording works whether or not the fund exists (2026-11-17). Still open: agree on fund scoping with the professor and that team. |
+
+### 2.5 Name moderation flow rejected at deploy
+
+| Field | Detail |
+| :--- | :--- |
+| **Date** | 2026-11-16 |
+| **Requirement** | `RF-C2` |
+| **Objective** | Block a display name with a banned word when a moderator corrects it, using a record-triggered flow on Opportunity. |
+| **Actions** | Wrote the flow as metadata (`Public_Name_Banned_Words`): get the banned words, loop over them, compare whole words, and show an error on `Public_Name__c`. Deployed it with a validation-only deploy and the tests. |
+| **Expected behavior** | The flow deploys and the new test `correctedNameWithBannedWordIsRejected` passes. |
+| **Actual behavior** | Deploy failed: *"Element getRecords invalid at this location in type Flow"*. |
+| **Prior research** | Prompt: *"I want to continue with my part of E2: the rejected payment notices log (RF-S4) and name moderation (RF-C2)…"* The generated file used `getRecords`, the label shown in Flow Builder, but the metadata name for that element is `recordLookups`, and elements must be in a fixed order. |
+| **Follow-up** | Renamed the element to `recordLookups` and moved it to its place in the file. Deploy passed with 33 of 33 tests on 2026-11-16 and the change was merged in PR #98 on 2026-11-17. Also found that maintaining banned words needs Customize Application, so admins keep the list (least privilege). |
