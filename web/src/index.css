@@ -949,6 +949,8 @@ html:has(.sheet[open]) {
   color: var(--weather-1);
   max-width: 60ch;
   text-wrap: pretty;
+  /* Staff write descriptions with line breaks; keep them. */
+  white-space: pre-line;
   /* The list is for choosing; the full description is on the campaign page. */
   display: -webkit-box;
   -webkit-box-orient: vertical;
@@ -1147,6 +1149,8 @@ html:has(.sheet[open]) {
   font-size: clamp(1.2rem, 2vw, 1.4rem);
   line-height: 1.45;
   font-weight: 700;
+  /* Staff write descriptions with line breaks; keep them. */
+  white-space: pre-line;
 }
 
 /* ---- Thanks wall: newest painted darkest ---- */
