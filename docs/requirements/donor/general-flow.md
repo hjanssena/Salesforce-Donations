@@ -92,5 +92,5 @@ This document covers the public experience and the donation lifecycle shared by 
 ### Acceptance Criteria
 - **CA1 (Receipt After Payment):** **Given** I paid with a test card, **when** my donation is recorded, **then** I receive an email from the program at the address I gave, with the donation reference, campaign, amount and date, and my display name only if I chose to be credited.
 - **CA2 (Negative: Unsuccessful Payment):** **Given** my payment was declined, cancelled, or left unfinished, **when** I check my email, **then** I have received no receipt.
-- **CA3 (Single Email):** **Given** I did not request an invoice, **when** my payment succeeds, **then** the receipt is the only email I receive.
+- **CA3 (Single Email):** **Given** my payment succeeds, **when** I check my email, **then** I receive exactly one email from the program: the receipt, which carries my invoice as an attachment only if I requested one (`RF-F3`).
 - **CA4 (Spanish):** **Given** I receive a receipt, **when** I read it, **then** it is written in Spanish.
